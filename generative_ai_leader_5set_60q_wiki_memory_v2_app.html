@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Generative AI Leader 5セット学習アプリ</title>
+<style>
+:root{--bg:#f6f8fc;--card:#fff;--text:#1f2937;--muted:#64748b;--line:#e5e7eb;--primary:#2563eb;--good:#15803d;--bad:#b91c1c;--warn:#b45309;--purple:#7c3aed;--shadow:0 12px 28px rgba(15,23,42,.08);--r:18px}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eaf2ff 0,#f6f8fc 320px);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",Arial,sans-serif;color:var(--text);line-height:1.7}header,main,nav{max-width:1240px;margin:auto}header{padding:28px 18px 12px}.hero,.card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:22px}h1{font-size:clamp(24px,4vw,40px);margin:0 0 8px;line-height:1.2}h2{font-size:24px;margin:0 0 10px}h3{font-size:18px;margin:0 0 8px}.muted{color:var(--muted)}.small{font-size:13px}.mini{font-size:12px;color:var(--muted)}nav{display:flex;gap:8px;flex-wrap:wrap;padding:0 18px 18px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(234,242,255,.98),rgba(246,248,252,.96));backdrop-filter:blur(8px)}.nav{border:1px solid var(--line);background:#fff;padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}.nav.active{background:var(--primary);color:#fff;border-color:var(--primary)}main{padding:0 18px 50px}.page{display:none}.page.active{display:block}.grid{display:grid;gap:16px}.two{grid-template-columns:repeat(2,minmax(0,1fr))}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.four{grid-template-columns:repeat(4,minmax(0,1fr))}.sets{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}@media(max-width:900px){.two,.three,.four{grid-template-columns:1fr}.layout,.wiki-layout,.result-grid{grid-template-columns:1fr!important}.side{position:static!important}}.badge{display:inline-block;border-radius:999px;padding:5px 9px;background:#eff6ff;color:#1d4ed8;font-weight:800;font-size:12px;margin:3px}.badge.green{background:#ecfdf5;color:#166534}.badge.yellow{background:#fffbeb;color:#92400e}.badge.purple{background:#f5f3ff;color:#6d28d9}.btn{border:0;border-radius:12px;padding:10px 14px;background:var(--primary);color:#fff;font-weight:900;cursor:pointer}.btn:hover{filter:brightness(.95)}.btn.sec{background:#fff;color:var(--text);border:1px solid var(--line)}.btn.warn{background:var(--warn)}.btn.bad{background:var(--bad)}select,input[type=search]{border:1px solid var(--line);border-radius:12px;padding:10px;background:#fff;font:inherit}.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.space{justify-content:space-between}.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:16px;align-items:start}.side{position:sticky;top:82px}.timer{font-size:34px;font-weight:950}.timer.warn{color:var(--warn)}.timer.danger{color:var(--bad);animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.5}}.bar{height:12px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#22c55e);width:0}.qnav{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.qnav button{border:1px solid var(--line);border-radius:9px;background:#fff;padding:7px 0;font-weight:800;cursor:pointer}.qnav .ans{background:#dcfce7;color:#166534}.qnav .ok{background:#dcfce7;color:#166534}.qnav .ng{background:#fee2e2;color:#991b1b}.qnav .blank{background:#f8fafc;color:#64748b}.qcard{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 16px;box-shadow:0 8px 22px rgba(15,23,42,.06)}.pill{border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#334155;font-size:12px;font-weight:800}.cat-basics{background:#eff6ff;color:#1d4ed8}.cat-services{background:#f5f3ff;color:#6d28d9}.cat-improvement{background:#ecfdf5;color:#047857}.cat-strategy{background:#fffbeb;color:#92400e}.choices{display:grid;gap:10px;margin-top:12px}.choice{border:1px solid var(--line);border-radius:14px;background:#fff;padding:11px;cursor:pointer;display:block}.choice:hover{background:#f8fbff;border-color:#93c5fd}.choice.sel{background:#eff6ff;border-color:var(--primary)}.choice.ok{background:#ecfdf5;border-color:#86efac}.choice.ng{background:#fef2f2;border-color:#fecaca}.pause{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:50;align-items:center;justify-content:center}.pause.show{display:flex}.pause-box{background:#fff;border-radius:20px;padding:24px;max-width:520px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.25)}.hidden{display:none!important}.stat{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}.stat .num{font-size:28px;font-weight:950}.stat .label{font-size:12px;color:var(--muted);font-weight:800}.result-grid{display:grid;grid-template-columns:260px 1fr;gap:16px}.score{width:210px;height:210px;border-radius:50%;display:grid;place-items:center;margin:auto;background:conic-gradient(var(--primary) 0deg,#dbeafe 0);position:relative}.score:after{content:"";position:absolute;width:154px;height:154px;background:#fff;border-radius:50%}.score div{position:relative;z-index:1;text-align:center}.score b{font-size:42px}.call{border:1px solid #bfdbfe;background:#eff6ff;border-radius:14px;padding:13px}.call.good{border-color:#bbf7d0;background:#f0fdf4}.call.warn{border-color:#fde68a;background:#fffbeb}.call.bad{border-color:#fecaca;background:#fef2f2}table{width:100%;border-collapse:collapse}th,td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}th{background:#f8fafc;font-size:13px}.fb{border:1px solid var(--line);border-radius:12px;background:#f8fafc;padding:10px;margin-top:7px}.fb.ok{background:#f0fdf4;border-color:#bbf7d0}.fb.ng{background:#fff1f2;border-color:#fecaca}.explain{background:#eff6ff;border:1px solid #bfdbfe;border-radius:14px;padding:12px;margin-top:12px}.link{border:0;background:none;color:var(--primary);font-weight:900;text-decoration:underline;cursor:pointer;padding:0}.analysis{border-left:5px solid var(--primary);background:#f8fafc;border-radius:12px;padding:12px;margin:8px 0}.analysis.bad{border-left-color:var(--bad)}.analysis.warn{border-left-color:var(--warn)}.analysis.good{border-left-color:var(--good)}canvas{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px}.wiki-layout{display:grid;grid-template-columns:300px 1fr;gap:16px}.wiki-list{max-height:72vh;overflow:auto}.wiki-list button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px;margin-bottom:8px;font-weight:800;cursor:pointer}.wiki-list button.active{background:#eff6ff;border-color:var(--primary);color:#1d4ed8}.section{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}@media print{nav,.no-print,.side .toolbar,.btn{display:none!important}body{background:#fff}.card,.qcard{box-shadow:none}.page{display:block}.page:not(.active){display:none}}
+</style>
+</head>
+<body>
+<header><div class="hero"><h1>Google Cloud Generative AI Leader 5セット学習アプリ</h1><p class="muted">本試験レベルを意識したケーススタディ型の問題集、90分タイマー、一時停止、採点後の詳細解説、カテゴリ別グラフ、回答系統分析、進捗ダッシュボード、解説Wikiを1つにまとめました。</p><span class="badge">5セット × 60問</span><span class="badge purple">90分</span><span class="badge green">進捗保存</span><span class="badge yellow">Wiki連動</span></div></header>
+<nav class="no-print"><button class="nav active" data-page="home">ホーム</button><button class="nav" data-page="exam">問題集</button><button class="nav" data-page="progress">私の進捗状況</button><button class="nav" data-page="review">復習</button><button class="nav" data-page="wiki">解説参照Wiki</button><button class="nav" data-page="data">データ保存</button><button class="nav" data-page="congrats">完走レビュー</button></nav>
+<main>
+<section id="home" class="page active"><div class="grid two"><div class="card"><h2>使い方</h2><p>問題集ページでセットを選択し、試験開始を押します。回答終了・採点後、カテゴリ別点数、割合グラフ、誤答タグ、対策レポート、問題別詳細解説が表示されます。</p><div class="toolbar"><button class="btn" onclick="show('exam')">問題集を開始</button><button class="btn sec" onclick="show('progress')">進捗を見る</button><button class="btn sec" onclick="show('wiki')">Wikiを開く</button></div></div><div class="card"><h2>学習設計</h2><div class="grid two"><div class="stat"><div class="label">総問題数</div><div class="num">300</div></div><div class="stat"><div class="label">1セット</div><div class="num">100点</div></div><div class="stat"><div class="label">カテゴリ</div><div class="num">4</div></div><div class="stat"><div class="label">保存方式</div><div class="num">自動</div></div></div></div></div><div class="card" style="margin-top:16px"><h2>セット一覧</h2><div id="setCards" class="grid sets"></div></div></section>
+<section id="exam" class="page"><div class="card no-print"><div class="toolbar space"><div><h2>問題集</h2><p class="muted">各セットは60問、100点満点、90分です。カテゴリ配分は試験ガイドに合わせています。</p></div><div class="toolbar"><select id="setSelect"></select><select id="modeSelect" title="難易度設定"><option value="standard">標準 / 90分</option><option value="challenging" selected>やや難 / 90分</option><option value="hard">高難度 / 75分</option></select><button class="btn" onclick="startExam()">試験開始</button></div></div></div><div id="examArea" class="hidden" style="margin-top:16px"><div class="layout"><aside class="card side no-print"><h3 id="setTitle">模擬試験</h3><div id="timer" class="timer">90:00</div><div id="timerStatus" class="mini">未開始</div><div class="bar"><span id="progressBar"></span></div><p class="small"><b id="answered">0</b> / <span id="totalQ">60</span>問回答済み</p><div class="toolbar"><button id="pauseBtn" class="btn sec" onclick="pauseExam()">一時停止</button><button class="btn warn" onclick="grade(false)">回答終了・採点</button></div><h3 style="margin-top:16px">問題ナビ</h3><div id="qnav" class="qnav"></div></aside><div><div id="questions"></div><div class="card no-print"><div class="toolbar space"><p class="muted">時間切れの場合は自動採点されます。</p><button class="btn warn" onclick="grade(false)">回答終了・採点</button></div></div></div></div></div><div id="result" class="hidden" style="margin-top:16px"></div></section>
+<section id="progress" class="page"><div class="card"><div class="toolbar space"><div><h2>私の進捗状況</h2><p class="muted">採点済み履歴をブラウザに保存し、実施回数、点数推移、カテゴリ平均、セット別進捗を可視化します。</p></div><div class="toolbar no-print"><button class="btn sec" onclick="exportHistory()">履歴JSON出力</button><button class="btn bad" onclick="resetHistory()">リセット</button></div></div></div><div id="progressBody" style="margin-top:16px"></div></section>
+<section id="wiki" class="page"><div class="card"><h2>解説参照Wiki</h2><p class="muted">採点結果の解説から関連項目へ直接移動できます。苦手タグのWikiを重点的に復習してください。</p><input id="wikiSearch" type="search" placeholder="RAG、Gemini Enterprise、SAIF、温度など" oninput="renderWikiList()"></div><div class="wiki-layout" style="margin-top:16px"><aside id="wikiList" class="card wiki-list no-print"></aside><article id="wikiDetail" class="card"></article></div></section>
+
+<section id="review" class="page"><div class="card"><div class="toolbar space"><div><h2>振り返り・復習</h2><p class="muted">「後から確認する」を押した問題、誤答、未回答、自信度が低い問題だけを抽出できます。</p></div><div class="toolbar no-print"><select id="reviewFilter" onchange="renderReview()"><option value="flagged">後から確認のみ</option><option value="wrong">誤答・未回答</option><option value="lowconf">自信度低い</option><option value="all">すべて</option></select><button class="btn sec" onclick="downloadReviewList()">復習リストTXT</button></div></div></div><div id="reviewBody" style="margin-top:16px"></div></section>
+<section id="data" class="page"><div class="card"><h2>学習データ保存・バックアップ</h2><p class="muted">採点履歴、問題別回答、後から確認フラグ、自信度、途中再開データ、総学習時間をブラウザのローカルストレージに保存します。PC変更前にはJSONバックアップを出力してください。</p><div class="toolbar no-print"><button class="btn" onclick="exportAllData()">全データJSON出力</button><label class="btn sec">JSON取込<input id="importAllFile" type="file" accept="application/json" style="display:none" onchange="importAllData(event)"></label><button class="btn bad" onclick="resetAllData()">全データ削除</button></div></div><div id="dataBody" style="margin-top:16px"></div></section>
+<section id="congrats" class="page"><div id="congratsBody"></div></section>
+</main>
+<div id="pauseOverlay" class="pause no-print"><div class="pause-box"><h2>一時停止中</h2><p class="muted">タイマーは停止しています。再開するまで回答はロックされます。</p><button class="btn" onclick="pauseExam()">再開</button></div></div>
+<script>
+const CATS={basics:{name:"生成 AI の基礎",short:"基礎"},services:{name:"Google Cloud の生成 AI サービス",short:"サービス"},improvement:{name:"生成 AI モデル出力を改善する手法",short:"出力改善"},strategy:{name:"ビジネス戦略・安全・責任ある AI",short:"戦略/安全"}};
+const CTX=[
+{org:"地方銀行",team:"リテール企画部",biz:"住宅ローン相談とFAQ高度化",data:"審査規程、商品説明、問い合わせ履歴、通話メモ",risk:"金融規制、個人情報、説明責任",users:"営業担当者とコールセンター担当者",cust:"個人顧客"},
+{org:"製造業",team:"品質保証部",biz:"設備保全と品質不具合の初動判断",data:"保全記録、検査画像、作業標準書、センサー時系列",risk:"安全基準、誤作業、機密図面流出",users:"現場技術者と品質管理者",cust:"工場現場"},
+{org:"小売チェーン",team:"EC・店舗運営部",biz:"商品検索、販促企画、在庫問い合わせ対応",data:"POS、在庫、商品説明、レビュー、販促資料",risk:"ブランド毀損、誤った在庫案内、顧客データ",users:"店舗スタッフとEC運営者",cust:"オンライン顧客"},
+{org:"医療機器メーカー",team:"薬事・営業企画部",biz:"規制文書要約、営業資料作成、問い合わせ一次回答",data:"承認文書、添付文書、論文、営業ナレッジ、FAQ",risk:"規制遵守、根拠提示、医療情報の誤用",users:"営業担当者と薬事担当者",cust:"医療従事者"},
+{org:"通信会社",team:"法人サポート部",biz:"障害問い合わせの切り分け、契約情報検索、FAQ自動化",data:"契約DB、障害レポート、ナレッジ記事、チャット履歴",risk:"SLA、セキュリティ、顧客固有情報の混同",users:"サポートエンジニアとアカウント担当",cust:"法人顧客"}
+];
+const T=[
+{id:"B01",cat:"basics",wiki:"foundation",tags:["LLM","基盤モデル"],q:"{org}は{biz}に生成AIを使うか検討しています。経営層はLLMを通常の分類モデルの延長と考えています。最も正確な説明はどれですか。",exp:"LLMは大量で多様なデータから言語や文脈を学習した基盤モデルで、要約、生成、抽出、分類、対話などに適応できます。ただし最新性や事実性は設計で補います。",tip:"分類だけ、検索だけ、常に正しい、という説明は狭すぎます。",cs:[["大量で多様なデータから言語や文脈を学習し、複数タスクへ適応できる基盤モデルの一種である。",1,"LLMの強みである汎用性とタスク適応性を正しく説明しています。"],["ラベル付きデータから単一カテゴリだけを返す教師あり分類モデルである。",0,"教師あり分類の説明であり、LLMの生成や対話の能力を狭く捉えています。"],["社内DBをリアルタイム検索する仕組みで、モデル自体は言語を学習しない。",0,"検索やRAGとの混同です。LLMは言語パターンを学習したモデルです。"],["小規模な専門データだけで学習するため、プロンプトや評価は不要である。",0,"LLMは通常大規模データで事前学習され、業務適用にはプロンプト、RAG、評価が必要です。"]]},
+{id:"B02",cat:"basics",wiki:"ml",tags:["教師あり学習","ラベル付きデータ"],q:"{team}では過去問い合わせを契約確認、障害切り分け、解約相談などに人手分類済みです。新規問い合わせを自動分類する最も適切なMLアプローチはどれですか。",exp:"入力と正解ラベルがあるため教師あり学習です。カテゴリ未定義なら教師なし、報酬で行動改善なら強化学習です。",tip:"まず正解ラベルの有無を確認します。",cs:[["教師あり学習。入力と正解ラベルのペアから未知データの分類を学習する。",1,"分類済み問い合わせはラベル付きデータなので最も直接的です。"],["教師なし学習。カテゴリ名を使わず自然なクラスタを発見する。",0,"ラベルがない探索なら有効ですが、このケースは既にラベルがあります。"],["強化学習。報酬を与えて分類ポリシーを試行錯誤で学ぶ。",0,"報酬設計の問題ではなく、正解付き分類データの問題です。"],["RAG。最新文書を検索してカテゴリを自動的に学習させる。",0,"RAGは知識取得の手法で、ラベル付き分類問題の主回答ではありません。"]]},
+{id:"B03",cat:"basics",wiki:"ml",tags:["教師なし学習","クラスタリング"],q:"{org}は{data}からまだ定義されていない顧客や案件の自然なグループを見つけたいと考えています。正解ラベルはありません。最適な説明はどれですか。",exp:"正解ラベルがない状態でパターンや類似性を見つけるのは教師なし学習です。",tip:"ラベルなしデータの構造発見なら教師なし学習です。",cs:[["教師なし学習で、ラベルなしデータの構造や類似性を探索する。",1,"要件は自然なグループ発見であり、教師なし学習が合います。"],["教師あり学習で、既存の正解カテゴリを使って分類する。",0,"既存カテゴリがないため最初のアプローチとしては不適切です。"],["強化学習で、顧客行動に報酬を与えて分類軸を固定する。",0,"報酬最大化の行動問題ではありません。"],["ファインチューニングでモデルに顧客情報を記憶させる。",0,"記憶させることではなく、ラベルなしデータの探索が目的です。"]]},
+{id:"B04",cat:"basics",wiki:"ml",tags:["強化学習","報酬"],q:"{org}はAIエージェントに、タスク成功なら報酬、失敗ならペナルティを与えて行動選択を改善したいと考えています。該当する学習はどれですか。",exp:"環境との相互作用、報酬、行動改善という構造は強化学習です。",tip:"報酬、ペナルティ、試行錯誤があれば強化学習を疑います。",cs:[["強化学習。環境との相互作用と報酬を通じて望ましい行動方針を学ぶ。",1,"報酬に基づく行動改善を正しく表しています。"],["教師あり学習。全状況の正解行動が事前にラベル付けされている前提で学ぶ。",0,"正解ラベルではなく報酬が中心です。"],["教師なし学習。報酬を使わずログの類似性だけで分類する。",0,"ログ分析には使えますが行動改善の説明ではありません。"],["グラウンディング。外部文書に基づいて行動ポリシーを報酬なしで最適化する。",0,"グラウンディングは回答根拠の手法です。"]]},
+{id:"B05",cat:"basics",wiki:"lifecycle",tags:["MLライフサイクル","運用"],q:"{org}ではAI施策が部門ごとに乱立しています。MLライフサイクルを経営層に説明する流れとして最も適切なのはどれですか。",exp:"MLライフサイクルはデータ取り込み、準備、トレーニング、デプロイ、管理・監視の流れで継続的に改善します。",tip:"本番後の管理と監視が含まれている選択肢を選びます。",cs:[["データ取り込み、データ準備、モデルのトレーニング、デプロイ、管理・監視の順に進む。",1,"基本的なライフサイクルを網羅しています。"],["モデルを先に本番公開し、利用ログが集まってからデータ品質と評価指標を決める。",0,"品質と評価を後回しにするのは危険です。"],["モデル名を決めてプロンプトを作り、権限や監査は後から考える。",0,"データ権限や監査は初期から設計すべきです。"],["一度デプロイしたら、ドリフト監視や更新管理は不要である。",0,"本番後も継続監視が必要です。"]]},
+{id:"B06",cat:"basics",wiki:"models",tags:["Gemini","マルチモーダル"],q:"{org}はテキスト、画像、PDF資料を横断して理解し、要約やQAを行う多目的アシスタントを検討しています。Google基盤モデルとして最も自然なのはどれですか。",exp:"複数モダリティの理解と対話、要約、推論にはGeminiが中心候補です。Imagenは静止画生成、Veoは動画生成、Gemmaは軽量オープンモデルの文脈です。",tip:"理解したい入力と生成したい出力の両方を見ます。",cs:[["Gemini。複数モダリティを理解し、テキスト生成や推論を含む幅広い用途に適用しやすい。",1,"多目的・マルチモーダルQAの中心候補です。"],["Imagen。テキストから高品質な静止画像を生成する目的で使う。",0,"画像生成が主目的ではありません。"],["Veo。テキストや画像から動画を生成する目的で使う。",0,"動画生成が主目的ではありません。"],["Gemma。軽量オープンモデルの自社管理だけを目的に使う。",0,"制御性重視なら候補ですが、多モダリティQAの主回答ではありません。"]]},
+{id:"B07",cat:"basics",wiki:"models",tags:["Imagen","Veo","モダリティ"],q:"{org}のマーケティングチームは商品説明文から写実的な静止画モックを短時間で比較したいと考えています。最も適切なGoogleモデルはどれですか。",exp:"静止画像生成はImagen、動画生成はVeoです。Geminiは理解と対話、Gemmaは軽量オープンモデル文脈で見分けます。",tip:"静止画か動画かを最初に確認します。",cs:[["Imagen。テキスト記述から高品質な静止画像を生成する用途に合う。",1,"静止画モック生成に直接対応します。"],["Veo。動画生成に強いため、静止画モックにも常に最適である。",0,"動画生成ならVeoですが静止画ならImagenが直接的です。"],["Gemini。画像を理解できるため、静止画像生成専用モデルとして最適である。",0,"理解と生成専用を混同しています。"],["Gemma。オープンモデルなので写実画像生成の標準選択である。",0,"Gemmaは画像生成専用モデルではありません。"]]},
+{id:"B08",cat:"basics",wiki:"data",tags:["データ品質","RAG"],q:"{org}が{data}を根拠に社内AI検索を作ったところ、古い版と新しい版の文書が混在し、部門ごとに用語も異なります。最優先の論点はどれですか。",exp:"RAGやグラウンディングはデータ品質に依存します。完全性、整合性、関連性、可用性、権限を整備することが先です。",tip:"RAGは低品質データを自動修復しません。",cs:[["データの完全性、整合性、関連性、可用性を整え、回答根拠として使える情報源を管理する。",1,"根拠データの品質と管理が最優先です。"],["温度を上げ、矛盾を創造的な表現で吸収する。",0,"温度調整では根拠データの矛盾は解消しません。"],["ファインチューニングだけで文書の版差分を覚え込ませ、文書管理をやめる。",0,"更新性と監査性の観点で不適切です。"],["回答を短く制限すれば矛盾は利用者に見えないため十分である。",0,"出力長制限はデータ品質問題の解決ではありません。"]]},
+{id:"B09",cat:"basics",wiki:"data-types",tags:["構造化データ","ラベル付きデータ"],q:"{org}は{data}をAIに活用します。構造化データ、非構造化データ、ラベル付きデータの区別として最も適切なのはどれですか。",exp:"構造化/非構造化は形式の軸、ラベル付き/ラベルなしは正解情報の有無の軸です。",tip:"PDFだから構造化、という単純化に注意します。",cs:[["売上表や契約DBは構造化、通話メモやPDF本文は非構造化、正解カテゴリ付き履歴はラベル付きデータである。",1,"形式とラベルの有無を正しく分けています。"],["PDFはファイル形式が決まっているため常に構造化データである。",0,"PDF本文は非構造化に近いことが多いです。"],["ラベル付きデータとは機密区分ラベルだけを指す。",0,"MLでは入力に正解や分類が付与されたデータを指します。"],["生成AIは非構造化データだけを扱うため、構造化データは関係しない。",0,"構造化データも生成AIの分析支援や検索に使えます。"]]},
+{id:"B10",cat:"basics",wiki:"layers",tags:["生成AIレイヤ","エージェント"],q:"{org}の役員会で生成AI環境をレイヤで整理します。最も適切な構成はどれですか。",exp:"生成AI環境はインフラ、モデル、プラットフォーム、エージェント、アプリケーションの層で整理します。",tip:"モデルだけ、UIだけ、ネットワークだけの説明は狭すぎます。",cs:[["インフラストラクチャ、モデル、プラットフォーム、エージェント、アプリケーションの層で整理する。",1,"各層の責任と選択肢を分けて考えられます。"],["UI、ボタン、画面遷移、配色だけで整理する。",0,"アプリUIは一部であり、モデルや基盤が抜けています。"],["DNS、VPN、ロードバランサだけを主要レイヤとする。",0,"インフラの一部ですが生成AI固有レイヤが抜けています。"],["モデルだけを選べばエージェントやアプリ設計は価値に影響しない。",0,"業務価値はデータ接続、ツール利用、アプリ統合で決まります。"]]},
+{id:"B11",cat:"basics",wiki:"usecases",tags:["生成AIユースケース","要約"],q:"{team}は既存のルールベースFAQと生成AIアシスタントの違いを整理しています。生成AI導入価値として最も適切なのはどれですか。",exp:"生成AIは固定ルールを超え、文脈に応じた生成、要約、抽出、対話を支援します。ただし人間の確認とガバナンスが必要です。",tip:"何でも完全自動化、ナレッジ管理不要、は過大評価です。",cs:[["定型回答だけでなく、文脈に応じた要約、下書き、情報抽出、自然言語対話を支援できる。",1,"生成AIの代表的な価値を適切に表しています。"],["すべての判断を完全自動化し、人間のレビューを不要にできる。",0,"高リスク業務では人間の確認が重要です。"],["データが古くても自動で最新公式回答に修正するため、ナレッジ管理は不要になる。",0,"最新性は保証されないためRAGや文書管理が必要です。"],["評価や監視なしに本番導入でき、常に低コストである。",0,"コストや運用負荷は要件次第で、評価と監視が必要です。"]]},
+{id:"B12",cat:"basics",wiki:"model-selection",tags:["コンテキストウィンドウ","RAG"],q:"{org}は数百ページの社内規程から質問に答えるアシスタントを作りたい一方、規程は毎月更新されます。設計上、最も重要な観点はどれですか。",exp:"長文QAはコンテキスト長だけでなく、RAG、権限、更新頻度、コスト、性能、監査性を総合評価します。",tip:"長いコンテキストだけ、ファインチューニングだけ、は迷わせる誤答です。",cs:[["コンテキストウィンドウ、RAG、アクセス権、更新頻度、コスト、応答性能を合わせて評価する。",1,"長文・更新・権限・コストを総合的に捉えています。"],["最大コンテキストのモデルを選べば検索設計や文書更新は不要になる。",0,"長文入力は有効ですが更新・権限・根拠提示は別問題です。"],["毎月更新情報は必ずファインチューニングで記憶させるのが最善である。",0,"頻繁に変わる知識はRAGの方が更新性と監査性に優れます。"],["文書量に関係なくAIは同じ精度で答えるため検索品質は考慮しない。",0,"チャンク設計や検索品質が回答に大きく影響します。"]]},
+{id:"B13",cat:"basics",wiki:"usecases",tags:["作成","自動化","分析"],q:"{team}は{data}を使って業務効率化を進めたいと考えています。生成AIに向いたユースケースの組み合わせとして最も適切なのはどれですか。",exp:"生成AIは作成、要約、抽出、コード補助、画像/動画生成、分析支援、パーソナライズに活用できます。",tip:"できることと安全に任せられる範囲を分けます。",cs:[["問い合わせ要約、文書ドラフト、コード補助、画像・動画生成、データ分析支援、パーソナライズ体験。",1,"代表ユースケースを幅広く含みます。"],["センサーなしで物理故障を完全予測し、全法的判断を自動確定する。",0,"完全予測や高リスク判断の完全自動化は過大です。"],["既存データを使わず、一般知識だけで企業固有の在庫や規程を正確に答える。",0,"企業固有情報にはデータ連携やRAGが必要です。"],["生成AIは画像生成だけに限定し、構造化データの分析支援には使わない。",0,"構造化データの分析説明にも活用できます。"]]},
+{id:"B14",cat:"basics",wiki:"diffusion",tags:["拡散モデル","画像生成"],q:"{org}のデザインチームは、ノイズから徐々に高品質な画像を生成する仕組みについて質問しています。該当するモデル種別はどれですか。",exp:"ノイズ除去の過程を学習して画像を生成する代表的な考え方は拡散モデルです。",tip:"ノイズから画像なら拡散モデルです。",cs:[["拡散モデル。ノイズ除去過程を学習し、画像などの生成に強みを持つ。",1,"画像生成の仕組みとして適切です。"],["強化学習。報酬を最大化するため、画像生成のノイズ除去そのものを指す。",0,"強化学習は報酬に基づく行動学習です。"],["RAG。外部文書検索でノイズから画像を復元するモデルである。",0,"RAGは検索による知識補完です。"],["教師なしクラスタリング。似た画像をグループ化して新規画像を生成する。",0,"クラスタリングはパターン発見で、生成過程の説明ではありません。"]]},
+{id:"B15",cat:"basics",wiki:"agents",tags:["エージェント","ツール利用"],q:"{org}は、{users}の依頼に対しAIが状況を確認し、必要な社内システムを呼び出し、次の行動を決める仕組みを検討しています。生成AIエージェントの説明として最も適切なのはどれですか。",exp:"エージェントはモデル単体ではなく、推論、ツール利用、観察、行動を組み合わせて目標達成を支援します。",tip:"チャット画面より広い概念です。",cs:[["目標に向けて推論し、必要に応じてツールやデータソースを使い、観察結果をもとに行動するアプリケーション。",1,"エージェントの本質を捉えています。"],["ユーザーが質問を入力するだけのチャット画面で、外部システムとは連携しない。",0,"チャットUIは一部であり、ツール利用が抜けています。"],["データを保存する中央リポジトリで、推論や意思決定はしない。",0,"データストアはツールになり得ますがエージェントそのものではありません。"],["モデルを学習するGPUクラスタで、業務タスク実行は対象外である。",0,"GPUクラスタはインフラ層です。"]]},
+{id:"S01",cat:"services",wiki:"cloud",tags:["Google Cloudの強み","オープンアプローチ"],q:"{org}は生成AI基盤の選定で、将来のモデル変更や既存ツールとの連携余地を重視しています。Google Cloudの特性として最も要件に合う説明はどれですか。",exp:"Google CloudはAIファースト、エンタープライズ対応、広いAIエコシステム、オープンなアプローチを強みとして説明されます。",tip:"単一ベンダー固定や管理放棄ではなく、選択肢と統制の両立を見ます。",cs:[["Googleのモデル、オープンモデル、API、パートナー連携を用途に応じて選びやすいオープンなアプローチ。",1,"柔軟性と統合性を求める要件に合います。"],["Google製モデル以外を使えないようにして運用を単純化する閉じたアプローチ。",0,"オープン性や選択肢の説明と逆です。"],["セキュリティとプライバシーの統制を利用者側で放棄し、速度だけを優先する設計。",0,"エンタープライズ利用では統制が重要です。"],["全ユースケースで自社が基盤モデルをゼロから学習することを前提にした戦略。",0,"事前学習モデルやAPIを活用できる点がGoogle Cloudの価値です。"]]},
+{id:"S02",cat:"services",wiki:"infrastructure",tags:["TPU","GPU","ハイパーコンピュータ"],q:"{team}は大規模なAI推論と将来のモデル開発を見据え、基盤インフラの説明を求めています。Google CloudのAI向け最適化インフラとして最も適切なのはどれですか。",exp:"ハイパーコンピュータ、TPU、GPU、データセンター、クラウドコンピューティングがAI基盤の論点です。",tip:"生産性アプリや検索サービスだけをインフラと混同しないようにします。",cs:[["ハイパーコンピュータ、カスタム設計TPU、GPU、データセンター、クラウドコンピューティング。",1,"AIワークロードの学習・推論を支える基盤として適切です。"],["Gmail、Docs、Slides、Meetだけで構成される生産性基盤。",0,"Workspaceは利用者向け機能であり、AIインフラの主説明ではありません。"],["プロンプトテンプレート、チャット履歴、メモだけを保存するナレッジ基盤。",0,"学習・推論向けの計算基盤が抜けています。"],["モデルの回答を必ず正解にする検証済みデータセンター機能。",0,"インフラは性能やスケールを支えますが、正解保証は別問題です。"]]},
+{id:"S03",cat:"services",wiki:"democratization",tags:["AI民主化","AutoML","API"],q:"{org}はML専門家が少ない一方、複数部門でAI活用を広げたいと考えています。Google CloudがAI開発を民主化する方法として最も適切なのはどれですか。",exp:"ローコード/ノーコード、事前トレーニング済みモデル、API、AutoML、Model Gardenにより専門性の壁を下げます。",tip:"完全自動化ではなく、技術レベルに応じた開発手段を提供する点が重要です。",cs:[["ローコード/ノーコード、事前トレーニング済みモデル、使いやすいAPIを提供し、技術レベルに応じた構築を可能にする。",1,"AI民主化の考え方に最も合います。"],["すべての社員に分散学習コードの実装を義務づけ、標準化する。",0,"専門性の壁を下げる方向と逆です。"],["高額案件だけに最先端モデルを限定公開し、部門展開を抑制する。",0,"アクセス拡大ではなく制限になっています。"],["AIが完全自動で業務要件を決めるため、人間の入力やレビューを不要にする。",0,"要件定義やレビューは引き続き重要です。"]]},
+{id:"S04",cat:"services",wiki:"gemini-apps",tags:["Geminiアプリ","Gem"],q:"{team}がキャンペーン案のタグラインや投稿文を短時間で多数ブレインストーミングしたいと言っています。追加設定を少なく始める選択として最も適切なのはどれですか。",exp:"Geminiアプリは迅速な文章作成、アイデア出し、要約などの生産性向上に向きます。カスタムGemは継続利用の型を作る場合に有効です。",tip:"初期探索なら軽く始める、反復運用ならGemを検討します。",cs:[["Geminiアプリでキャンペーン目標と対象者を入力し、多様な下書きやタグラインを生成する。",1,"迅速なブレインストーミングに合います。"],["NotebookLMに過去資料だけを入れ、自由形式の新規コピー生成を主目的にする。",0,"NotebookLMは根拠資料の分析・整理が主で、自由な初期発想の主選択ではありません。"],["Gemini for Google Workspaceを使う前に、必ずVertex AIでカスタムモデルを学習する。",0,"初期のアイデア生成に過剰なアプローチです。"],["Veoで投稿文を生成し、動画化は後で検討する。",0,"Veoは動画生成が主用途です。"]]},
+{id:"S05",cat:"services",wiki:"workspace",tags:["Gemini for Google Workspace","生産性"],q:"{org}はGmail、Docs、Sheets、Slides、Meetでの日常業務にAI支援を組み込み、メール要約、文書作成、会議整理を効率化したいと考えています。最適な選択はどれですか。",exp:"Gemini for Google WorkspaceはWorkspaceアプリ内で文書作成、要約、分析、会議支援を行う文脈で問われます。",tip:"既存のWorkspace内の作業支援か、独立したAIアプリかを見分けます。",cs:[["Gemini for Google Workspaceを使い、既存のGmail、Docs、Sheets、Slides、Meet内で作業を支援する。",1,"Workspaceアプリ内の生産性向上に最適です。"],["Vertex AI Agent Builderで全社員のメール送信を自律エージェントに委任する。",0,"業務自動化の設計として過剰で、日常生産性支援の主選択ではありません。"],["Vertex AI Searchを導入し、Slidesのレイアウト改善を主目的にする。",0,"検索アプリ構築が主用途です。"],["Google AI Studioだけを使い、企業ユーザーのGmailやDocsに直接統合する。",0,"AI Studioは開発・プロトタイピング寄りです。"]]},
+{id:"S06",cat:"services",wiki:"notebooklm",tags:["NotebookLM","文書分析"],q:"{team}は複数の長文レポートを読み込み、根拠を確認しながら論点整理、要約、比較メモ作成をしたいと考えています。最も適切なのはどれですか。",exp:"NotebookLMはユーザーが提供した資料を根拠に、Q&A、要約、関連情報の整理を行う用途に適します。",tip:"資料に基づく研究整理ならNotebookLM、全社横断検索ならGemini EnterpriseやVertex AI Searchを検討します。",cs:[["NotebookLMを使い、アップロードした資料を根拠に要約、質問応答、メモ整理を行う。",1,"複数資料の読解と根拠付き整理に合います。"],["Geminiアプリで資料を入れずに一般知識だけから結論を作らせる。",0,"根拠資料に基づく分析という要件を満たしにくいです。"],["Vertex AIだけでモデルをファインチューニングし、資料参照機能は使わない。",0,"資料分析には過剰で、根拠参照の要件に直接合いません。"],["CCaaSを使い、レポートをコンタクトセンターの通話として処理する。",0,"顧客接点基盤であり、文書研究整理の主選択ではありません。"]]},
+{id:"S07",cat:"services",wiki:"gemini-enterprise",tags:["Gemini Enterprise","社内情報"],q:"{org}では販売、在庫、契約、ナレッジが複数システムに分散し、{users}が横断的に情報を探すのに時間を使っています。最も適切なサービスはどれですか。",exp:"Gemini Enterpriseは企業内の様々な情報源を理解し、カスタムエージェントやマルチモーダル検索でナレッジワーカーを支援する文脈です。",tip:"社内横断情報活用ならGemini Enterprise、外部検索体験ならVertex AI Searchを比較します。",cs:[["Gemini Enterpriseで、複数の企業データソースを理解するカスタムAIエージェントや検索体験を提供する。",1,"分散社内情報の利用と意思決定支援に合います。"],["Gemini for Google Workspaceだけで、全社の基幹システム接続を不要にする。",0,"Workspace内作業支援は有効ですが、分散システム横断の主回答ではありません。"],["Google AI Studioで個人ごとに試作し、企業データ統制を各自に任せる。",0,"企業横断の統制と継続運用が不足します。"],["Imagenで複数システムの情報を画像に変換して検索する。",0,"画像生成は主目的ではありません。"]]},
+{id:"S08",cat:"services",wiki:"vertex-search",tags:["Vertex AI Search","検索"],q:"{org}は自社サイトと製品ドキュメントに対し、{cust}が自然言語で質問し、関連ページや根拠付き回答に到達できる検索体験を作りたいと考えています。最も適切なのはどれですか。",exp:"Vertex AI Searchは構造化/非構造化データに対する検索アプリ、外部検索、RAG基盤として利用されます。",tip:"外部ユーザー向け検索体験と社内ナレッジアシスタントを区別します。",cs:[["Vertex AI Searchで、製品ドキュメントやWebコンテンツに対する自然言語検索アプリを構築する。",1,"外部検索体験に直接合います。"],["Gemini for Google Workspaceで顧客Webサイトの検索インデックスを自動生成する。",0,"Workspace内生産性支援が主で、外部検索アプリ構築ではありません。"],["NotebookLMを顧客全員に配布し、各自がサイト全体をアップロードする。",0,"個人資料分析向けで、外部検索サービスとして不適切です。"],["Agent Assistを使い、顧客が検索する前にオペレーターへ候補回答だけを出す。",0,"Agent Assistは担当者支援であり、顧客向け検索体験の主選択ではありません。"]]},
+{id:"S09",cat:"services",wiki:"customer-engagement",tags:["CCaaS","Conversational Agents"],q:"{org}は電話、チャット、メールのサポートを統合し、チャネル横断のルーティング、担当者管理、セキュリティを含むクラウド型コンタクトセンターを求めています。最も適切なのはどれですか。",exp:"Google Cloud Contact Center as a Serviceは統合チャネル、スケーラブルなコンタクトセンター、CRM連携などの文脈です。",tip:"単なるチャットボットか、コンタクトセンター基盤全体かを見ます。",cs:[["Google Cloud Contact Center as a Serviceを使い、チャネル統合、ルーティング、担当者管理を含む基盤を整える。",1,"包括的なコンタクトセンター要件に合います。"],["Conversational Agentsだけで、電話、メール、担当者管理を含む基盤全体を置き換える。",0,"会話自動化には有効ですが、完全なコンタクトセンター基盤とは粒度が違います。"],["Vertex AI Searchを使い、全サポートチャネルの通話制御を行う。",0,"検索機能であり、通話基盤ではありません。"],["Geminiアプリを担当者に使わせ、顧客チャネル統合は行わない。",0,"個人支援はできてもチャネル統合要件を満たしません。"]]},
+{id:"S10",cat:"services",wiki:"agent-assist",tags:["Agent Assist","Conversational Insights"],q:"{team}はオペレーターが顧客と会話中に、AIがリアルタイムでFAQ候補や次の対応を提示する仕組みを求めています。一方、管理者は通話後の傾向分析も別途検討しています。会話中支援として最も適切なのはどれですか。",exp:"Agent Assistは人間の担当者へのリアルタイム支援、Conversational Insightsは会話分析の文脈で区別します。",tip:"リアルタイム支援か事後分析かを見ます。",cs:[["Agent Assist。会話中の担当者に関連情報や回答候補を提示する。",1,"リアルタイムの担当者支援に合います。"],["Conversational Insights。会話中の担当者へ必ず次の発話を自律送信する。",0,"Insightsは分析寄りで、会話中の担当者支援そのものではありません。"],["Vertex AI Search。担当者の代わりに通話ルーティングとスクリプト送信を行う。",0,"検索は有用な部品になり得ますが、担当者支援機能の主名称ではありません。"],["Gemini Enterprise。全社情報を活用できるため、通話中支援の製品名として常に最適である。",0,"社内情報活用には有効ですが、問われているのはコンタクトセンター担当者支援です。"]]},
+{id:"S11",cat:"services",wiki:"vertex-ai",tags:["Vertex AI","MLプラットフォーム"],q:"{org}では部門ごとにMLツールが乱立し、モデル開発、評価、デプロイ、監視が分断されています。統合的に管理する中心プラットフォームとして最も適切なのはどれですか。",exp:"Vertex AIはML/生成AIソリューションの構築、デプロイ、管理を支援する統合プラットフォームです。",tip:"情報活用アプリとMLライフサイクル基盤を区別します。",cs:[["Vertex AI。モデル開発、トレーニング、評価、デプロイ、監視を一元的に扱う。",1,"MLライフサイクル統合の中心です。"],["Gemini Enterprise。従業員の社内情報活用を支援するため、ML開発基盤の主選択である。",0,"社内ナレッジ活用の文脈で、ML開発全体の主基盤ではありません。"],["BigQuery。データ分析基盤なのでモデルの開発・デプロイ・監視すべてを単独で担う。",0,"データ基盤として重要ですが、Vertex AIのような統合MLプラットフォームではありません。"],["Cloud Functions。モデル管理UIや評価基盤を提供する中心サービスである。",0,"関数実行環境であり、MLライフサイクル全体の主基盤ではありません。"]]},
+{id:"S12",cat:"services",wiki:"model-garden",tags:["Model Garden","AutoML"],q:"{team}は既存の基盤モデルやAPIを試し、必要に応じて少ないコードでモデル選定やカスタマイズを進めたいと考えています。Vertex AIで特に関係が深い機能はどれですか。",exp:"Model Gardenは利用可能なモデル探索、AutoMLは少ない専門知識でモデル作成を支援する文脈です。",tip:"モデル探索・選定ならModel Gardenを思い出します。",cs:[["Model GardenやAutoMLを活用し、事前トレーニング済みモデルの探索や低コードでのモデル作成を進める。",1,"要件に最も合います。"],["Security Command Centerでモデル候補を比較し、最良モデルを自動選定する。",0,"SCCはセキュリティリスク管理の文脈です。"],["Gemini for Workspaceでモデルのトレーニングジョブを管理する。",0,"Workspaceアプリ内の生産性支援が主用途です。"],["Cloud NATでモデルの文体を調整する。",0,"ネットワーク機能でありモデル調整ではありません。"]]},
+{id:"S13",cat:"services",wiki:"agent-builder",tags:["Vertex AI Agent Builder","カスタムエージェント"],q:"{org}は、社内ナレッジ検索、チケット作成、承認申請API呼び出しを組み合わせるカスタムエージェントを構築したいと考えています。最も適切なのはどれですか。",exp:"Vertex AI Agent Builderはデータストアやツールを使うカスタムエージェント構築に適しています。",tip:"複数ツールを使ってタスク実行するならAgent Builderです。",cs:[["Vertex AI Agent Builderで、データストアや関数ツールを接続したカスタムエージェントを構築する。",1,"検索と業務API呼び出しを組み合わせる要件に合います。"],["Vertex AI Searchだけを使い、チケット作成や承認API呼び出しはモデルに記憶させる。",0,"検索だけでは外部アクション実行の要件を満たしません。"],["NotebookLMで各利用者がチケット情報を手動アップロードし、申請も手作業にする。",0,"個人資料分析向けで、業務自動化には不足します。"],["Geminiアプリでプロンプトを配布し、API認証と監査ログは個人判断にする。",0,"企業アプリとしての統制が不足します。"]]},
+{id:"S14",cat:"services",wiki:"agent-tools",tags:["Cloud Run","Cloud Functions","関数ツール"],q:"AIエージェントが注文状況を確認し、条件を満たす場合のみ返金APIを呼び出す必要があります。安全な設計として最も適切なのはどれですか。",exp:"エージェントから外部操作を行う場合、Cloud RunやCloud Functionsなどで認証、検証、監査を備えた関数/ツールとして公開します。",tip:"モデルに権限を直渡しせず、制御されたツール境界を作ります。",cs:[["Cloud RunやCloud Functionsで認証、入力検証、権限、監査を実装した関数ツールを用意し、エージェントから呼び出す。",1,"安全なツール利用設計です。"],["モデルに全顧客データとAPIキーをプロンプトで渡し、返金可否を自律判断させる。",0,"情報漏えいと権限濫用のリスクが高すぎます。"],["返金ロジックを自然文でプロンプトに書くだけで、外部システムの状態確認は省略する。",0,"実データ確認と業務ルール実装が必要です。"],["担当者の個人アカウントでAPIを呼ばせ、エージェントの監査ログは残さない。",0,"監査性と権限管理に問題があります。"]]},
+{id:"S15",cat:"services",wiki:"ai-apis",tags:["Speech-to-Text","Document AI","Vision API"],q:"{org}は通話録音の文字起こし、請求書の項目抽出、製品写真の内容確認を生成AIアプリの一部として実装したいと考えています。関連APIの組み合わせとして最も適切なのはどれですか。",exp:"音声はSpeech-to-Text/Text-to-Speech、文書抽出はDocument AI、画像理解はCloud Vision APIなどを組み合わせます。",tip:"タスクのモダリティごとにAPIを対応させます。",cs:[["Speech-to-Text API、Document AI API、Cloud Vision APIなどを用途に応じて組み合わせる。",1,"音声、文書、画像の各タスクに合います。"],["Vertex AI Searchだけで音声認識、帳票抽出、画像認識をすべて置き換える。",0,"検索サービスだけでは各モダリティの専用処理をすべて担いません。"],["Gemini for Google Workspaceで請求書抽出APIと通話録音処理基盤を直接構築する。",0,"Workspace内支援とアプリAPI構築を混同しています。"],["Text-to-Speech APIだけで通話録音の文字起こしと請求書抽出を実施する。",0,"Text-to-Speechはテキストから音声生成です。"]]},
+{id:"S16",cat:"services",wiki:"studios",tags:["Vertex AI Studio","Google AI Studio"],q:"開発チームはGemini APIで素早くプロトタイプを作りつつ、企業データ、IAM、Google Cloud上の運用も見据えています。Vertex AI StudioとGoogle AI Studioの使い分けとして最も適切なのはどれですか。",exp:"Google AI StudioはGemini APIの迅速な試作、Vertex AI StudioはGoogle Cloud上のエンタープライズ開発・検証に寄せて考えます。",tip:"試作の速さと企業運用の統制を分けて理解します。",cs:[["Google AI Studioは迅速なGemini API試作、Vertex AI StudioはGoogle Cloud上の企業向け開発・検証に適する。",1,"両者の使い分けとして適切です。"],["Vertex AI Studioはメール作成専用、Google AI StudioはDNS管理専用である。",0,"どちらも生成AI開発に関係します。"],["Google AI Studioだけを使えばIAM、監査、企業データ運用の考慮が不要になる。",0,"企業運用では統制設計が必要です。"],["Vertex AI Studioは画像保存、Google AI Studioは動画再生を主目的とする。",0,"生成AIモデルの試作・開発環境です。"]]},
+{id:"S17",cat:"services",wiki:"rag-services",tags:["RAG API","Google検索によるグラウンディング"],q:"{org}は自社規程に基づく回答と、公開Web上の最新一般情報に基づく回答をユースケースごとに分けたいと考えています。Google Cloudのグラウンディング選択として最も適切なのはどれですか。",exp:"自社データにはVertex AI SearchやRAG API、ワールドデータにはGoogle検索によるグラウンディングを検討します。",tip:"根拠データの所在を見て選びます。",cs:[["自社データにはVertex AI Search/RAG API、公開Web情報にはGoogle検索によるグラウンディングを検討する。",1,"根拠ソースの違いに合わせた選択です。"],["すべての最新情報はファインチューニングで覚えさせ、検索は使わない。",0,"更新頻度が高い情報にはRAGや検索グラウンディングが有効です。"],["社内規程も公開Webも同じ個人用Notebookだけで本番回答させる。",0,"企業運用・権限・更新管理の観点が不足します。"],["温度を下げれば根拠ソースの違いは考慮不要になる。",0,"ランダム性を下げても最新性や根拠性は保証されません。"]]},
+{id:"S18",cat:"services",wiki:"governance",tags:["データ管理","プライバシー"],q:"{org}は生成AI導入で、自社データの管理、プライバシー、ガバナンス、オープンモデルの選択肢を経営条件にしています。サービス選定で最も重視すべき説明はどれですか。",exp:"企業利用ではユーザーデータ管理、セキュリティ、プライバシー、ガバナンス、モデル選択、事前構築済みソリューションの組み合わせを評価します。",tip:"機能だけでなく統制を見ます。",cs:[["セキュリティ、プライバシー、ガバナンス、データ管理、モデル選択肢を含めてエンタープライズ要件に合うか評価する。",1,"企業導入の判断として適切です。"],["最も新しいモデル名だけで選び、データ管理は導入後に各部門で個別対応する。",0,"ガバナンスの分断を招きます。"],["オープンモデルを使えばプライバシーと権限設計は不要になる。",0,"モデル選択とデータ統制は別問題です。"],["事前構築済みソリューションは統制できないため、必ず全機能をゼロから作る。",0,"事前構築済みでも統制設計と組み合わせて活用できます。"]]},
+{id:"I01",cat:"improve",wiki:"limitations",tags:["ハルシネーション","基盤モデルの限界"],q:"{team}が生成AIに未公開のスタートアップ売上を質問したところ、AIは存在しない数字とプレスリリースを自信ありげに提示しました。この限界を最も正確に表す用語はどれですか。",exp:"事実に基づかない、もっともらしい捏造出力はハルシネーションです。ナレッジカットオフは最新情報を知らないこと、バイアスは偏りです。",tip:"存在しない根拠を作る場合はハルシネーションです。",cs:[["ハルシネーション。実在しない情報をもっともらしく生成している。",1,"事例の本質に合います。"],["ナレッジカットオフ。最新情報を知らないだけで、捏造出力は別問題ではない。",0,"最新情報を知らないことが背景でも、存在しない数字を作るのはハルシネーションです。"],["バイアス。特定集団に不公平な出力をしたことが主問題である。",0,"この事例は公平性より事実捏造が中心です。"],["データアクセシビリティ。ユーザーが質問できたため十分に解決済みである。",0,"アクセス性の問題ではなく出力信頼性の問題です。"]]},
+{id:"I02",cat:"improve",wiki:"rag",tags:["RAG","最新情報"],q:"{org}の社内チャットボットは、新しい製品仕様に関する質問に古い情報で答えています。モデル全体の再学習なしで最新文書を反映したい場合、最も適切な手法はどれですか。",exp:"RAGは回答生成前に外部文書から関連情報を検索し、最新文書に基づく回答を支援します。",tip:"頻繁に更新される知識はRAGが第一候補です。",cs:[["RAGを使い、最新の公式ドキュメントを検索して回答生成に利用する。",1,"再学習せず最新情報を取り込む要件に合います。"],["ファインチューニングだけで毎回新文書を覚え込ませ、検索基盤を不要にする。",0,"更新頻度が高い知識には運用負荷が高く、根拠提示も弱くなりがちです。"],["温度を上げて回答の多様性を増やし、新仕様に当たりやすくする。",0,"正確性は改善せず誤答が増える可能性があります。"],["トークン数を減らして短く答えさせる。",0,"回答長は変わっても最新性は改善しません。"]]},
+{id:"I03",cat:"improve",wiki:"fine-tuning",tags:["ファインチューニング","RAGとの違い"],q:"{team}は最新規程の参照はRAGで安定しましたが、回答文体がブランド基準に合わず、特定の分類判断の振る舞いも不安定です。次の改善策として最も適切なのはどれですか。",exp:"最新知識はRAG、文体や特定タスクの振る舞い調整はプロンプト改善やファインチューニングが候補です。",tip:"知識更新と振る舞い調整を分けます。",cs:[["プロンプト改善で基準を明確化し、必要なら代表例でファインチューニングして文体やタスク振る舞いを調整する。",1,"RAGで知識を維持しつつ、振る舞い面の改善に対応できます。"],["RAGをやめ、全規程とブランド文体をモデルに一度だけ記憶させる。",0,"更新性と根拠提示が弱くなります。"],["温度を最大にしてブランドらしい多様な表現を増やす。",0,"一貫性や分類安定性が下がる可能性があります。"],["HITLを廃止し、モデルの判断をそのまま採用する。",0,"品質課題がある状態で人間確認をなくすのは危険です。"]]},
+{id:"I04",cat:"improve",wiki:"prompting",tags:["プロンプトエンジニアリング","少数ショット"],q:"{org}では担当者によってプロンプトがばらばらで、同じ文書要約でも出力形式が揺れています。最も適切なプロンプト改善はどれですか。",exp:"目的、役割、文脈、制約、出力形式、評価基準、例を明確にすると出力が安定します。少数ショットは期待形式を示すのに有効です。",tip:"曖昧な依頼を構造化します。",cs:[["役割、目的、前提、禁止事項、出力形式、良い例/悪い例を明示し、少数ショットで期待出力を示す。",1,"出力形式と品質基準の揺れに直接対処します。"],["質問を短くし、文脈や制約はモデルが推測するようにする。",0,"曖昧さが増えます。"],["すべての業務でChain-of-Thoughtを全文出力させれば十分である。",0,"出力形式や制約の明示は別途必要です。"],["Top-Pだけを固定すれば、業務要件の理解と形式遵守は保証される。",0,"サンプリング設定だけでは要件理解は保証されません。"]]},
+{id:"I05",cat:"improve",wiki:"react",tags:["ReAct","ツール利用"],q:"{org}のエージェントは、ユーザー依頼を受けて検索し、結果を観察し、必要ならAPIを呼び、最終回答を返す必要があります。プロンプト/設計パターンとして最も近いのはどれですか。",exp:"ReActは推論とアクションを組み合わせ、ツール利用と観察結果を次の判断に反映する考え方です。",tip:"Reasoning + Acting = ReActと覚えます。",cs:[["ReAct。推論と行動を組み合わせ、ツール実行結果を観察して次の判断に使う。",1,"検索やAPI呼び出しを伴うエージェント設計に合います。"],["ゼロショット。例もツールも使わず、最初の回答だけで完結させる。",0,"ツール利用と観察ループの要件に合いません。"],["ワンショット。1つの例だけで外部システム操作の安全性を保証する。",0,"例示は有用ですが、ツール利用設計の主概念ではありません。"],["拡散プロンプト。ノイズから業務APIを復元する。",0,"画像生成の概念との混同です。"]]},
+{id:"I06",cat:"improve",wiki:"sampling",tags:["温度","Top-P","安全性設定"],q:"{team}はFAQ回答では一貫性を重視し、広告コピー案では多様性を重視したいと考えています。サンプリング設定の理解として最も適切なのはどれですか。",exp:"温度やTop-Pは出力の多様性やランダム性に影響します。安全性設定、出力長、トークン数とは役割が違います。",tip:"事実回答は低め、発想支援は高めが典型です。",cs:[["FAQでは低めの温度で一貫性を高め、コピー案では必要に応じて温度やTop-Pで多様性を調整する。",1,"用途に応じた調整として適切です。"],["温度を高くすると常に事実性が向上するため、FAQにも最大値を使う。",0,"高温度は多様性を増やしますが事実性を保証しません。"],["Top-Pは出力文字数を指定する値なので、多様性には影響しない。",0,"Top-Pは確率分布からの候補選択に関係します。"],["安全性設定を下げるほど企業利用では必ず品質が上がる。",0,"安全性とリスク管理は企業利用で重要です。"]]},
+{id:"I07",cat:"improve",wiki:"grounding",tags:["グラウンディング","根拠"],q:"{org}はAI回答に根拠リンクを付け、社内規程、契約書、公開Web情報を区別して扱いたいと考えています。グラウンディングの説明として最も適切なのはどれですか。",exp:"グラウンディングはモデル出力を検証可能な情報源に結び付ける手法で、自社データ、サードパーティデータ、ワールドデータを区別します。",tip:"出力をどの根拠に縛るかがポイントです。",cs:[["モデル出力を検証可能な情報源に結び付け、自社データ、外部データ、ワールドデータを用途別に使い分ける。",1,"グラウンディングの要点を正しく説明しています。"],["モデルの重みを必ず更新し、根拠文書を不要にすること。",0,"これはファインチューニング寄りの説明で、根拠参照とは異なります。"],["回答を短くして、根拠がなくても誤りを目立たなくすること。",0,"信頼性向上ではありません。"],["ユーザーが納得する雰囲気の文体に変えること。",0,"文体ではなく根拠との接続が中心です。"]]},
+{id:"I08",cat:"improve",wiki:"monitoring",tags:["継続評価","ドリフト監視"],q:"{org}は生成AIアシスタントを本番導入しました。導入後のGoogle Cloud推奨プラクティスに近い運用はどれですか。",exp:"本番後はKPI、パフォーマンス、ドリフト、バージョン、セキュリティ更新、ユーザー影響を継続的に監視・評価します。",tip:"リリースして終わりではありません。",cs:[["KPI、正答品質、ユーザー影響、モデル/プロンプトのバージョン、セキュリティ更新、ドリフトを継続監視する。",1,"本番運用として適切です。"],["初回評価で合格したら、モデル更新や文書変更があっても再評価しない。",0,"更新により挙動が変わるため継続評価が必要です。"],["ログを残さないことでプライバシーと監査を同時に満たす。",0,"プライバシーに配慮した監査ログ設計が必要です。"],["ユーザーからの苦情が出るまでKPIを定義しない。",0,"成功指標は事前に定義します。"]]},
+{id:"I09",cat:"improve",wiki:"hitl",tags:["HITL","高リスク業務"],q:"{org}のAIは{risk}に関わる回答や判断を支援します。自動化による効率化は重要ですが、誤判断の影響も大きいです。最も適切な対策はどれですか。",exp:"高リスク領域では人間参加型(HITL)、承認ワークフロー、監査、根拠提示、エスカレーションを設けます。",tip:"全部自動化より、リスクに応じた人間確認です。",cs:[["リスクの高い判断にはHITL、承認、根拠確認、エスカレーションを組み込み、AIは意思決定支援に位置づける。",1,"高リスク業務に適した制御です。"],["モデル精度が高ければ、規制・法務・顧客影響のある判断も完全自動承認する。",0,"高リスク判断には人間の責任と確認が必要です。"],["プロンプトに『慎重に答えて』と書けば、承認ワークフローは不要になる。",0,"プロンプトだけでは統制になりません。"],["誤回答を減らすため、利用者に質問内容を記録させない。",0,"監査性が失われます。"]]},
+{id:"I10",cat:"improve",wiki:"evaluation",tags:["評価設計","KPI"],q:"{team}はAI回答の品質評価を始めます。ビジネスで使える評価設計として最も適切なのはどれですか。",exp:"正確性、根拠性、安全性、完了率、ユーザー満足度、コスト、遅延などをユースケース別に評価し、代表的テストセットで継続比較します。",tip:"単一の印象評価ではなく、複数指標と継続比較です。",cs:[["代表的な質問セットを作り、正確性、根拠性、安全性、完了率、満足度、コスト、遅延を継続的に比較する。",1,"業務価値とリスクの両方を評価できます。"],["最初の5問に正解したら全社本番利用で十分と判断する。",0,"サンプルが少なくリスクを把握できません。"],["ユーザー満足度だけを見て、根拠や安全性は評価しない。",0,"もっともらしい誤回答を見逃します。"],["コストだけが低ければ、回答品質は問わない。",0,"品質とリスクも重要です。"]]},
+{id:"T01",cat:"strategy",wiki:"usecase-selection",tags:["ユースケース選定","ビジネス要件"],q:"{org}が生成AI導入を始めます。最初のステップとして最も適切なのはどれですか。",exp:"ビジネス課題、成功指標、データ可用性、技術制約、リスク、運用体制を整理し、高価値で管理可能なユースケースを選びます。",tip:"モデル選定より前に課題と指標を決めます。",cs:[["ビジネス課題、成功指標、データ、リスク、制約を整理し、価値が高く管理可能なユースケースを選ぶ。",1,"導入初期の王道です。"],["話題のモデル名を先に決め、その後に使い道を探す。",0,"技術起点すぎて成果につながりにくいです。"],["全業務を同時に自動化し、失敗した部門だけ後で止める。",0,"リスクと変更管理が大きすぎます。"],["データや権限が未整備でも、まず本番利用者に公開して反応を見る。",0,"ガバナンスと安全性の観点で危険です。"]]},
+{id:"T02",cat:"strategy",wiki:"adoption",tags:["パイロット","変更管理"],q:"{org}はPoC後に全社展開を検討しています。組織統合の進め方として最も適切なのはどれですか。",exp:"パイロット、評価、ガバナンス、トレーニング、変更管理、段階拡大が重要です。",tip:"小さく検証し、学びを標準化して拡大します。",cs:[["パイロットで効果とリスクを測定し、利用ルール、教育、運用体制、変更管理を整えて段階的に拡大する。",1,"現実的で安全な展開です。"],["PoCで一度動いたら、KPIを定義せずに即日全社必須利用にする。",0,"効果測定と変更管理が不足します。"],["各部門に自由利用を任せ、共通ガイドラインやデータ統制は設けない。",0,"シャドーAIやリスク増大につながります。"],["利用者教育を省略し、AIの回答を常に正解として扱う文化を作る。",0,"責任あるAI利用に反します。"]]},
+{id:"T03",cat:"strategy",wiki:"roi",tags:["効果測定","ROI"],q:"{team}は生成AI施策の成果を役員に報告します。ビジネス影響の測定指標として最も適切なのはどれですか。",exp:"業務時間削減、品質、顧客満足度、採用率、コスト削減、リスク低減、収益影響などが候補です。",tip:"利用回数だけでは価値を測れません。",cs:[["処理時間削減、回答品質、顧客満足度、利用定着率、コスト削減、リスク低減、売上貢献を組み合わせて測る。",1,"業務価値とリスクをバランスよく測れます。"],["生成された文字数とプロンプト回数だけで価値を判断する。",0,"活動量であって成果とは限りません。"],["モデル名の知名度とデモの見栄えだけで投資判断する。",0,"実業務への効果測定が必要です。"],["人間の作業時間が増えてもAI利用率が高ければ成功とする。",0,"本来の効率化や品質向上を見失っています。"]]},
+{id:"T04",cat:"strategy",wiki:"saif",tags:["SAIF","IAM","SCC"],q:"{org}は生成AIを安全に導入するため、MLライフサイクル全体の攻撃や不正使用を考慮したいと考えています。最も適切な組み合わせはどれですか。",exp:"SAIFはAIシステムを安全に設計・運用する考え方を提供し、IAM、Security Command Center、ワークロード監視などと組み合わせます。",tip:"安全なAIはモデルだけでなくデータ、権限、運用を含みます。",cs:[["SAIFの考え方を踏まえ、IAMでアクセス制御し、Security Command Centerや監視ツールでリスクと異常を把握する。",1,"安全なAI導入の包括的な考え方です。"],["SAIFを使えばIAMや監視は不要になり、モデル出力は必ず安全になる。",0,"フレームワークは対策不要を意味しません。"],["IAMは画像生成品質を上げ、Security Command Centerはプロンプトを自動改善する。",0,"各サービスの目的が違います。"],["セキュリティは本番後に問題が出てから検討し、PoCでは権限を広く付与する。",0,"初期からセキュリティを設計すべきです。"]]},
+{id:"T05",cat:"strategy",wiki:"responsible-ai",tags:["説明可能性","アカウンタビリティ"],q:"{org}のAIが候補者選考や与信補助に使われ、利用者から『なぜその判断になったのか』と問われています。責任あるAIの対応として最も適切なのはどれですか。",exp:"透明性、説明可能性、アカウンタビリティ、公平性、監査可能性が重要です。",tip:"公平性評価だけで説明可能性が満たされるわけではありません。",cs:[["判断根拠、利用データ、制約、レビュー責任を説明できる仕組みを設け、必要に応じて人間が確認する。",1,"透明性と説明責任に対応します。"],["モデルの性能が高ければ、判断理由を開示しなくても信頼される。",0,"高リスク領域では説明可能性が重要です。"],["不公平が疑われた場合だけログを削除して再実行する。",0,"監査性を損ないます。"],["ファインチューニングを行えば、個別判断の説明責任は不要になる。",0,"性能改善と説明責任は別問題です。"]]},
+{id:"T06",cat:"strategy",wiki:"privacy",tags:["プライバシー","匿名化","仮名化"],q:"{org}は{data}に個人情報や顧客固有情報を含む状態で生成AI活用を検討しています。最も適切なプライバシー対応はどれですか。",exp:"データ最小化、目的明確化、匿名化、仮名化、アクセス制御、保持期間、監査を検討します。",tip:"入れられるデータを全部入れる、は危険です。",cs:[["利用目的を明確にし、データ最小化、匿名化/仮名化、アクセス制御、保持期間、監査を設計する。",1,"プライバシーリスクに対する基本対応です。"],["精度向上のため個人情報を全利用者のプロンプトにそのまま含める。",0,"不必要な個人情報共有は避けるべきです。"],["社内利用ならプライバシーリスクはないため、同意や権限を考えない。",0,"社内利用でも個人情報保護と権限管理が必要です。"],["匿名化すれば必ず再識別不可能なので、他の対策は不要になる。",0,"匿名化の強度確認や複合的対策が必要です。"]]},
+{id:"T07",cat:"strategy",wiki:"bias-fairness",tags:["バイアス","公平性","データ品質"],q:"{org}のAIが特定属性の顧客や候補者に不利な結果を出している疑いがあります。最も適切な対応はどれですか。",exp:"データ品質、代表性、バイアス、公平性指標、影響評価、継続監視、人間レビューを組み合わせます。",tip:"データを増やすだけ、説明するだけ、では不十分な場合があります。",cs:[["データの代表性と品質を確認し、公平性評価、影響分析、人間レビュー、継続監視を実施する。",1,"偏りの原因と影響に体系的に対処できます。"],["より大きなデータを集めれば、偏りは必ず自動的に消える。",0,"大規模でも偏りを含むデータなら問題は残ります。"],["不利な結果を隠すため、利用者への説明を簡略化する。",0,"透明性と信頼を損ないます。"],["一度公平性評価を通過したら、データや社会状況が変わっても再評価しない。",0,"継続監視が必要です。"]]}
+];
+CATS.improve=CATS.improvement; delete CATS.improvement;
+const CAT_ORDER=["basics","services","improve","strategy"];
+const KEY="gail_5set_progress_v1";
+const WIKI={
+foundation:{title:"基盤モデル・LLM・生成AIの基礎",cat:"basics",keys:["LLM","基盤モデル","マルチモーダル","生成AI"],body:["生成AIは、学習済みモデルを使って新しいテキスト、画像、コード、動画などを生成する技術です。LLMは大量で多様なデータから言語パターンや文脈を学習した基盤モデルの一種で、要約、分類、抽出、対話、下書き作成などへ適応できます。","試験では『何ができるか』だけでなく、『常に正しいわけではない』『最新情報や社内情報はRAGやグラウンディングで補う』という限界もセットで問われます。"],pit:["LLMを単なる分類器や検索エンジンと捉えない。","マルチモーダルは複数形式の入力や出力を扱える点が価値。"]},
+ml:{title:"MLアプローチ: 教師あり・教師なし・強化学習",cat:"basics",keys:["教師あり","教師なし","強化学習","ラベル"],body:["教師あり学習は入力と正解ラベルのペアから学習します。問い合わせ分類や需要予測など、過去の正解があるタスクに向きます。","教師なし学習はラベルなしデータの構造や類似性を発見します。顧客クラスタリングや未知パターン発見に使われます。","強化学習は行動に対する報酬やペナルティを通じて方策を改善します。試行錯誤、報酬最大化、環境との相互作用がキーワードです。"],pit:["『ディープラーニング』はモデル構造であり、報酬で学ぶかどうかの分類とは別。","ラベル付きデータがある場合は教師ありを疑う。"]},
+lifecycle:{title:"MLライフサイクルと運用",cat:"basics",keys:["データ取り込み","デプロイ","監視","ライフサイクル"],body:["MLライフサイクルは、データの取り込み、データ準備、モデルのトレーニング、デプロイ、管理・監視という流れで整理できます。","生成AI導入でも本番後のKPI監視、バージョン管理、セキュリティ更新、ドリフト監視が重要です。PoCで動いたことと、継続運用できることは別です。"],pit:["デプロイ後に評価を止めない。","データ品質や権限設計を後回しにしない。"]},
+models:{title:"Google基盤モデル: Gemini / Gemma / Imagen / Veo",cat:"basics",keys:["Gemini","Gemma","Imagen","Veo"],body:["Geminiはマルチモーダル理解、対話、要約、推論、コード支援など幅広い用途の中心候補です。","Gemmaは軽量なオープンモデル系の文脈で、制御性やカスタマイズ、開発者による検証で問われます。","Imagenはテキストから高品質な静止画像を生成する用途に向きます。","Veoはテキストや画像から動画を生成する用途に向きます。"],pit:["静止画はImagen、動画はVeo。","Geminiは画像を理解できても、静止画生成専用の最適解とは限らない。"]},
+data:{title:"データ品質とアクセシビリティ",cat:"basics",keys:["データ品質","完全性","整合性","関連性"],body:["AIの出力品質は根拠データの品質に強く依存します。完全性、整合性、関連性、可用性、形式、費用、権限を確認します。","RAGを入れても、古い文書、重複、矛盾、権限不備があると回答品質や信頼性は下がります。"],pit:["RAGは低品質データを魔法のように修復しない。","文書の版管理とアクセス権は試験で狙われやすい。"]},
+"data-types":{title:"構造化・非構造化・ラベル付きデータ",cat:"basics",keys:["構造化","非構造化","ラベル付き","ラベルなし"],body:["構造化データは表やDBのように行・列で整理されたデータです。非構造化データはメール本文、PDF本文、音声、画像、動画などです。","ラベル付きデータは入力に正解や分類が付いているデータです。ラベルなしデータは正解カテゴリが付いていないデータです。"],pit:["PDFはファイル形式が決まっていても中身は非構造化として扱うことが多い。","構造化/非構造化とラベル付き/なしは別軸。"]},
+layers:{title:"生成AI環境のレイヤ",cat:"basics",keys:["インフラ","モデル","プラットフォーム","エージェント","アプリケーション"],body:["生成AI環境は、インフラストラクチャ、モデル、プラットフォーム、エージェント、アプリケーションのレイヤで考えると整理しやすくなります。","ビジネス価値はモデル単体ではなく、データ接続、ツール利用、アプリ統合、ガバナンスによって決まります。"],pit:["モデル名だけで設計を終えない。","UIだけ、ネットワークだけの説明は狭い。"]},
+usecases:{title:"生成AIユースケース",cat:"basics",keys:["要約","作成","検出","自動化","パーソナライズ"],body:["代表ユースケースは、テキスト生成、要約、情報抽出、画像生成、コード生成、動画生成、データ分析支援、パーソナライズされた体験です。","試験では、業務要件に対してどのユースケースが自然か、どこに人間確認が必要かを選ばせる問題が出やすいです。"],pit:["全自動化を安易に選ばない。","高リスク判断はHITLや承認を入れる。"]},
+diffusion:{title:"拡散モデル",cat:"basics",keys:["拡散モデル","画像生成","ノイズ"],body:["拡散モデルは、ノイズから徐々に画像などを生成する考え方としてよく説明されます。Imagenのような画像生成モデルを理解する際の基礎用語です。"],pit:["強化学習やRAGと混同しない。"]},
+agents:{title:"生成AIエージェントの基本",cat:"basics",keys:["エージェント","ツール","行動","観察"],body:["生成AIエージェントは、目標に向かって推論し、ツールやデータソースを使い、観察結果を次の行動に反映してタスク達成を支援するアプリケーションです。","単なるチャットUIではなく、関数、データストア、プラグイン、APIなどを安全に使う設計が重要です。"],pit:["データストアはエージェントそのものではなくツールになり得る。","外部操作には権限、検証、監査が必要。"]},
+cloud:{title:"Google Cloudの生成AIにおける強み",cat:"services",keys:["AIファースト","エンタープライズ","オープン"],body:["Google Cloudの強みは、AIファーストのアプローチ、エンタープライズ対応、Googleプロダクト全体のAIエコシステム、オープンなアプローチにあります。","企業利用では、責任性、安全性、プライバシー、信頼性、スケーラビリティを確認します。"],pit:["ベンダーロックイン回避や選択肢を求める問題ではオープンアプローチが重要。"]},
+infrastructure:{title:"AI向け最適化インフラ",cat:"services",keys:["ハイパーコンピュータ","TPU","GPU","データセンター"],body:["AIワークロードには、ハイパーコンピュータ、GoogleのカスタムTPU、GPU、データセンター、クラウドコンピューティングなどの基盤が関わります。","試験では細かな構築手順より、これらが大規模AIの学習・推論を支えるというビジネス価値が問われます。"],pit:["WorkspaceやチャットUIをAIインフラそのものと混同しない。"]},
+democratization:{title:"AI開発の民主化",cat:"services",keys:["ローコード","ノーコード","事前トレーニング済みモデル","API","AutoML"],body:["Google Cloudはローコード/ノーコード、事前トレーニング済みモデル、API、Model Garden、AutoMLなどで、専門家以外もAI活用を進めやすくします。","完全自動化ではなく、技術レベルに応じた構築手段を提供することがポイントです。"],pit:["AI民主化は『人間の入力が不要』ではない。"]},
+"gemini-apps":{title:"Geminiアプリ / Gemini Advanced / Gem",cat:"services",keys:["Geminiアプリ","Gemini Advanced","Gem"],body:["Geminiアプリは、文章作成、要約、アイデア出し、計画立案、学習支援など、個人やチームの迅速な作業支援に使いやすいビルド済み生成AIツールです。","Gemは特定の役割や指示を持つカスタム支援として使われます。初期ブレインストーミングはGeminiアプリ、繰り返し利用するブランド基準や役割はGemを検討します。"],pit:["NotebookLMは資料に基づく分析、Geminiアプリは自由な生成や対話に向く。"]},
+workspace:{title:"Gemini for Google Workspace",cat:"services",keys:["Gmail","Docs","Sheets","Slides","Meet","Workspace"],body:["Gemini for Google Workspaceは、Gmail、Docs、Sheets、Slides、Meetなどの日常業務に生成AI支援を組み込みます。","メール要約、文書作成、スプレッドシート分析、プレゼン作成、会議支援などが代表的です。"],pit:["企業の全システム横断検索やカスタムエージェント構築とは別の文脈。"]},
+notebooklm:{title:"NotebookLM",cat:"services",keys:["NotebookLM","文書分析","根拠付き回答"],body:["NotebookLMは、ユーザーが提供した資料を根拠に、要約、Q&A、比較、メモ整理を行うAIファーストのノートブックです。","複数の長文レポートを分析してトレンドを整理するようなリサーチ業務に適しています。"],pit:["全社基幹システム横断の本番検索基盤ではなく、資料ベースの理解支援と考える。"]},
+"gemini-enterprise":{title:"Gemini Enterprise",cat:"services",keys:["Gemini Enterprise","社内情報","カスタムエージェント","マルチモーダル検索"],body:["Gemini Enterpriseは、企業内のさまざまなデータソースにアクセスして理解し、ナレッジワーカーが情報を探し、活用し、タスクを進めるためのカスタムAIエージェントや検索体験を提供する文脈で問われます。","Cloud NotebookLM API、マルチモーダル検索、カスタムエージェントなどがキーワードです。"],pit:["外部顧客向け検索だけならVertex AI Searchが自然な場合がある。","MLライフサイクルの中心基盤はVertex AI。"]},
+"vertex-search":{title:"Vertex AI Search",cat:"services",keys:["Vertex AI Search","検索","外部検索","RAG"],body:["Vertex AI Searchは、構造化・非構造化データに対する検索アプリケーションや、外部検索体験、事前構築済みRAGの文脈で出題されます。","製品ドキュメントやWebサイトを自然言語で検索できるようにしたい場合に有力です。"],pit:["NotebookLMの個人資料分析、Gemini Enterpriseの企業情報活用と粒度を区別する。"]},
+"customer-engagement":{title:"Customer Engagement Suite / CCaaS",cat:"services",keys:["CCaaS","Conversational Agents","Agent Assist","Conversational Insights"],body:["GoogleのCustomer Engagement Suiteには、Conversational Agents、Agent Assist、Conversational Insights、Google Cloud Contact Center as a Serviceなどの顧客接点向け機能が含まれます。","CCaaSはチャネル統合や担当者管理を含むコンタクトセンター基盤、Conversational Agentsは会話自動化、Agent Assistは担当者支援、Conversational Insightsは会話分析と整理できます。"],pit:["『チャットボット』と『コンタクトセンター基盤全体』の違いに注意。"]},
+"agent-assist":{title:"Agent AssistとConversational Insights",cat:"services",keys:["Agent Assist","Conversational Insights","リアルタイム支援"],body:["Agent Assistは、顧客対応中の人間の担当者に回答候補や関連情報を提示するリアルタイム支援です。","Conversational Insightsは通話や会話ログの分析、傾向把握、品質改善に使う文脈です。"],pit:["会話中支援ならAgent Assist、事後分析ならConversational Insights。"]},
+"vertex-ai":{title:"Vertex AI",cat:"services",keys:["Vertex AI","Model Garden","AutoML","MLOps"],body:["Vertex AIは、MLおよび生成AIソリューションを構築、デプロイ、管理するGoogle Cloudの統合プラットフォームです。","モデル開発、トレーニング、評価、デプロイ、監視、Model Garden、AutoMLなどの文脈で問われます。"],pit:["Gemini Enterpriseは社内情報活用、Vertex AIは開発者・MLライフサイクル寄り。"]},
+"model-garden":{title:"Model Garden / AutoML",cat:"services",keys:["Model Garden","AutoML","事前トレーニング済みモデル"],body:["Model Gardenは利用可能なモデルを探索・選定する文脈で、AutoMLは少ない専門知識でもモデル作成を進める文脈で出ます。","AI民主化とVertex AIの機能理解をつなげて覚えると得点しやすくなります。"],pit:["セキュリティツールやWorkspaceと混同しない。"]},
+"agent-builder":{title:"Vertex AI Agent Builder",cat:"services",keys:["Vertex AI Agent Builder","カスタムエージェント","データストア"],body:["Vertex AI Agent Builderは、データストアやツールを接続したカスタムエージェントを構築するためのサービスです。","複数データソース検索、関数呼び出し、API連携、業務タスク実行を組み合わせる問題で候補になります。"],pit:["検索だけならVertex AI Search、タスク実行まで含むならAgent Builderを疑う。"]},
+"agent-tools":{title:"エージェントツールと安全な外部操作",cat:"services",keys:["関数","Cloud Run","Cloud Functions","プラグイン","データストア"],body:["エージェントツールには拡張機能、関数、データストア、プラグインなどがあります。外部システム操作は、認証、入力検証、権限、監査を備えたCloud RunやCloud Functionsの関数として実装すると安全です。"],pit:["APIキーや全データをプロンプトに直接入れない。"]},
+"ai-apis":{title:"事前構築済みAI API",cat:"services",keys:["Speech-to-Text","Text-to-Speech","Document AI","Vision","Translation"],body:["音声文字起こしはSpeech-to-Text、音声合成はText-to-Speech、文書抽出はDocument AI、画像理解はCloud Vision、翻訳はTranslation APIなど、モダリティごとにAPIを使い分けます。"],pit:["Text-to-SpeechとSpeech-to-Textを逆にしない。"]},
+studios:{title:"Vertex AI StudioとGoogle AI Studio",cat:"services",keys:["Vertex AI Studio","Google AI Studio","Gemini API"],body:["Google AI StudioはGemini APIを使った迅速なプロトタイピングに向きます。Vertex AI StudioはGoogle Cloud上でのエンタープライズ向け開発、検証、統制に寄せて理解します。"],pit:["試作の速さと企業運用の統制を分ける。"]},
+"rag-services":{title:"Google CloudのRAG/グラウンディングサービス",cat:"services",keys:["Vertex AI Search","RAG API","Google検索によるグラウンディング"],body:["自社データに基づく回答にはVertex AI Searchを使った事前構築済みRAGやRAG API、公開Web情報に基づく回答にはGoogle検索によるグラウンディングを検討します。","根拠ソースの所在と更新頻度で選択肢を判断します。"],pit:["温度を下げても最新情報や根拠性は保証されない。"]},
+governance:{title:"エンタープライズデータ管理とガバナンス",cat:"services",keys:["セキュリティ","プライバシー","ガバナンス","データ管理"],body:["企業利用では、ユーザーデータ管理、アクセス制御、プライバシー、ガバナンス、モデル選択肢、事前構築済みソリューションを総合的に評価します。"],pit:["最新モデル名だけで選ばない。"]},
+limitations:{title:"基盤モデルの限界",cat:"improve",keys:["ハルシネーション","バイアス","ナレッジカットオフ","エッジケース"],body:["基盤モデルには、データ依存、ナレッジカットオフ、バイアス、公平性、ハルシネーション、エッジケースへの弱さなどの限界があります。","限界への対策として、グラウンディング、RAG、プロンプトエンジニアリング、ファインチューニング、HITL、継続評価を組み合わせます。"],pit:["自信ありげな回答でも根拠がなければ信用しない。"]},
+rag:{title:"RAG: 検索拡張生成",cat:"improve",keys:["RAG","検索拡張生成","最新文書"],body:["RAGは、回答生成前に外部の関連文書を検索し、その内容を使って回答を生成する手法です。頻繁に更新される社内規程、製品仕様、FAQに向いています。","ファインチューニングと違い、知識をモデル重みに覚え込ませるのではなく、参照可能な情報源を更新することで最新性と根拠性を高めます。"],pit:["RAGシステム内でもプロンプト設計や検索品質が重要。"]},
+"fine-tuning":{title:"ファインチューニング",cat:"improve",keys:["ファインチューニング","文体","振る舞い"],body:["ファインチューニングは、追加データでモデルの振る舞い、文体、特定タスク適応を調整する手法です。","最新知識の参照はRAG、回答の癖や分類振る舞いはプロンプト改善やファインチューニング、と切り分けると判断しやすいです。"],pit:["頻繁に変わる社内知識を毎回ファインチューニングで覚えさせる選択は避ける。"]},
+prompting:{title:"プロンプトエンジニアリング",cat:"improve",keys:["ゼロショット","ワンショット","少数ショット","ロールプロンプト","プロンプトチェーン"],body:["プロンプトエンジニアリングは、目的、役割、文脈、制約、出力形式、例を明確にして、望ましい出力を得る手法です。","ゼロショットは例なし、ワンショットは1例、少数ショットは複数例、ロールプロンプトは役割付与、プロンプトチェーンは複雑な処理を段階化する手法です。"],pit:["サンプリング設定だけでは業務要件の理解は保証されない。"]},
+react:{title:"ReActプロンプト",cat:"improve",keys:["ReAct","Reasoning","Acting","ツール"],body:["ReActは、推論と行動を組み合わせ、ツール実行結果を観察して次の判断に使うエージェント設計の考え方です。","検索、API呼び出し、データストア参照を伴うタスクで出やすい論点です。"],pit:["ゼロショットや少数ショットとの違いを意識する。"]},
+sampling:{title:"サンプリングパラメータ",cat:"improve",keys:["温度","Top-P","トークン数","安全性設定","出力長"],body:["温度は出力のランダム性に影響し、低いほど一貫性、高いほど多様性が出やすくなります。Top-Pは確率質量の範囲で候補を選ぶNucleusサンプリングです。","トークン数や出力長は長さに関係し、安全性設定は有害出力やポリシー上の制御に関係します。"],pit:["温度を上げても事実性は上がらない。"]},
+grounding:{title:"グラウンディング",cat:"improve",keys:["グラウンディング","自社データ","ワールドデータ","根拠"],body:["グラウンディングは、モデルの出力を検証可能な情報源に結び付ける考え方です。自社データ、サードパーティデータ、ワールドデータの違いを理解します。","RAGはグラウンディングの代表的な実装パターンです。"],pit:["文体を整えることと、根拠に基づくことは別。"]},
+monitoring:{title:"継続的なモニタリングと評価",cat:"improve",keys:["KPI","ドリフト","バージョニング","セキュリティ更新"],body:["本番導入後は、KPI、性能、正答品質、ユーザー影響、モデルやプロンプトのバージョン、セキュリティパッチ、ドリフトを継続監視します。","モデル更新やデータ更新があると挙動が変わるため、代表テストセットで比較することが重要です。"],pit:["一度合格したら永続的に正しい、とは考えない。"]},
+hitl:{title:"HITL: 人間参加型",cat:"improve",keys:["HITL","人間確認","承認","エスカレーション"],body:["HITLは、人間が確認、承認、修正、エスカレーションする仕組みです。法務、金融、医療、採用、顧客影響が大きい判断などで重要です。","AIは意思決定支援に位置づけ、最終責任や監査を明確にします。"],pit:["プロンプトだけで高リスク統制を置き換えない。"]},
+evaluation:{title:"評価設計",cat:"improve",keys:["評価","品質","正確性","根拠性","安全性"],body:["AI評価では、正確性、根拠性、安全性、完了率、ユーザー満足度、コスト、遅延などをユースケース別に設定します。","代表的な質問セットを用意し、変更前後で継続比較すると弱点を見つけやすくなります。"],pit:["利用回数や文字数だけでは成果を測れない。"]},
+"usecase-selection":{title:"ユースケース選定",cat:"strategy",keys:["ビジネス要件","技術制約","リスク","成功指標"],body:["生成AI導入では、ビジネス課題、成功指標、データ可用性、技術制約、リスクを整理し、高価値かつ管理可能なユースケースを選びます。","モデル名から入るのではなく、解決すべき課題と測定方法から入ることが重要です。"],pit:["全社一斉自動化はリスクが高い。"]},
+adoption:{title:"導入・組織統合・変更管理",cat:"strategy",keys:["パイロット","ガバナンス","教育","変更管理"],body:["小さく始め、パイロットで効果とリスクを測定し、利用ルール、教育、運用体制、変更管理を整えて段階的に拡大します。","利用者がAIの限界を理解し、適切に確認できる状態を作ることが学習効率と業務定着に効きます。"],pit:["PoCで動いたことと全社展開できることは別。"]},
+roi:{title:"ビジネス効果とROI",cat:"strategy",keys:["ROI","業務時間削減","顧客満足度","採用率"],body:["ビジネス効果は、業務時間削減、回答品質、顧客満足度、利用定着率、コスト削減、リスク低減、収益貢献などで測定します。","技術指標とビジネス指標をつなげて説明できると、Generative AI Leaderの出題に強くなります。"],pit:["プロンプト回数や生成文字数だけでは成果ではない。"]},
+saif:{title:"SAIFとGoogle Cloudセキュリティ",cat:"strategy",keys:["SAIF","IAM","Security Command Center","ワークロード監視"],body:["SAIFは、AIシステムを安全に設計、導入、運用するためのセキュリティフレームワークです。","Google CloudのIAMはアクセス制御、Security Command Centerはセキュリティリスク管理、ワークロード監視は稼働状況や異常把握に関係します。"],pit:["SAIFは対策不要を意味しない。"]},
+"responsible-ai":{title:"責任あるAI",cat:"strategy",keys:["透明性","説明可能性","アカウンタビリティ","公平性"],body:["責任あるAIでは、透明性、説明可能性、アカウンタビリティ、公平性、プライバシーを考慮します。","高リスク領域では、AIがどの根拠や基準で回答したかを説明でき、人間が確認できる設計が重要です。"],pit:["公平性評価だけで説明可能性が満たされるわけではない。"]},
+privacy:{title:"プライバシー",cat:"strategy",keys:["データ最小化","匿名化","仮名化","アクセス制御"],body:["個人情報や顧客固有情報を扱う場合、利用目的の明確化、データ最小化、匿名化、仮名化、アクセス制御、保持期間、監査を設計します。","匿名化しても再識別リスクが残る場合があるため、複合的な対策が必要です。"],pit:["社内利用でもプライバシーリスクは存在する。"]},
+"bias-fairness":{title:"バイアスと公平性",cat:"strategy",keys:["バイアス","公平性","代表性","データ品質"],body:["バイアスや公平性の問題には、データの代表性、品質、ラベルの偏り、評価指標、影響分析、人間レビュー、継続監視で対処します。","大きなデータセットでも、偏りを含んでいれば不公平な結果は残ります。"],pit:["データを増やせば必ず公平になる、という選択肢は危険。"]}
+};
+let SETS=[],current=null,tickId=null,remaining=5400,paused=false,graded=false,selectedWiki="foundation",lastReport="";
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function fmt(s,ctx){return String(s??"").replace(/\{(\w+)\}/g,(m,k)=>ctx[k]??m)}
+function rng(seed){let a=seed>>>0;return function(){a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
+function shuffle(arr,seed){const r=rng(seed);const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function catLabel(cat){return CATS[cat]?.name||cat}
+function catShort(cat){return CATS[cat]?.short||cat}
+function catCss(cat){return cat==="improve"?"improvement":cat}
+function buildSets(){SETS=CTX.map((ctx,si)=>{let qs=T.map((t,qi)=>{let cs=t.cs.map((c,ci)=>({text:fmt(c[0],ctx),ok:!!c[1],fb:fmt(c[2],ctx),orig:ci}));cs=shuffle(cs,9000+si*97+qi*13).map((c,i)=>({...c,letter:"ABCD"[i]}));return{id:`${si+1}-${t.id}`,base:t.id,no:qi+1,cat:t.cat,wiki:t.wiki,tags:t.tags||[],q:fmt(t.q,ctx),exp:fmt(t.exp,ctx),tip:fmt(t.tip,ctx),choices:cs}});return{id:si+1,title:`セット${si+1}`,ctx,questions:qs}})}
+function history(){try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}}
+function saveHistory(h){localStorage.setItem(KEY,JSON.stringify(h))}
+function show(page){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='progress')renderProgress();if(page==='wiki'){renderWikiList();renderWikiDetail(selectedWiki)}}
+document.querySelectorAll('.nav').forEach(b=>b.addEventListener('click',()=>show(b.dataset.page)));
+function init(){buildSets();const sel=$('setSelect');sel.innerHTML=SETS.map(s=>`<option value="${s.id-1}">${s.title} - ${esc(s.ctx.org)} / ${esc(s.ctx.team)}</option>`).join('');renderSetCards();renderWikiList();renderWikiDetail(selectedWiki);renderProgress()}
+function renderSetCards(){const h=history();$('setCards').innerHTML=SETS.map(s=>{const hs=h.filter(x=>x.setId===s.id);const best=hs.length?Math.max(...hs.map(x=>x.score)):null;const last=hs.length?hs[hs.length-1].score:null;return`<div class="card"><h3>${s.title}</h3><p class="muted small">${esc(s.ctx.org)} / ${esc(s.ctx.team)}</p><p><span class="badge">60問</span><span class="badge purple">90分</span></p><p class="small">実施: <b>${hs.length}</b>回 / 最高: <b>${best??'-'}</b>点 / 直近: <b>${last??'-'}</b>点</p><button class="btn" onclick="selectSet(${s.id-1})">このセットを解く</button></div>`}).join('')}
+function selectSet(i){$('setSelect').value=i;show('exam');window.scrollTo({top:0,behavior:'smooth'})}
+function startExam(){if(current&&!graded){if(!confirm('進行中の試験を破棄して新しく開始しますか？'))return}clearInterval(tickId);const si=Number($('setSelect').value||0);current={set:SETS[si],answers:Array(60).fill(null),started:new Date().toISOString()};remaining=5400;paused=false;graded=false;$('examArea').classList.remove('hidden');$('result').classList.add('hidden');$('pauseOverlay').classList.remove('show');$('setTitle').textContent=`${current.set.title} - ${current.set.ctx.org}`;$('totalQ').textContent=current.set.questions.length;renderQuestions();updateProgress();startTimer();window.scrollTo({top:$('exam').offsetTop,behavior:'smooth'})}
+function startTimer(){clearInterval(tickId);updateTimer();tickId=setInterval(()=>{if(paused||graded)return;remaining--;updateTimer();if(remaining<=0){remaining=0;updateTimer();grade(true)}},1000)}
+function updateTimer(){const m=Math.floor(remaining/60),s=remaining%60;$('timer').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;$('timer').classList.toggle('warn',remaining<=600&&remaining>180);$('timer').classList.toggle('danger',remaining<=180);$('timerStatus').textContent=graded?'採点済み':paused?'一時停止中':remaining<5400?'進行中':'開始直後';$('pauseBtn').textContent=paused?'再開':'一時停止'}
+function pauseExam(){if(!current||graded)return;paused=!paused;$('pauseOverlay').classList.toggle('show',paused);document.querySelectorAll('input[type=radio]').forEach(x=>x.disabled=paused||graded);updateTimer()}
+function renderQuestions(){if(!current)return;const qs=current.set.questions;$('questions').innerHTML=qs.map((q,i)=>`<div class="qcard" id="q${i}"><div class="toolbar space"><div><span class="pill cat-${catCss(q.cat)}">Q${i+1} ${catShort(q.cat)}</span> ${q.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join(' ')}</div><button class="link no-print" onclick="openWiki('${q.wiki}')">Wiki: ${esc(WIKI[q.wiki]?.title||q.wiki)}</button></div><p><b>${esc(q.q)}</b></p><div class="choices">${q.choices.map((c,ci)=>choiceHtml(i,ci,c)).join('')}</div>${graded?`<div class="explain"><b>要点:</b> ${esc(q.exp)}<br><b>見極め:</b> ${esc(q.tip)}</div>`:''}</div>`).join('');updateQuestionStyles();renderQnav()}
+function choiceHtml(i,ci,c){const sel=current.answers[i]===ci;let cls='choice'+(sel?' sel':'');if(graded){if(c.ok)cls+=' ok';else if(sel&&!c.ok)cls+=' ng'}return`<label class="${cls}" data-q="${i}" data-c="${ci}"><input type="radio" name="q${i}" ${sel?'checked':''} ${(paused||graded)?'disabled':''} onclick="pick(${i},${ci})"> <b>${c.letter}.</b> ${esc(c.text)}</label>`}
+function pick(i,ci){if(paused||graded)return;current.answers[i]=ci;updateQuestionStyles();updateProgress()}
+function updateQuestionStyles(){if(!current)return;current.set.questions.forEach((q,i)=>{q.choices.forEach((c,ci)=>{const el=document.querySelector(`.choice[data-q="${i}"][data-c="${ci}"]`);if(!el)return;el.className='choice'+(current.answers[i]===ci?' sel':'');if(graded){if(c.ok)el.classList.add('ok');else if(current.answers[i]===ci)el.classList.add('ng')}})}) ;renderQnav(false)}
+function updateProgress(){if(!current)return;const ans=current.answers.filter(x=>x!==null).length;$('answered').textContent=ans;$('progressBar').style.width=(ans/current.answers.length*100)+'%';renderQnav(false)}
+function renderQnav(full=true){if(!current)return;const html=current.set.questions.map((q,i)=>{let cls='';if(graded){const a=current.answers[i];cls=a===null?'blank':q.choices[a].ok?'ok':'ng'}else cls=current.answers[i]!==null?'ans':'';return`<button class="${cls}" onclick="scrollQ(${i})">${i+1}</button>`}).join('');if(full||$('qnav').innerHTML!==html)$('qnav').innerHTML=html}
+function scrollQ(i){const el=$('q'+i);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})}
+function grade(auto){if(!current||graded)return;const blanks=current.answers.filter(x=>x===null).length;if(!auto&&blanks>0&&!confirm(`未回答が${blanks}問あります。このまま採点しますか？`))return;graded=true;paused=false;clearInterval(tickId);$('pauseOverlay').classList.remove('show');const qs=current.set.questions;const details=qs.map((q,i)=>{const ai=current.answers[i];const choice=ai===null?null:q.choices[ai];return{q,i,ai,choice,ok:!!choice?.ok,blank:ai===null,correct:q.choices.find(c=>c.ok)}});let byCat={};CAT_ORDER.forEach(c=>byCat[c]={total:0,earned:0,correct:0,count:0,blank:0,wrong:0});let tagMiss={};details.forEach(d=>{const c=d.q.cat;byCat[c].total+=2;byCat[c].count++;if(d.ok){byCat[c].earned+=2;byCat[c].correct++}else{if(d.blank)byCat[c].blank++;else byCat[c].wrong++;d.q.tags.forEach(t=>tagMiss[t]=(tagMiss[t]||0)+1)}});const correct=details.filter(d=>d.ok).length;const score=correct*2;const record={id:Date.now(),date:new Date().toISOString(),setId:current.set.id,setTitle:current.set.title,org:current.set.ctx.org,score,correct,wrong:details.filter(d=>!d.ok&&!d.blank).length,blank:blanks,remaining,elapsed:5400-remaining,byCat,tagMiss};const h=history();h.push(record);saveHistory(h);renderQuestions();renderResult(record,details);renderSetCards();renderProgress();if(auto)alert('時間切れのため自動採点しました。')}
+function pct(n,d){return d?Math.round(n/d*100):0}
+function mmss(sec){return `${Math.floor(sec/60)}分${String(sec%60).padStart(2,'0')}秒`}
+function renderResult(r,details){const cats=CAT_ORDER.map(c=>({key:c,...r.byCat[c],pct:pct(r.byCat[c].earned,r.byCat[c].total)}));const weak=cats.filter(x=>x.pct<75).sort((a,b)=>a.pct-b.pct);const missTags=Object.entries(r.tagMiss).sort((a,b)=>b[1]-a[1]).slice(0,10);const level=r.score>=85?'good':r.score>=75?'warn':'bad';const msg=r.score>=85?'合格圏。弱点タグを潰せば安定合格を狙えます。':r.score>=75?'合格ライン近辺。カテゴリ別の穴を優先して復習してください。':'要復習。まずは弱点カテゴリのWikiと誤答選択肢の理由を確認してください。';lastReport=makeReport(r,cats,missTags,details);$('result').classList.remove('hidden');$('result').innerHTML=`<div class="card"><div class="toolbar space"><div><h2>採点結果</h2><p class="muted">${esc(r.setTitle)} / ${esc(r.org)} / 採点日時: ${new Date(r.date).toLocaleString('ja-JP')}</p></div><div class="toolbar no-print"><button class="btn sec" onclick="downloadReport()">分析レポートTXT</button><button class="btn sec" onclick="window.print()">印刷</button><button class="btn" onclick="startExam()">同じセットを再受験</button></div></div><div class="result-grid"><div><div class="score" style="background:conic-gradient(var(--primary) ${r.score*3.6}deg,#dbeafe 0)"><div><b>${r.score}</b><br><span class="small">/100点</span></div></div><div class="call ${level}" style="margin-top:14px"><b>${msg}</b><br><span class="small">正解 ${r.correct}/60、不正解 ${r.wrong}、未回答 ${r.blank}、所要 ${mmss(r.elapsed)}</span></div></div><div><div class="grid four">${stat('正解数',r.correct+'問')}${stat('不正解',r.wrong+'問')}${stat('未回答',r.blank+'問')}${stat('残り時間',mmss(r.remaining))}</div><h3 style="margin-top:16px">カテゴリ別 獲得点数と割合</h3>${catTable(cats)}<canvas id="catChart" height="250"></canvas></div></div></div><div class="card" style="margin-top:16px"><h2>回答系統と対策分析レポート</h2>${analysisHtml(r,cats,missTags,details)}</div><div class="card" style="margin-top:16px"><h2>問題別 詳細解説</h2><p class="muted">各問題から関連Wikiへ移動できます。誤答した選択肢だけでなく、正解以外のもっともらしい選択肢のどこが要件から外れているかを確認してください。</p>${detailHtml(details)}</div>`;setTimeout(()=>drawBar('catChart',cats.map(x=>catShort(x.key)),cats.map(x=>x.pct),100,'カテゴリ別正答率(%)'),50);$('result').scrollIntoView({behavior:'smooth',block:'start'})}
+function stat(label,num){return`<div class="stat"><div class="label">${esc(label)}</div><div class="num">${esc(num)}</div></div>`}
+function catTable(cats){return`<table><thead><tr><th>カテゴリ</th><th>獲得点</th><th>割合</th><th>状態</th></tr></thead><tbody>${cats.map(c=>`<tr><td>${catLabel(c.key)}</td><td><b>${c.earned}</b> / ${c.total}</td><td>${c.pct}%</td><td>${c.pct>=80?'安定':c.pct>=70?'要確認':'重点復習'}</td></tr>`).join('')}</tbody></table>`}
+function analysisHtml(r,cats,missTags,details){const weak=cats.filter(c=>c.pct<75).sort((a,b)=>a.pct-b.pct);const blankRate=Math.round(r.blank/60*100);const serviceMiss=details.filter(d=>!d.ok&&d.q.cat==='services').length;const impMiss=details.filter(d=>!d.ok&&d.q.cat==='improve').length;let blocks=[];blocks.push(`<div class="analysis ${r.score>=85?'good':r.score>=75?'warn':'bad'}"><h3>総合判定</h3><p>${r.score>=85?'知識はかなり定着しています。残りは誤答タグのピンポイント復習と、2択で迷った選択肢の判別理由の言語化です。':r.score>=75?'合格圏に近いですが、カテゴリ別の弱点が残っています。特に70%未満のカテゴリを優先して潰すと点数が伸びやすいです。':'基礎用語とサービス選定の両方を再整理してください。まずは誤答が多いタグのWikiを読み、同じ論点の問題を解き直すのが効率的です。'}</p></div>`);if(weak.length)blocks.push(`<div class="analysis bad"><h3>重点復習カテゴリ</h3><p>${weak.map(c=>`${catLabel(c.key)} ${c.pct}%`).join('、')}</p><p>対策: このカテゴリのWikiを先に読み、問題別解説で「正解を選ぶ理由」と「惜しい選択肢を切る理由」を1問ずつ確認してください。</p></div>`);else blocks.push(`<div class="analysis good"><h3>カテゴリバランス</h3><p>大きな穴はありません。次は時間短縮と説明できる理解を目標にしてください。</p></div>`);if(missTags.length)blocks.push(`<div class="analysis warn"><h3>誤答タグ 上位</h3><p>${missTags.map(([t,n])=>`<span class="badge yellow">${esc(t)}: ${n}</span>`).join(' ')}</p><p>対策: 上位3タグのWikiを復習し、関連する問題を再度解きます。タグがGoogle Cloudサービス名の場合は「似たサービスとの差分」を表にして覚えると効果的です。</p></div>`);if(blankRate>=10)blocks.push(`<div class="analysis warn"><h3>時間配分</h3><p>未回答が${r.blank}問あります。1問あたり平均108秒を目安にし、迷った問題は一旦選択して後で戻る運用を練習してください。</p></div>`);if(serviceMiss>=6)blocks.push(`<div class="analysis bad"><h3>サービス選定の傾向</h3><p>Google Cloudサービス問題で失点が多めです。Vertex AI、Vertex AI Search、Gemini Enterprise、NotebookLM、Gemini for Workspace、Customer Engagement Suiteの境界を優先復習してください。</p></div>`);if(impMiss>=4)blocks.push(`<div class="analysis bad"><h3>出力改善手法の傾向</h3><p>RAG、グラウンディング、ファインチューニング、HITL、プロンプト、サンプリングの使い分けを再確認してください。「最新知識」「文体/振る舞い」「根拠」「高リスク確認」で判断軸を作ると迷いにくくなります。</p></div>`);blocks.push(`<div class="analysis good"><h3>次回学習プラン</h3><ol><li>誤答タグ上位3つのWikiを読む。</li><li>誤答問題の選択肢フィードバックを読み、なぜ他の選択肢が要件から外れるかを1行で説明する。</li><li>翌日、同じセットではなく別セットを解き、点数推移とカテゴリ割合を確認する。</li></ol></div>`);return blocks.join('')}
+function detailHtml(details){return details.map(d=>{const ans=d.choice?`${d.choice.letter}. ${d.choice.text}`:'未回答';const correct=`${d.correct.letter}. ${d.correct.text}`;return`<div class="qcard"><div class="toolbar space"><h3>Q${d.i+1} ${d.ok?'✅ 正解':'❌ 不正解'}</h3><button class="link no-print" onclick="openWiki('${d.q.wiki}')">関連Wiki: ${esc(WIKI[d.q.wiki]?.title||d.q.wiki)}</button></div><p><b>${esc(d.q.q)}</b></p><p class="small">あなたの回答: <b>${esc(ans)}</b><br>正解: <b>${esc(correct)}</b></p><div class="explain"><b>解説:</b> ${esc(d.q.exp)}<br><b>見極めポイント:</b> ${esc(d.q.tip)}</div>${d.q.choices.map(c=>`<div class="fb ${c.ok?'ok':(d.choice===c?'ng':'')}"><b>${c.letter}. ${esc(c.text)}</b> ${c.ok?' <span class="badge green">正解</span>':''}${d.choice===c?' <span class="badge purple">選択</span>':''}<br>${esc(c.fb)}</div>`).join('')}</div>`}).join('')}
+function makeReport(r,cats,missTags,details){let lines=[];lines.push('Google Cloud Generative AI Leader 学習分析レポート');lines.push('================================================');lines.push(`日時: ${new Date(r.date).toLocaleString('ja-JP')}`);lines.push(`セット: ${r.setTitle} / ${r.org}`);lines.push(`得点: ${r.score}/100  正解: ${r.correct}/60  不正解: ${r.wrong}  未回答: ${r.blank}`);lines.push(`所要時間: ${mmss(r.elapsed)}  残り時間: ${mmss(r.remaining)}`);lines.push('');lines.push('[カテゴリ別]');cats.forEach(c=>lines.push(`${catLabel(c.key)}: ${c.earned}/${c.total} (${c.pct}%)`));lines.push('');lines.push('[誤答タグ上位]');if(missTags.length)missTags.forEach(([t,n])=>lines.push(`${t}: ${n}`));else lines.push('誤答タグなし');lines.push('');lines.push('[対策]');const weak=cats.filter(c=>c.pct<75).sort((a,b)=>a.pct-b.pct);if(weak.length)lines.push(`重点復習カテゴリ: ${weak.map(c=>catLabel(c.key)).join('、')}`);else lines.push('カテゴリ別の大きな穴はありません。解答速度と説明力を強化してください。');if(missTags.length)lines.push(`最優先Wiki: ${missTags.slice(0,3).map(([t])=>t).join('、')}`);lines.push('');lines.push('[誤答一覧]');details.filter(d=>!d.ok).forEach(d=>{lines.push(`Q${d.i+1}: ${d.q.q}`);lines.push(`  あなた: ${d.choice?d.choice.letter+'. '+d.choice.text:'未回答'}`);lines.push(`  正解: ${d.correct.letter}. ${d.correct.text}`);lines.push(`  解説: ${d.q.exp}`);lines.push(`  Wiki: ${WIKI[d.q.wiki]?.title||d.q.wiki}`)});return lines.join('\n')}
+function downloadReport(){const blob=new Blob([lastReport||'レポートはまだありません。'],{type:'text/plain;charset=utf-8'});downloadBlob(blob,'gail_analysis_report.txt')}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function canvasSetup(id,h=250){const c=$(id);if(!c)return null;const d=window.devicePixelRatio||1;const w=Math.max(320,c.getBoundingClientRect().width||600);c.width=w*d;c.height=h*d;c.style.height=h+'px';const ctx=c.getContext('2d');ctx.scale(d,d);ctx.clearRect(0,0,w,h);return{c,ctx,w,h}}
+function drawBar(id,labels,values,max=100,title=''){const o=canvasSetup(id,260);if(!o)return;const{ctx,w,h}=o;const pad=46,bw=(w-pad*2)/values.length*0.58;ctx.font='13px sans-serif';ctx.fillStyle='#0f172a';ctx.fillText(title,18,24);ctx.strokeStyle='#e5e7eb';ctx.beginPath();ctx.moveTo(pad,40);ctx.lineTo(pad,h-48);ctx.lineTo(w-18,h-48);ctx.stroke();values.forEach((v,i)=>{const x=pad+((w-pad*2)/values.length)*i+((w-pad*2)/values.length-bw)/2;const bh=(h-90)*(v/max);ctx.fillStyle=v>=80?'#16a34a':v>=70?'#d97706':'#dc2626';ctx.fillRect(x,h-48-bh,bw,bh);ctx.fillStyle='#111827';ctx.textAlign='center';ctx.fillText(v+'%',x+bw/2,h-55-bh);ctx.fillText(labels[i],x+bw/2,h-28)});ctx.textAlign='left'}
+function drawLine(id,labels,values,max=100,title='点数推移'){const o=canvasSetup(id,260);if(!o)return;const{ctx,w,h}=o;const pad=46;ctx.font='13px sans-serif';ctx.fillStyle='#0f172a';ctx.fillText(title,18,24);ctx.strokeStyle='#e5e7eb';ctx.beginPath();ctx.moveTo(pad,40);ctx.lineTo(pad,h-48);ctx.lineTo(w-18,h-48);ctx.stroke();[0,50,80,100].forEach(v=>{const y=h-48-(h-90)*(v/max);ctx.strokeStyle=v===80?'#93c5fd':'#edf2f7';ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-18,y);ctx.stroke();ctx.fillStyle='#64748b';ctx.fillText(v,pad-30,y+4)});if(!values.length)return;const step=values.length===1?0:(w-pad-30)/(values.length-1);ctx.strokeStyle='#2563eb';ctx.lineWidth=3;ctx.beginPath();values.forEach((v,i)=>{const x=pad+i*step;const y=h-48-(h-90)*(v/max);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();values.forEach((v,i)=>{const x=pad+i*step;const y=h-48-(h-90)*(v/max);ctx.fillStyle='#2563eb';ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);ctx.fill();ctx.fillStyle='#111827';ctx.textAlign='center';ctx.fillText(v,x,y-9);ctx.fillStyle='#64748b';ctx.fillText(labels[i],x,h-28)});ctx.textAlign='left'}
+function renderProgress(){const h=history();renderSetCards();if(!h.length){$('progressBody').innerHTML=`<div class="card"><h3>まだ採点履歴がありません</h3><p class="muted">問題集を1回採点すると、ここに点数推移、カテゴリ別平均、セット別進捗が表示されます。</p><button class="btn" onclick="show('exam')">最初のテストを始める</button></div>`;return}const scores=h.map(x=>x.score);const best=Math.max(...scores),last=scores[scores.length-1],first=scores[0],avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);let catAvg=CAT_ORDER.map(c=>{let vals=h.map(x=>pct(x.byCat[c].earned,x.byCat[c].total));return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)});const setRows=SETS.map(s=>{const hs=h.filter(x=>x.setId===s.id);return{set:s.title,count:hs.length,best:hs.length?Math.max(...hs.map(x=>x.score)):'-',last:hs.length?hs[hs.length-1].score:'-'}});const tagTotal={};h.forEach(r=>Object.entries(r.tagMiss).forEach(([t,n])=>tagTotal[t]=(tagTotal[t]||0)+n));const topTags=Object.entries(tagTotal).sort((a,b)=>b[1]-a[1]).slice(0,10);$('progressBody').innerHTML=`<div class="grid four"><div class="stat"><div class="label">実施回数</div><div class="num">${h.length}</div></div><div class="stat"><div class="label">最高点</div><div class="num">${best}</div></div><div class="stat"><div class="label">平均点</div><div class="num">${avg}</div></div><div class="stat"><div class="label">初回→直近</div><div class="num">${first}→${last}</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>点数推移</h3><canvas id="scoreTrend" height="260"></canvas></div><div class="card"><h3>カテゴリ別 平均正答率</h3><canvas id="catAvg" height="260"></canvas></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>セット別進捗</h3><table><thead><tr><th>セット</th><th>実施</th><th>最高</th><th>直近</th></tr></thead><tbody>${setRows.map(r=>`<tr><td>${r.set}</td><td>${r.count}</td><td>${r.best}</td><td>${r.last}</td></tr>`).join('')}</tbody></table></div><div class="card"><h3>累積弱点タグ</h3>${topTags.length?topTags.map(([t,n])=>`<span class="badge yellow">${esc(t)}: ${n}</span>`).join(' '):'<p class="muted">弱点タグはありません。</p>'}<div class="section"><h3>学習アドバイス</h3><p>${last>=80?'直近は合格練習ラインに到達しています。次は未実施セットを解き、カテゴリ別80%以上を安定させてください。':'直近が80点未満です。累積弱点タグ上位からWikiを読み、同じ論点の誤答解説を再確認してください。'}</p></div></div></div><div class="card" style="margin-top:16px"><h3>履歴一覧</h3><table><thead><tr><th>日時</th><th>セット</th><th>点数</th><th>カテゴリ割合</th></tr></thead><tbody>${h.slice().reverse().map(r=>`<tr><td>${new Date(r.date).toLocaleString('ja-JP')}</td><td>${esc(r.setTitle)} / ${esc(r.org)}</td><td><b>${r.score}</b></td><td>${CAT_ORDER.map(c=>`${catShort(c)}:${pct(r.byCat[c].earned,r.byCat[c].total)}%`).join(' / ')}</td></tr>`).join('')}</tbody></table></div>`;setTimeout(()=>{drawLine('scoreTrend',h.map((_,i)=>String(i+1)),scores,100,'試験ごとの得点');drawBar('catAvg',CAT_ORDER.map(catShort),catAvg,100,'カテゴリ平均(%)')},50)}
+function exportHistory(){downloadBlob(new Blob([JSON.stringify(history(),null,2)],{type:'application/json;charset=utf-8'}),'gail_progress_history.json')}
+function resetHistory(){if(confirm('進捗履歴を削除しますか？この操作は元に戻せません。')){localStorage.removeItem(KEY);renderProgress();renderSetCards()}}
+function renderWikiList(){const q=($('wikiSearch')?.value||'').toLowerCase();const ids=Object.keys(WIKI).filter(id=>{const w=WIKI[id];return !q||[w.title,w.cat,...w.keys,...w.body].join(' ').toLowerCase().includes(q)});$('wikiList').innerHTML=ids.map(id=>{const w=WIKI[id];return`<button class="${id===selectedWiki?'active':''}" onclick="renderWikiDetail('${id}')"><span class="pill cat-${catCss(w.cat)}">${catShort(w.cat)}</span><br>${esc(w.title)}<br><span class="mini">${w.keys.slice(0,4).map(esc).join(' / ')}</span></button>`}).join('')||'<p class="muted">該当するWikiがありません。</p>'}
+function renderWikiDetail(id){selectedWiki=id;if(!WIKI[id])selectedWiki='foundation';const w=WIKI[selectedWiki];renderWikiList();$('wikiDetail').innerHTML=`<h2>${esc(w.title)}</h2><p><span class="pill cat-${catCss(w.cat)}">${catLabel(w.cat)}</span></p><p>${w.keys.map(k=>`<span class="badge">${esc(k)}</span>`).join(' ')}</p><div class="section"><h3>要点</h3>${w.body.map(p=>`<p>${esc(p)}</p>`).join('')}</div><div class="section"><h3>試験での見極めポイント</h3><ul>${w.pit.map(p=>`<li>${esc(p)}</li>`).join('')}</ul></div><div class="section"><h3>関連する問題タグ</h3><p>${relatedTags(selectedWiki).map(t=>`<span class="badge purple">${esc(t)}</span>`).join(' ')||'<span class="muted">関連タグなし</span>'}</p></div><div class="toolbar no-print"><button class="btn sec" onclick="show('exam')">問題集へ戻る</button><button class="btn sec" onclick="show('progress')">進捗を見る</button></div>`}
+function relatedTags(id){const s=new Set();T.filter(t=>t.wiki===id).forEach(t=>(t.tags||[]).forEach(x=>s.add(x)));return[...s]}
+function openWiki(id){selectedWiki=id;show('wiki');setTimeout(()=>renderWikiDetail(id),20)}
+window.addEventListener('resize',()=>{if($('progress').classList.contains('active'))renderProgress();if(!$('result').classList.contains('hidden')){const h=history();const r=h[h.length-1];if(r){const cats=CAT_ORDER.map(c=>({key:c,...r.byCat[c],pct:pct(r.byCat[c].earned,r.byCat[c].total)}));drawBar('catChart',cats.map(x=>catShort(x.key)),cats.map(x=>x.pct),100,'カテゴリ別正答率(%)')}}});
+init();
+</script>
+<script>
+/* Enhanced 60-question, full-save, flag/review, difficulty and congratulations layer */
+(function(){
+CATS.improve=CATS.improvement;
+const ALLKEY="gail_5set60_all_progress_v2";
+const MODE={standard:{name:"標準",seconds:5400,note:"90分。カテゴリと難易度を見ながら実力確認。"},challenging:{name:"やや難",seconds:5400,note:"90分。問題順をシャッフルし、本番の迷いを再現。"},hard:{name:"高難度",seconds:4500,note:"75分。時間制約を強め、即答力を鍛える。"}};
+const DIFF={basic:"標準",medium:"やや難",hard:"難"};
+window.MODE=MODE;window.DIFF=DIFF;
+const EXTRA_T=[
+{id:"B16",cat:"basics",wiki:"model-selection",diff:"medium",tags:["モデル選定","可用性"],q:"{org}は{biz}向けに生成AIを導入します。候補モデルの比較で、技術チームは精度だけを見ればよいと主張しています。リーダーとして最も適切な助言はどれですか。",exp:"モデル選定では、モダリティ、コンテキストウィンドウ、セキュリティ、可用性、信頼性、コスト、性能、カスタマイズ性をビジネス要件に照らして判断します。",tip:"精度だけでなく、企業利用に必要な非機能要件を含めて選びます。",cs:[["精度に加え、扱うデータ形式、コンテキスト長、セキュリティ、可用性、コスト、性能、カスタマイズ性を評価する。",1,"ビジネス要件に沿ったモデル選定として最も包括的です。"],["最も新しいモデル名を選べば、セキュリティやコストは後から自然に最適化される。",0,"モデル名の新しさだけでは企業要件を満たせません。"],["画像生成モデルを選べば、テキスト要約や社内検索にも常に最適である。",0,"モダリティとタスク適合性を無視しています。"],["ファインチューニングが可能なモデルであれば、RAGやアクセス制御は不要になる。",0,"ファインチューニングは知識更新や権限制御を置き換えません。"]]},
+{id:"B17",cat:"basics",wiki:"data",diff:"hard",tags:["データアクセシビリティ","データ品質"],q:"{team}は{data}を使ってAI活用を進めたいものの、一部データは部門別権限により閲覧制限があります。データアクセシビリティの考え方として最も適切なのはどれですか。",exp:"データアクセシビリティは単に全員が見られることではありません。必要な人が、適切な権限とガバナンスの下で、利用可能な形式でアクセスできることです。",tip:"アクセスしやすさと統制は両立させます。",cs:[["必要な利用者が、アクセス制御、監査、形式整備のもとで適切に利用できる状態を目指す。",1,"利便性とガバナンスの両立を表しています。"],["AIの精度を上げるため、全データを全社員に公開する。",0,"プライバシーと権限管理を無視しています。"],["権限設定があるデータはAI活用できないため、すべて対象外にする。",0,"適切な権限設計により活用できる場合があります。"],["非構造化データは検索できないため、アクセシビリティの検討対象外である。",0,"非構造化データも検索、抽出、RAGの対象になります。"]]},
+{id:"B18",cat:"basics",wiki:"models",diff:"medium",tags:["Gemma","オープンモデル"],q:"{org}は研究用途で軽量なオープンモデルを社内環境で検証し、制御性とカスタマイズ性を重視したいと考えています。Googleのモデル選択として最も近いのはどれですか。",exp:"GemmaはGoogleの軽量オープンモデルファミリーの文脈で問われます。Geminiは汎用マルチモーダル、Imagenは画像、Veoは動画です。",tip:"オープンモデル、軽量、社内検証という手掛かりを見ます。",cs:[["Gemma。軽量なオープンモデルを活用し、制御しやすい環境で検証しやすい。",1,"オープンモデル活用の要件に合います。"],["Imagen。軽量オープンモデルとしてテキスト分類を行う。",0,"Imagenは画像生成の文脈です。"],["Veo。社内規程検索向けの軽量テキストモデルとして利用する。",0,"Veoは動画生成の文脈です。"],["Gemini for Workspace。モデルファミリーではなく、必ず自社環境にモデルを配置するための仕組みである。",0,"Workspace内の生産性支援機能とモデル選定を混同しています。"]]},
+{id:"S19",cat:"services",wiki:"gemini-enterprise",diff:"hard",tags:["Gemini Enterprise","Vertex AI Search","使い分け"],q:"{org}は社内の契約DB、FAQ、画像付き作業記録を横断し、従業員向けに情報検索だけでなく業務タスク支援エージェントも提供したいと考えています。最も適切なのはどれですか。",exp:"社内横断情報活用とカスタムエージェントまで含む場合、Gemini Enterpriseが最も自然です。Vertex AI Searchは検索体験やRAG基盤として重要ですが、設問は業務エージェントまで含みます。",tip:"検索だけか、社内データを理解するエージェントまで含むかを見ます。",cs:[["Gemini Enterpriseを使い、複数社内ソースを理解するカスタムエージェントと検索体験を提供する。",1,"社内横断情報とタスク支援を合わせた要件に合います。"],["Vertex AI Searchだけを使い、業務タスク実行エージェントの設計は不要とする。",0,"検索だけではタスク支援まで十分に満たしません。"],["Gemini for Workspaceだけで、契約DBや作業記録への企業データ接続を不要にする。",0,"Workspace内生産性支援とは要件の粒度が違います。"],["NotebookLMを全社員に配布し、各自がDBを手動アップロードして運用する。",0,"個人・チームの資料分析には有効ですが、企業横断運用として不適切です。"]]},
+{id:"S20",cat:"services",wiki:"rag-services",diff:"medium",tags:["RAG API","Vertex AI Search"],q:"{team}は自社文書を使った回答生成を素早く始めたい一方、将来的には検索、生成、評価をより細かく制御したRAGアプリに拡張したいと考えています。最も適切な整理はどれですか。",exp:"Vertex AI Searchを使った事前構築済みRAGは素早い開始に向き、RAG APIはより柔軟にRAGパイプラインを構築する選択肢です。",tip:"すぐ始めるか、細かく制御するかでRAGサービスを分けます。",cs:[["初期はVertex AI Searchによる事前構築済みRAGを使い、制御が必要な段階でRAG APIを検討する。",1,"段階的導入として現実的です。"],["RAG APIはGoogle検索専用であり、自社文書には使えない。",0,"RAG APIは自社データ活用のRAG構築でも検討対象です。"],["Vertex AI Searchは画像生成専用のため、文書検索やRAGには使えない。",0,"Vertex AI Searchは検索アプリやRAG基盤として使われます。"],["どちらもファインチューニングを自動実行するため、検索設計は不要である。",0,"RAGは検索と生成の設計が重要です。"]]},
+{id:"S21",cat:"services",wiki:"ai-apis",diff:"hard",tags:["Translation API","Document Translation API","Document AI"],q:"{org}は海外拠点の規制文書を翻訳し、表や項目を抽出したうえでAI要約したいと考えています。API選定として最も適切なのはどれですか。",exp:"文書翻訳にはDocument Translation API、項目抽出にはDocument AI API、必要に応じてTranslation APIや生成AIを組み合わせます。",tip:"単純テキスト翻訳、文書翻訳、文書抽出の違いを見ます。",cs:[["Document Translation APIで文書翻訳し、Document AI APIで項目抽出し、必要に応じて生成AIで要約する。",1,"文書処理の流れに合っています。"],["Text-to-Speech APIで文書を音声化すれば、翻訳と項目抽出も完了する。",0,"音声生成と文書翻訳・抽出は別タスクです。"],["Cloud Vision APIだけで、表構造、翻訳、要約、規制判断をすべて完結させる。",0,"画像認識だけでは要件を十分に満たしません。"],["Geminiアプリに全規制文書を貼り付け、権限管理や根拠管理は省略する。",0,"企業文書処理では権限、根拠、監査が必要です。"]]},
+{id:"I11",cat:"improve",wiki:"evaluation",diff:"hard",tags:["評価指標","A/Bテスト","KPI"],q:"{org}が生成AIアシスタントを本番導入しました。初期利用者は便利と言っていますが、経営層は効果と品質を継続的に判断したいと考えています。最も適切なのはどれですか。",exp:"生成AIの継続評価では、正答率、根拠一致、ユーザー満足度、解決率、エスカレーション率、コスト、遅延、安全性、ドリフトなどをKPIとして追跡します。",tip:"感想だけではなく、品質・業務効果・安全性を測ります。",cs:[["回答品質、根拠一致、利用率、業務時間削減、顧客満足度、コスト、安全性、ドリフトを継続監視する。",1,"本番運用に必要な指標を広く含みます。"],["利用者アンケートが良ければ、ログ評価や安全性確認は不要である。",0,"主観評価だけでは不足します。"],["モデルのバージョンを固定すれば、ドリフトやセキュリティ更新は考えなくてよい。",0,"固定してもデータや業務が変われば監視が必要です。"],["生成文字数が増えたかだけをKPIにする。",0,"生成量は成果や品質を直接表すとは限りません。"]]},
+{id:"I12",cat:"improve",wiki:"prompting",diff:"medium",tags:["プロンプトチェーン","Few-shot"],q:"{team}は複雑な問い合わせを、事実抽出、契約条件確認、リスク分類、回答文作成の順に安定処理したいと考えています。最も適切な手法はどれですか。",exp:"複雑な処理はプロンプトチェーンで段階化し、必要に応じて少数ショット例やロール指定を組み合わせます。",tip:"一発回答より、段階分解と検証が鍵です。",cs:[["プロンプトチェーンで処理を段階化し、各段階の入力・出力形式を明確にする。",1,"複雑タスクを安定させる手法として適切です。"],["温度を最大にして、各段階の判断をより創造的にする。",0,"事実確認や契約確認では一貫性が重要です。"],["Few-shotを禁止し、例を一切示さずに毎回自由回答させる。",0,"期待形式がある場合は例が役立ちます。"],["回答の長さだけを制限すれば、抽出、検証、分類の品質も自動的に向上する。",0,"出力長は品質管理の一部にすぎません。"]]},
+{id:"T08",cat:"strategy",wiki:"governance",diff:"hard",tags:["ガバナンス","利用ルール"],q:"{org}は部門ごとに生成AIの試行が増えています。スピードを落としすぎず、リスクを抑えて全社展開するための最も適切な進め方はどれですか。",exp:"生成AI導入はユースケース選定、パイロット、評価、ガバナンス、教育、変更管理、段階展開を組み合わせます。",tip:"全禁止か全放任かの両極端を避けます。",cs:[["利用ポリシー、データ分類、承認フロー、評価基準、教育を整え、管理可能なユースケースから段階展開する。",1,"スピードと統制のバランスが取れています。"],["各部門の判断に完全に任せ、データ入力や出力利用のルールは作らない。",0,"リスクが顕在化しやすく、全社展開に向きません。"],["リスクを避けるため、業務利用を無期限に全面禁止する。",0,"イノベーション機会を失い、現実的な管理策ではありません。"],["PoCで便利だったものは評価なしで全社本番に移す。",0,"効果、リスク、運用負荷の検証が不足しています。"]]},
+{id:"T09",cat:"strategy",wiki:"responsible-ai",diff:"medium",tags:["説明可能性","公平性","HITL"],q:"{org}のAIが候補者や顧客を順位付けする用途で使われます。関係者はなぜその結果になったか説明できず、不公平な影響も懸念しています。最も適切な対応はどれですか。",exp:"高影響領域では説明可能性、透明性、公平性評価、影響分析、人間レビュー、監査ログを組み合わせて責任あるAIを実現します。",tip:"公平性だけ、精度だけ、データ量だけでは足りません。",cs:[["説明可能性、透明性、公平性評価、影響分析、人間レビュー、監査ログを組み合わせる。",1,"責任あるAIの観点を包括しています。"],["データ量を増やせば説明可能性と公平性は必ず満たされる。",0,"偏ったデータが増えるだけの場合もあります。"],["ファインチューニングで精度が上がれば、候補者への説明は不要である。",0,"高影響用途では説明責任が残ります。"],["AIの順位付け結果は常に中立なので、人間レビューはバイアスを増やすだけである。",0,"AIにもデータ由来のバイアスがあり、人間の適切な監督が必要です。"]]}
+];
+function loadStore(){try{let s=JSON.parse(localStorage.getItem(ALLKEY)||"null");if(!s){let legacy=[];try{legacy=JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){}s={version:2,createdAt:new Date().toISOString(),attempts:legacy,live:null,totalStudySeconds:0,reviewDone:{},wikiVisits:{}};localStorage.setItem(ALLKEY,JSON.stringify(s))}s.attempts=s.attempts||[];s.reviewDone=s.reviewDone||{};s.wikiVisits=s.wikiVisits||{};return s}catch(e){return{version:2,attempts:[],live:null,totalStudySeconds:0,reviewDone:{},wikiVisits:{}}}}
+function saveStore(s){s.updatedAt=new Date().toISOString();localStorage.setItem(ALLKEY,JSON.stringify(s))}
+history=function(){return loadStore().attempts||[]};
+saveHistory=function(h){const s=loadStore();s.attempts=h;saveStore(s)};
+function ensureEnhancements(){if(!T.some(x=>x.id==="B16"))T.push(...EXTRA_T);T.forEach((t,i)=>{if(!t.diff)t.diff=(i%7===0?"hard":i%3===0?"medium":"basic")});buildSets();}
+buildSets=function(){SETS=CTX.map((ctx,si)=>{let qs=T.map((t,qi)=>{let cs=t.cs.map((c,ci)=>({text:fmt(c[0],ctx),ok:!!c[1],fb:fmt(c[2],ctx),orig:ci}));cs=shuffle(cs,12000+si*211+qi*17).map((c,i)=>({...c,letter:"ABCD"[i]}));return{id:`${si+1}-${t.id}`,base:t.id,no:qi+1,cat:t.cat,wiki:t.wiki,tags:t.tags||[],diff:t.diff||"basic",q:fmt(t.q,ctx),exp:fmt(t.exp,ctx),tip:fmt(t.tip,ctx),choices:cs}});return{id:si+1,title:`セット${si+1}`,ctx,questions:qs}})};
+function refreshSetSelect(){const sel=$("setSelect");if(sel)sel.innerHTML=SETS.map((s,i)=>`<option value="${i}">${s.title} - ${esc(s.ctx.org)} / ${esc(s.ctx.team)} / 60問</option>`).join("")}
+show=function(page){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(page).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.page===page));if(page==='progress')renderProgress();if(page==='wiki'){renderWikiList();renderWikiDetail(selectedWiki)}if(page==='review')renderReview();if(page==='data')renderData();if(page==='congrats')renderCongrats();};
+function modeInfo(){const v=($("modeSelect")?.value)||"challenging";return MODE[v]||MODE.challenging}
+function qCount(){return current?.set?.questions?.length||60}
+renderSetCards=function(){const h=history();const st=loadStore();$("setCards").innerHTML=SETS.map((s,idx)=>{const hs=h.filter(x=>x.setId===s.id);const best=hs.length?Math.max(...hs.map(x=>x.score)):null;const last=hs.length?hs[hs.length-1].score:null;const live=st.live&&st.live.setId===s.id;return`<div class="card"><h3>${s.title}</h3><p class="muted small">${esc(s.ctx.org)} / ${esc(s.ctx.team)}</p><p><span class="badge">60問</span><span class="badge purple">${live?'途中保存あり':'90分'}</span><span class="badge yellow">${esc(s.ctx.biz)}</span></p><p class="small">実施: <b>${hs.length}</b>回 / 最高: <b>${best??'-'}</b>点 / 直近: <b>${last??'-'}</b>点</p><div class="toolbar"><button class="btn" onclick="selectSet(${idx})">このセットを解く</button>${live?`<button class="btn sec" onclick="resumeLive()">途中再開</button>`:''}</div></div>`}).join('')};
+startExam=function(){if(current&&!graded){if(!confirm('進行中の試験を破棄して新しく開始しますか？'))return}clearInterval(tickId);const si=Number($("setSelect").value||0);const mi=modeInfo();let qs=SETS[si].questions.slice();if($("modeSelect")?.value!=="standard")qs=shuffle(qs,Date.now()%100000+si*31);current={set:{...SETS[si],questions:qs},setIndex:si,answers:Array(qs.length).fill(null),flags:Array(qs.length).fill(false),confidence:Array(qs.length).fill('normal'),started:new Date().toISOString(),mode:$("modeSelect")?.value||"challenging"};remaining=mi.seconds;paused=false;graded=false;$("examArea").classList.remove('hidden');$("result").classList.add('hidden');$("pauseOverlay").classList.remove('show');$("setTitle").textContent=`${current.set.title} - ${current.set.ctx.org} / ${mi.name}`;$("totalQ").textContent=qs.length;renderQuestions();updateProgress();startTimer();saveLive();window.scrollTo({top:$("exam").offsetTop,behavior:'smooth'})};
+function saveLive(){if(!current||graded)return;const st=loadStore();st.live={setId:current.set.id,setIndex:current.setIndex,answers:current.answers,flags:current.flags,confidence:current.confidence,remaining,started:current.started,mode:current.mode,updatedAt:new Date().toISOString()};saveStore(st);}
+window.resumeLive=function(){const st=loadStore();const l=st.live;if(!l){alert('途中保存データはありません。');return}clearInterval(tickId);const si=l.setIndex??(l.setId-1);const mi=MODE[l.mode]||MODE.challenging;let qs=SETS[si].questions.slice();if(l.mode!=="standard")qs=shuffle(qs,(new Date(l.started).getTime()%100000)+si*31);current={set:{...SETS[si],questions:qs},setIndex:si,answers:l.answers||Array(qs.length).fill(null),flags:l.flags||Array(qs.length).fill(false),confidence:l.confidence||Array(qs.length).fill('normal'),started:l.started,mode:l.mode||"challenging"};if($("setSelect"))$("setSelect").value=si;if($("modeSelect"))$("modeSelect").value=current.mode;remaining=l.remaining??mi.seconds;paused=false;graded=false;$("examArea").classList.remove('hidden');$("result").classList.add('hidden');$("setTitle").textContent=`${current.set.title} - ${current.set.ctx.org} / 途中再開`;$("totalQ").textContent=qs.length;show('exam');renderQuestions();updateProgress();startTimer();};
+startTimer=function(){clearInterval(tickId);updateTimer();tickId=setInterval(()=>{if(paused||graded)return;remaining--;if(remaining%10===0)saveLive();updateTimer();if(remaining<=0){remaining=0;updateTimer();grade(true)}},1000)};
+pauseExam=function(){if(!current||graded)return;paused=!paused;$("pauseOverlay").classList.toggle('show',paused);document.querySelectorAll('input[type=radio],select.confsel,button.flagbtn').forEach(x=>x.disabled=paused||graded);updateTimer();saveLive()};
+renderQuestions=function(){if(!current)return;const qs=current.set.questions;$("questions").innerHTML=qs.map((q,i)=>`<div class="qcard" id="q${i}"><div class="toolbar space"><div><span class="pill cat-${catCss(q.cat)}">Q${i+1} ${catShort(q.cat)}</span> <span class="pill">難易度: ${DIFF[q.diff]||q.diff}</span> ${q.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join(' ')}</div><button class="link no-print" onclick="openWiki('${q.wiki}')">Wiki: ${esc(WIKI[q.wiki]?.title||q.wiki)}</button></div><p><b>${esc(q.q)}</b></p><div class="choices">${q.choices.map((c,ci)=>choiceHtml(i,ci,c)).join('')}</div><div class="toolbar no-print" style="margin-top:10px"><button class="btn sec flagbtn ${current.flags[i]?'warn':''}" onclick="toggleFlag(${i})" ${paused||graded?'disabled':''}>${current.flags[i]?'★ 後から確認する':'☆ 後から確認する'}</button><label class="small">自信度 <select class="confsel" onchange="setConfidence(${i},this.value)" ${paused||graded?'disabled':''}><option value="high" ${current.confidence[i]==='high'?'selected':''}>高い</option><option value="normal" ${current.confidence[i]==='normal'?'selected':''}>普通</option><option value="low" ${current.confidence[i]==='low'?'selected':''}>低い</option></select></label></div>${graded?`<div class="explain"><b>要点:</b> ${esc(q.exp)}<br><b>見極め:</b> ${esc(q.tip)}</div>`:''}</div>`).join('');updateQuestionStyles();renderQnav()};
+choiceHtml=function(i,ci,c){const sel=current.answers[i]===ci;let cls='choice'+(sel?' sel':'');if(graded){if(c.ok)cls+=' ok';else if(sel&&!c.ok)cls+=' ng'}return`<label class="${cls}" data-q="${i}" data-c="${ci}"><input type="radio" name="q${i}" ${sel?'checked':''} ${(paused||graded)?'disabled':''} onclick="pick(${i},${ci})"> <b>${c.letter}.</b> ${esc(c.text)}</label>`};
+pick=function(i,ci){if(paused||graded)return;current.answers[i]=ci;updateQuestionStyles();updateProgress();saveLive()};
+window.toggleFlag=function(i){if(!current||paused||graded)return;current.flags[i]=!current.flags[i];renderQuestions();updateProgress();saveLive()};
+window.setConfidence=function(i,v){if(!current||paused||graded)return;current.confidence[i]=v;saveLive()};
+updateProgress=function(){if(!current)return;const ans=current.answers.filter(x=>x!==null).length;$("answered").textContent=ans;$("progressBar").style.width=(ans/current.answers.length*100)+'%';renderQnav(false)};
+renderQnav=function(full=true){if(!current)return;const html=current.set.questions.map((q,i)=>{let cls='';if(graded){const a=current.answers[i];cls=a===null?'blank':q.choices[a].ok?'ok':'ng'}else cls=current.answers[i]!==null?'ans':'';return`<button class="${cls}" title="${current.flags[i]?'後から確認 / ':''}${DIFF[q.diff]||q.diff}" onclick="scrollQ(${i})">${current.flags[i]?'★':''}${i+1}</button>`}).join('');if(full||$("qnav").innerHTML!==html)$("qnav").innerHTML=html};
+grade=function(auto){if(!current||graded)return;const n=qCount();const blanks=current.answers.filter(x=>x===null).length;if(!auto&&blanks>0&&!confirm(`未回答が${blanks}問あります。このまま採点しますか？`))return;graded=true;paused=false;clearInterval(tickId);$("pauseOverlay").classList.remove('show');const qs=current.set.questions;const details=qs.map((q,i)=>{const ai=current.answers[i];const choice=ai===null?null:q.choices[ai];return{q,i,ai,choice,ok:!!choice?.ok,blank:ai===null,correct:q.choices.find(c=>c.ok),flagged:!!current.flags[i],confidence:current.confidence[i]||'normal'}});let byCat={},byDiff={};CAT_ORDER.forEach(c=>byCat[c]={total:0,earned:0,correct:0,count:0,blank:0,wrong:0});Object.keys(DIFF).forEach(d=>byDiff[d]={total:0,earned:0,correct:0,count:0});let tagMiss={};const pt=100/n;details.forEach(d=>{const c=d.q.cat;byCat[c].total+=pt;byCat[c].count++;byDiff[d.q.diff].total+=pt;byDiff[d.q.diff].count++;if(d.ok){byCat[c].earned+=pt;byCat[c].correct++;byDiff[d.q.diff].earned+=pt;byDiff[d.q.diff].correct++}else{if(d.blank)byCat[c].blank++;else byCat[c].wrong++;d.q.tags.forEach(t=>tagMiss[t]=(tagMiss[t]||0)+1)}});Object.values(byCat).forEach(x=>{x.total=+x.total.toFixed(1);x.earned=+x.earned.toFixed(1)});Object.values(byDiff).forEach(x=>{x.total=+x.total.toFixed(1);x.earned=+x.earned.toFixed(1)});const correct=details.filter(d=>d.ok).length;const score=Math.round(correct/n*100);const record={id:Date.now(),date:new Date().toISOString(),setId:current.set.id,setTitle:current.set.title,org:current.set.ctx.org,industry:current.set.ctx.biz,mode:current.mode,questionCount:n,score,correct,wrong:details.filter(d=>!d.ok&&!d.blank).length,blank:blanks,flagged:details.filter(d=>d.flagged).length,lowConfidence:details.filter(d=>d.confidence==='low').length,remaining,elapsed:(MODE[current.mode]?.seconds||5400)-remaining,byCat,byDiff,tagMiss,details:details.map(d=>({i:d.i,qid:d.q.id||d.q.base,question:d.q.q,cat:d.q.cat,diff:d.q.diff,tags:d.q.tags,wiki:d.q.wiki,answer:d.choice?{letter:d.choice.letter,text:d.choice.text}:null,correct:{letter:d.correct.letter,text:d.correct.text},ok:d.ok,blank:d.blank,flagged:d.flagged,confidence:d.confidence,explanation:d.q.exp,tip:d.q.tip,choices:d.q.choices.map(c=>({letter:c.letter,text:c.text,ok:c.ok,fb:c.fb}))}))};const st=loadStore();st.attempts.push(record);st.live=null;saveStore(st);renderQuestions();renderResult(record,details);renderSetCards();renderProgress();renderReview();renderData();if(auto)alert('時間切れのため自動採点しました。');if(new Set(st.attempts.map(x=>x.setId)).size>=5){renderCongrats();setTimeout(()=>show('congrats'),650)}};
+catTable=function(cats){return`<table><thead><tr><th>カテゴリ</th><th>獲得点</th><th>割合</th><th>状態</th></tr></thead><tbody>${cats.map(c=>`<tr><td>${catLabel(c.key)}</td><td><b>${Number(c.earned).toFixed(1)}</b> / ${Number(c.total).toFixed(1)}</td><td>${c.pct}%</td><td>${c.pct>=80?'安定':c.pct>=70?'要確認':'重点復習'}</td></tr>`).join('')}</tbody></table>`};
+renderResult=function(r,details){const cats=CAT_ORDER.map(c=>({key:c,...r.byCat[c],pct:pct(r.byCat[c].earned,r.byCat[c].total)}));const diffs=Object.keys(DIFF).map(d=>({key:d,...r.byDiff[d],pct:pct(r.byDiff[d].earned,r.byDiff[d].total)}));const missTags=Object.entries(r.tagMiss).sort((a,b)=>b[1]-a[1]).slice(0,10);const level=r.score>=85?'good':r.score>=75?'warn':'bad';const msg=r.score>=85?'合格圏。弱点タグを潰せば安定合格を狙えます。':r.score>=75?'合格ライン近辺。カテゴリ別の穴を優先して復習してください。':'要復習。まずは弱点カテゴリのWikiと誤答選択肢の理由を確認してください。';lastReport=makeReport(r,cats,missTags,details);$("result").classList.remove('hidden');$("result").innerHTML=`<div class="card"><div class="toolbar space"><div><h2>採点結果</h2><p class="muted">${esc(r.setTitle)} / ${esc(r.org)} / ${MODE[r.mode]?.name||r.mode} / 採点日時: ${new Date(r.date).toLocaleString('ja-JP')}</p></div><div class="toolbar no-print"><button class="btn sec" onclick="downloadReport()">分析レポートTXT</button><button class="btn sec" onclick="show('review')">復習へ</button><button class="btn sec" onclick="window.print()">印刷</button><button class="btn" onclick="startExam()">同じセットを再受験</button></div></div><div class="result-grid"><div><div class="score" style="background:conic-gradient(var(--primary) ${r.score*3.6}deg,#dbeafe 0)"><div><b>${r.score}</b><br><span class="small">/100点</span></div></div><div class="call ${level}" style="margin-top:14px"><b>${msg}</b><br><span class="small">正解 ${r.correct}/${r.questionCount}、不正解 ${r.wrong}、未回答 ${r.blank}、後から確認 ${r.flagged}、所要 ${mmss(r.elapsed)}</span></div></div><div><div class="grid four">${stat('正解数',r.correct+'問')}${stat('不正解',r.wrong+'問')}${stat('未回答',r.blank+'問')}${stat('後から確認',r.flagged+'問')}</div><h3 style="margin-top:16px">カテゴリ別 獲得点数と割合</h3>${catTable(cats)}<canvas id="catChart" height="250"></canvas><h3 style="margin-top:16px">難易度別 正答率</h3><canvas id="diffChart" height="220"></canvas></div></div></div><div class="card" style="margin-top:16px"><h2>回答系統と対策分析レポート</h2>${analysisHtml(r,cats,missTags,details)}${difficultyAdvice(diffs,r)}</div><div class="card" style="margin-top:16px"><h2>問題別 詳細解説</h2><p class="muted">各問題から関連Wikiへ移動できます。後から確認フラグ付きの問題は、復習ページでまとめて参照できます。</p>${detailHtml(details)}</div>`;setTimeout(()=>{drawBar('catChart',cats.map(x=>catShort(x.key)),cats.map(x=>x.pct),100,'カテゴリ別正答率(%)');drawBar('diffChart',diffs.map(x=>DIFF[x.key]),diffs.map(x=>x.pct),100,'難易度別正答率(%)')},50);$("result").scrollIntoView({behavior:'smooth',block:'start'})};
+function difficultyAdvice(diffs,r){const hard=diffs.find(x=>x.key==='hard');const low=r.lowConfidence||0;return`<div class="analysis ${hard&&hard.pct<65?'warn':'good'}"><h3>難易度別の読み解き</h3><p>高難度問題の正答率は ${hard?hard.pct:0}% です。${hard&&hard.pct<65?'サービスの境界、RAGとファインチューニングの使い分け、責任あるAIの複合論点を重点復習してください。':'高難度でも一定の判断力があります。次は時間短縮を狙ってください。'}</p><p>自信度「低い」は ${low} 問です。正解していても自信度が低い問題は、試験本番で迷いを生みやすいので復習対象にしてください。</p></div>`}
+renderReview=function(){const st=loadStore();const filter=$("reviewFilter")?.value||"flagged";let rows=[];st.attempts.forEach(a=>(a.details||[]).forEach(d=>rows.push({...d,attempt:a})));if(filter==='flagged')rows=rows.filter(x=>x.flagged);if(filter==='wrong')rows=rows.filter(x=>!x.ok);if(filter==='lowconf')rows=rows.filter(x=>x.confidence==='low');rows=rows.slice().reverse();$("reviewBody").innerHTML=rows.length?rows.map((d,idx)=>`<div class="qcard"><div class="toolbar space"><h3>${idx+1}. ${d.ok?'✅':'❌'} ${esc(d.attempt.setTitle)} / ${esc(d.attempt.org)}</h3><button class="link no-print" onclick="openWiki('${d.wiki}')">Wiki: ${esc(WIKI[d.wiki]?.title||d.wiki)}</button></div><p><span class="pill cat-${catCss(d.cat)}">${catShort(d.cat)}</span> <span class="pill">難易度: ${DIFF[d.diff]||d.diff}</span> ${d.flagged?'<span class="badge yellow">後から確認</span>':''} <span class="badge purple">自信度: ${d.confidence}</span></p><p><b>${esc(d.question)}</b></p><p class="small">あなたの回答: <b>${esc(d.answer?d.answer.letter+'. '+d.answer.text:'未回答')}</b><br>正解: <b>${esc(d.correct.letter+'. '+d.correct.text)}</b></p><div class="explain"><b>解説:</b> ${esc(d.explanation)}<br><b>見極め:</b> ${esc(d.tip)}</div>${(d.choices||[]).map(c=>`<div class="fb ${c.ok?'ok':(d.answer&&d.answer.letter===c.letter?'ng':'')}"><b>${c.letter}. ${esc(c.text)}</b>${c.ok?' <span class="badge green">正解</span>':''}${d.answer&&d.answer.letter===c.letter?' <span class="badge purple">選択</span>':''}<br>${esc(c.fb)}</div>`).join('')}</div>`).join(''):`<div class="card"><h3>該当する復習問題はありません</h3><p class="muted">試験中に「後から確認する」を押すか、採点後に誤答があるとここで絞り込めます。</p></div>`};
+window.downloadReviewList=function(){const st=loadStore();let lines=['Generative AI Leader 復習リスト','================================'];st.attempts.forEach(a=>(a.details||[]).filter(d=>d.flagged||!d.ok||d.confidence==='low').forEach(d=>{lines.push(`\n[${a.setTitle} / ${a.org}] ${d.ok?'正解':'不正解'} ${d.flagged?'後から確認 ':''}自信度:${d.confidence}`);lines.push(d.question);lines.push(`あなた: ${d.answer?d.answer.letter+'. '+d.answer.text:'未回答'}`);lines.push(`正解: ${d.correct.letter}. ${d.correct.text}`);lines.push(`解説: ${d.explanation}`);lines.push(`Wiki: ${WIKI[d.wiki]?.title||d.wiki}`)}));downloadBlob(new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'}),'gail_review_list.txt')};
+renderData=function(){const st=loadStore();const size=new Blob([JSON.stringify(st)]).size;$("dataBody").innerHTML=`<div class="grid four"><div class="stat"><div class="label">保存済みテスト</div><div class="num">${st.attempts.length}</div></div><div class="stat"><div class="label">途中保存</div><div class="num">${st.live?'あり':'なし'}</div></div><div class="stat"><div class="label">総学習時間</div><div class="num">${Math.round((st.totalStudySeconds||0)/60)}分</div></div><div class="stat"><div class="label">データサイズ</div><div class="num">${Math.round(size/1024)}KB</div></div></div><div class="card" style="margin-top:16px"><h3>保存対象</h3><p><span class="badge">採点履歴</span><span class="badge">問題別回答</span><span class="badge">後から確認フラグ</span><span class="badge">自信度</span><span class="badge">途中再開データ</span><span class="badge">総学習時間</span><span class="badge">Wiki参照履歴</span></p><p class="muted">ブラウザのローカルストレージに保存されます。別ブラウザや別PCへ移行する場合は、JSON出力と取込を使用してください。</p></div>`};
+window.exportAllData=function(){downloadBlob(new Blob([JSON.stringify(loadStore(),null,2)],{type:'application/json;charset=utf-8'}),'gail_all_learning_data.json')};
+window.importAllData=function(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(r.result);if(!data.attempts)throw new Error('invalid');saveStore(data);alert('取り込みました。');renderProgress();renderReview();renderData();renderSetCards()}catch(e){alert('JSONの形式が正しくありません。')}};r.readAsText(f)};
+window.resetAllData=function(){if(confirm('全ての学習データを削除しますか？')){localStorage.removeItem(ALLKEY);localStorage.removeItem(KEY);renderProgress();renderReview();renderData();renderSetCards();alert('削除しました。')}};
+resetHistory=function(){if(confirm('採点履歴を削除しますか？途中保存と総学習時間は保持します。')){const st=loadStore();st.attempts=[];saveStore(st);renderProgress();renderSetCards();renderReview();renderData()}};
+exportHistory=function(){downloadBlob(new Blob([JSON.stringify(history(),null,2)],{type:'application/json;charset=utf-8'}),'gail_attempt_history.json')};
+renderProgress=function(){const st=loadStore();const h=st.attempts;renderSetCards();if(!h.length){$("progressBody").innerHTML=`<div class="card"><h3>まだ採点履歴がありません</h3><p class="muted">問題集を1回採点すると、点数推移、カテゴリ別平均、難易度別平均、セット別進捗、弱点タグが表示されます。</p><button class="btn" onclick="show('exam')">最初のテストを始める</button></div>`;return}const scores=h.map(x=>x.score);const best=Math.max(...scores),last=scores[scores.length-1],first=scores[0],avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);let catAvg=CAT_ORDER.map(c=>Math.round(h.map(x=>pct(x.byCat[c].earned,x.byCat[c].total)).reduce((a,b)=>a+b,0)/h.length));let diffAvg=Object.keys(DIFF).map(d=>Math.round(h.map(x=>x.byDiff?pct(x.byDiff[d].earned,x.byDiff[d].total):0).reduce((a,b)=>a+b,0)/h.length));const completed=new Set(h.map(x=>x.setId)).size;const setRows=SETS.map(s=>{const hs=h.filter(x=>x.setId===s.id);return{set:s.title,org:s.ctx.org,count:hs.length,best:hs.length?Math.max(...hs.map(x=>x.score)):'-',last:hs.length?hs[hs.length-1].score:'-'}});const tagTotal={};h.forEach(r=>Object.entries(r.tagMiss||{}).forEach(([t,n])=>tagTotal[t]=(tagTotal[t]||0)+n));const topTags=Object.entries(tagTotal).sort((a,b)=>b[1]-a[1]).slice(0,12);const testSec=h.reduce((a,b)=>a+(b.elapsed||0),0);$("progressBody").innerHTML=`<div class="grid four"><div class="stat"><div class="label">実施回数</div><div class="num">${h.length}</div></div><div class="stat"><div class="label">完了セット</div><div class="num">${completed}/5</div></div><div class="stat"><div class="label">平均点</div><div class="num">${avg}</div></div><div class="stat"><div class="label">初回→直近</div><div class="num">${first}→${last}</div></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>点数推移</h3><canvas id="scoreTrend" height="260"></canvas></div><div class="card"><h3>カテゴリ別 平均正答率</h3><canvas id="catAvg" height="260"></canvas></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>難易度別 平均正答率</h3><canvas id="diffAvg" height="240"></canvas></div><div class="card"><h3>学習時間</h3><p><span class="badge">テスト実施時間 ${mmss(testSec)}</span><span class="badge purple">アプリ学習時間 ${mmss(st.totalStudySeconds||0)}</span></p><p class="muted">点数が伸びにくい場合は、テスト回数よりも「誤答タグ上位3つのWiki→該当問題の解き直し」を優先してください。</p></div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>セット別進捗</h3><table><thead><tr><th>セット</th><th>業界</th><th>実施</th><th>最高</th><th>直近</th></tr></thead><tbody>${setRows.map(r=>`<tr><td>${r.set}</td><td>${esc(r.org)}</td><td>${r.count}</td><td>${r.best}</td><td>${r.last}</td></tr>`).join('')}</tbody></table></div><div class="card"><h3>累積弱点タグ</h3>${topTags.length?topTags.map(([t,n])=>`<span class="badge yellow">${esc(t)}: ${n}</span>`).join(' '):'<p class="muted">弱点タグはありません。</p>'}<div class="section"><h3>学習アドバイス</h3><p>${last>=80?'直近は合格練習ラインに到達しています。未実施セットを完了し、カテゴリ別80%以上を安定させてください。':'直近が80点未満です。累積弱点タグ上位からWikiを読み、復習ページで誤答と後から確認問題を解き直してください。'}</p></div></div></div><div class="card" style="margin-top:16px"><h3>履歴一覧</h3><table><thead><tr><th>日時</th><th>セット</th><th>モード</th><th>点数</th><th>カテゴリ割合</th></tr></thead><tbody>${h.slice().reverse().map(r=>`<tr><td>${new Date(r.date).toLocaleString('ja-JP')}</td><td>${esc(r.setTitle)} / ${esc(r.org)}</td><td>${MODE[r.mode]?.name||r.mode||'-'}</td><td><b>${r.score}</b></td><td>${CAT_ORDER.map(c=>`${catShort(c)}:${pct(r.byCat[c].earned,r.byCat[c].total)}%`).join(' / ')}</td></tr>`).join('')}</tbody></table></div>`;setTimeout(()=>{drawLine('scoreTrend',h.map((_,i)=>String(i+1)),scores,100,'試験ごとの得点');drawBar('catAvg',CAT_ORDER.map(catShort),catAvg,100,'カテゴリ平均(%)');drawBar('diffAvg',Object.keys(DIFF).map(d=>DIFF[d]),diffAvg,100,'難易度平均(%)')},50)};
+renderCongrats=function(){const st=loadStore(),h=st.attempts;const done=new Set(h.map(x=>x.setId)).size;if(done<5){$("congratsBody").innerHTML=`<div class="card"><h2>完走レビュー</h2><p class="muted">5セット中 ${done} セット完了です。全5セットを1回以上採点すると、Congratulationsページで学習効果レビューを表示します。</p><button class="btn" onclick="show('exam')">未実施セットへ</button></div>`;return}const scores=h.map(x=>x.score);const first=scores[0],last=scores[scores.length-1],best=Math.max(...scores),avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);const testSec=h.reduce((a,b)=>a+(b.elapsed||0),0);const improvement=last-first;const latestBySet=[...new Map(h.map(a=>[a.setId,a])).values()].sort((a,b)=>a.setId-b.setId);$("congratsBody").innerHTML=`<div class="card"><h1>Congratulations!</h1><p class="muted">5セット完走です。異なる業界シナリオで、合計300問のケーススタディに取り組みました。</p><div class="grid four"><div class="stat"><div class="label">総テスト時間</div><div class="num">${Math.round(testSec/60)}分</div></div><div class="stat"><div class="label">最高点</div><div class="num">${best}</div></div><div class="stat"><div class="label">平均点</div><div class="num">${avg}</div></div><div class="stat"><div class="label">初回→直近</div><div class="num">${first}→${last}</div></div></div><div class="call ${improvement>=0?'good':'warn'}" style="margin-top:16px"><b>学習効果レビュー</b><br>初回から直近まで ${improvement>=0?'+':''}${improvement} 点の変化です。${avg>=80?'平均80点以上なので、試験直前は弱点タグとサービス使い分けの最終確認に集中してください。':'平均80点未満のため、復習ページで後から確認・誤答・自信度低い問題を優先してください。'}</div></div><div class="grid two" style="margin-top:16px"><div class="card"><h3>セット別 直近点</h3><canvas id="congratsChart" height="260"></canvas></div><div class="card"><h3>次の対策</h3><ol><li>復習ページで「後から確認のみ」を解き直す。</li><li>累積弱点タグ上位3つのWikiを読む。</li><li>最終日は高難度モードで1セットだけ実施し、時間配分を確認する。</li></ol><div class="toolbar"><button class="btn" onclick="show('review')">復習へ</button><button class="btn sec" onclick="show('progress')">進捗へ</button></div></div></div>`;setTimeout(()=>drawBar('congratsChart',latestBySet.map(x=>'Set'+x.setId),latestBySet.map(x=>x.score),100,'セット別 直近点'),50)};
+openWiki=function(id){selectedWiki=id;const st=loadStore();st.wikiVisits[id]=(st.wikiVisits[id]||0)+1;saveStore(st);show('wiki');setTimeout(()=>renderWikiDetail(id),20)};
+const oldMakeReport=makeReport;
+makeReport=function(r,cats,missTags,details){let base=oldMakeReport(r,cats,missTags,details);return base.replace(/正解: \\d+\/60/g,`正解: ${r.correct}/${r.questionCount}`).replace(/不正解: \\d+/g,`不正解: ${r.wrong}`)+`\n\n[追加情報]\n難易度モード: ${MODE[r.mode]?.name||r.mode}\n後から確認: ${r.flagged}問\n自信度低い: ${r.lowConfidence}問\n`};
+let studyTickStarted=false;function startStudyClock(){if(studyTickStarted)return;studyTickStarted=true;setInterval(()=>{if(document.visibilityState==='visible'){const st=loadStore();st.totalStudySeconds=(st.totalStudySeconds||0)+10;saveStore(st);if($("data")?.classList.contains('active'))renderData()}},10000)}
+function enhancedBootstrap(){ensureEnhancements();refreshSetSelect();document.querySelectorAll('.nav').forEach(b=>{b.onclick=()=>show(b.dataset.page)});renderSetCards();renderProgress();renderReview();renderData();renderCongrats();startStudyClock();}
+enhancedBootstrap();
+})();
+</script>
+<script>
+makeReport=function(r,cats,missTags,details){
+  const lines=[];
+  lines.push('Google Cloud Generative AI Leader 学習分析レポート');
+  lines.push('================================================');
+  lines.push(`日時: ${new Date(r.date).toLocaleString('ja-JP')}`);
+  lines.push(`セット: ${r.setTitle} / ${r.org} / ${window.MODE&&window.MODE[r.mode]?window.MODE[r.mode].name:r.mode}`);
+  lines.push(`得点: ${r.score}/100  正解: ${r.correct}/${r.questionCount||60}  不正解: ${r.wrong}  未回答: ${r.blank}`);
+  lines.push(`後から確認: ${r.flagged||0}問  自信度低い: ${r.lowConfidence||0}問  所要時間: ${mmss(r.elapsed||0)}`);
+  lines.push('');
+  lines.push('[カテゴリ別]');
+  cats.forEach(c=>lines.push(`${catLabel(c.key)}: ${Number(c.earned).toFixed(1)}/${Number(c.total).toFixed(1)} (${c.pct}%)`));
+  if(r.byDiff){lines.push('');lines.push('[難易度別]');Object.keys(window.DIFF||{}).forEach(d=>{const x=r.byDiff[d];if(x)lines.push(`${window.DIFF[d]}: ${Number(x.earned).toFixed(1)}/${Number(x.total).toFixed(1)} (${pct(x.earned,x.total)}%)`)})}
+  lines.push('');
+  lines.push('[誤答タグ上位]');
+  if(missTags&&missTags.length)missTags.forEach(([t,n])=>lines.push(`${t}: ${n}`));else lines.push('誤答タグなし');
+  lines.push('');
+  lines.push('[対策]');
+  const weak=cats.filter(c=>c.pct<75).sort((a,b)=>a.pct-b.pct);
+  if(weak.length)lines.push(`重点復習カテゴリ: ${weak.map(c=>catLabel(c.key)).join('、')}`);else lines.push('カテゴリ別の大きな穴はありません。時間配分と説明力を強化してください。');
+  if(missTags&&missTags.length)lines.push(`最優先Wiki/タグ: ${missTags.slice(0,3).map(([t])=>t).join('、')}`);
+  lines.push('');
+  lines.push('[誤答・後から確認一覧]');
+  const source=(r.details||[]).filter(d=>!d.ok||d.flagged||d.confidence==='low');
+  if(!source.length)lines.push('対象なし');
+  source.forEach((d,idx)=>{lines.push(`\n${idx+1}. ${d.question||d.q?.q||''}`);lines.push(`  状態: ${d.ok?'正解':'不正解'} ${d.flagged?'後から確認 ':''}自信度:${d.confidence||'-'}`);lines.push(`  あなた: ${d.answer?d.answer.letter+'. '+d.answer.text:(d.choice?d.choice.letter+'. '+d.choice.text:'未回答')}`);lines.push(`  正解: ${d.correct?d.correct.letter+'. '+d.correct.text:'-'}`);lines.push(`  解説: ${d.explanation||d.q?.exp||''}`);lines.push(`  Wiki: ${WIKI[d.wiki||d.q?.wiki]?.title||d.wiki||d.q?.wiki||''}`)});
+  return lines.join('\n');
+};
+</script>
+<script>
+/* V3: mixed-industry exam sets + balanced, plausible answer choices */
+(function(){
+  const V3_MARK='gail_v3_mixed_industry_balanced_choices';
+  if(window[V3_MARK]) return;
+  window[V3_MARK]=true;
+  const MIXED_CTX=[
+    {industry:'金融・銀行',org:'地域銀行',team:'デジタル企画部',biz:'融資相談、FAQ、社内規程検索の高度化',data:'審査規程、商品説明、問い合わせ履歴、通話メモ',risk:'金融規制、個人情報、説明責任',users:'営業担当者とコールセンター担当者',cust:'個人顧客'},
+    {industry:'保険',org:'損害保険会社',team:'保険金サービス部',biz:'事故受付、支払可否の一次整理、代理店支援',data:'約款、事故報告書、写真、支払履歴、通話録音',risk:'誤支払、説明責任、機微情報',users:'査定担当者と代理店担当者',cust:'契約者'},
+    {industry:'製造・品質保証',org:'産業機器メーカー',team:'品質保証部',biz:'不具合解析、保全ナレッジ検索、作業標準の要約',data:'検査画像、保全記録、作業標準書、センサー時系列',risk:'安全基準、誤作業、機密図面流出',users:'現場技術者と品質管理者',cust:'工場現場'},
+    {industry:'小売・EC',org:'小売チェーン',team:'EC・店舗運営部',biz:'商品検索、販促企画、在庫問い合わせ対応',data:'POS、在庫、商品説明、レビュー、販促資料',risk:'ブランド毀損、誤った在庫案内、顧客データ',users:'店舗スタッフとEC運営者',cust:'オンライン顧客'},
+    {industry:'医療機器・薬事',org:'医療機器メーカー',team:'薬事・営業企画部',biz:'規制文書要約、営業資料作成、問い合わせ一次回答',data:'承認文書、添付文書、論文、営業ナレッジ、FAQ',risk:'規制遵守、根拠提示、医療情報の誤用',users:'営業担当者と薬事担当者',cust:'医療従事者'},
+    {industry:'通信・法人サポート',org:'通信会社',team:'法人サポート部',biz:'障害問い合わせの切り分け、契約情報検索、FAQ自動化',data:'契約DB、障害レポート、ナレッジ記事、チャット履歴',risk:'SLA、セキュリティ、顧客固有情報の混同',users:'サポートエンジニアとアカウント担当',cust:'法人顧客'},
+    {industry:'物流・サプライチェーン',org:'物流事業者',team:'配送品質改善チーム',biz:'遅延理由の要約、配送問合せ対応、需要予測支援',data:'配送ステータス、車両記録、顧客連絡履歴、天候情報',risk:'誤案内、個人情報、委託先情報',users:'配車担当者とカスタマーサポート',cust:'荷主企業'},
+    {industry:'公共・自治体',org:'自治体',team:'住民サービス改革室',biz:'住民向けFAQ、申請書類案内、庁内文書検索',data:'条例、申請様式、FAQ、議事録、相談履歴',risk:'公平性、説明責任、個人情報保護',users:'窓口職員と政策担当者',cust:'住民'},
+    {industry:'教育・大学',org:'大学',team:'学務DX推進室',biz:'履修相談、研究資料整理、学生問い合わせ対応',data:'シラバス、履修規程、研究資料、問い合わせ履歴',risk:'学生情報、著作権、説明責任',users:'教職員と学生支援担当',cust:'学生'},
+    {industry:'メディア・広告',org:'広告代理店',team:'クリエイティブ戦略部',biz:'キャンペーン案作成、画像生成、効果レポート要約',data:'ブランドガイド、過去キャンペーン、SNS反応、画像素材',risk:'ブランド毀損、著作権、バイアス',users:'プランナーとデザイナー',cust:'広告主'},
+    {industry:'エネルギー・公益',org:'電力会社',team:'設備保全部',biz:'設備点検報告の要約、障害兆候の説明、作業手順支援',data:'点検記録、設備図面、センサー値、作業マニュアル',risk:'安全、停止影響、重要インフラ情報',users:'保全担当者と運用監視者',cust:'法人需要家'},
+    {industry:'製薬・研究開発',org:'製薬会社',team:'メディカルアフェアーズ部',biz:'論文要約、安全性情報整理、問い合わせ回答支援',data:'論文、症例報告、製品情報、規制文書、FAQ',risk:'薬機法、患者情報、根拠提示',users:'研究者とメディカル担当者',cust:'医療従事者'}
+  ];
+  const SET_META=[
+    {title:'セット1',focus:'基礎概念とサービス選定を横断する本番想定セット',seed:101},
+    {title:'セット2',focus:'RAG、グラウンディング、社内情報活用を重視した本番想定セット',seed:211},
+    {title:'セット3',focus:'顧客接点、エージェント、開発者向けサービスを重視した本番想定セット',seed:307},
+    {title:'セット4',focus:'責任あるAI、セキュリティ、ガバナンスを重視した本番想定セット',seed:419},
+    {title:'セット5',focus:'総合判断と時間配分を確認する本番直前セット',seed:523}
+  ];
+  const PAD=[
+    'この方針でも、データの所在、更新頻度、権限設計を合わせて確認する。',
+    '導入時には、利用者の役割、監査、運用負荷も比較対象に含める。',
+    'ただし、対象ユースケースのリスクと期待効果を事前に定義する。',
+    '本番運用では、根拠提示、KPI、継続評価を別途設計する。',
+    'サービス選定では、業務要件、セキュリティ、コストを同時に見る。',
+    '現場展開時には、教育、変更管理、人間確認の要否も検討する。'
+  ];
+  function len(s){return Array.from(String(s||'')).length}
+  function chooseCtx(si,qi){return MIXED_CTX[(SET_META[si].seed + qi*7 + si*3) % MIXED_CTX.length]}
+  function balanceTexts(raw,seed){
+    const baseLens=raw.map(c=>len(c.text));
+    let target=Math.max(70, Math.min(104, Math.max(...baseLens)-4));
+    const out=raw.map((c,idx)=>{let text=c.text.replace(/\s+/g,' ').trim();let loops=0;while(len(text)<target && loops<2){text += (text.endsWith('。')?'':'。') + PAD[(seed+idx+loops)%PAD.length];loops++;}return {...c,text};});
+    const corr=out.findIndex(c=>c.ok);
+    const maxLen=Math.max(...out.map(c=>len(c.text)));
+    if(corr>=0 && len(out[corr].text)>=maxLen){
+      const wrong=[0,1,2,3].filter(i=>i!==corr);
+      const wi=wrong[seed%wrong.length];
+      out[wi].text += (out[wi].text.endsWith('。')?'':'。') + PAD[(seed+9)%PAD.length];
+    }
+    return out;
+  }
+  function balancedChoices(t,ctx,si,qi){
+    const raw=t.cs.map((c,ci)=>({text:fmt(c[0],ctx),ok:!!c[1],fb:fmt(c[2],ctx),orig:ci}));
+    return balanceTexts(raw,SET_META[si].seed+qi*19);
+  }
+  function ensureQuestionCount(){
+    if(T.length<60){console.warn('T has less than 60 templates:',T.length)}
+    T.forEach((t,i)=>{if(!t.diff)t.diff=(i%9===0?'hard':i%3===0?'medium':'basic')});
+  }
+  buildSets=function(){
+    ensureQuestionCount();
+    SETS=SET_META.map((meta,si)=>{
+      const qs=T.slice(0,60).map((t,qi)=>{
+        const ctx=chooseCtx(si,qi);
+        let cs=balancedChoices(t,ctx,si,qi);
+        cs=shuffle(cs, meta.seed*13 + qi*37).map((c,i)=>({...c,letter:'ABCD'[i]}));
+        const tags=[ctx.industry].concat(t.tags||[]);
+        return {id:`${si+1}-${t.id}`,base:t.id,no:qi+1,cat:t.cat,wiki:t.wiki,tags,diff:t.diff||'basic',industry:ctx.industry,industryOrg:ctx.org,q:fmt(t.q,ctx),exp:fmt(t.exp,ctx),tip:fmt(t.tip,ctx),choices:cs};
+      });
+      const industryNames=[...new Set(qs.map(q=>q.industry))];
+      return {id:si+1,title:meta.title,focus:meta.focus,ctx:{org:'業界ミックス',team:'ランダム業界ケース',biz:meta.focus},industries:industryNames,questions:qs};
+    });
+  };
+  refreshSetSelect=function(){
+    const sel=$('setSelect');
+    if(sel) sel.innerHTML=SETS.map((s,i)=>`<option value="${i}">${s.title} - 業界ミックス / 60問 / ${esc(s.focus)}</option>`).join('');
+  };
+  renderSetCards=function(){
+    const h=history();
+    let st={live:null};try{st=JSON.parse(localStorage.getItem('gail_5set60_all_progress_v2')||'{}')}catch(e){}
+    $('setCards').innerHTML=SETS.map((s,idx)=>{
+      const hs=h.filter(x=>x.setId===s.id);
+      const best=hs.length?Math.max(...hs.map(x=>x.score)):null;
+      const last=hs.length?hs[hs.length-1].score:null;
+      const live=st.live&&st.live.setId===s.id;
+      return `<div class="card"><h3>${s.title}</h3><p class="muted small">${esc(s.focus)}</p><p><span class="badge">60問</span><span class="badge purple">本番想定90分</span><span class="badge green">業界ミックス</span></p><p class="small">業界例: ${s.industries.slice(0,5).map(esc).join(' / ')} ほか</p><p class="small">実施: <b>${hs.length}</b>回 / 最高: <b>${best??'-'}</b>点 / 直近: <b>${last??'-'}</b>点</p><div class="toolbar"><button class="btn" onclick="selectSet(${idx})">このセットを解く</button>${live?`<button class="btn sec" onclick="resumeLive()">途中再開</button>`:''}</div></div>`;
+    }).join('');
+  };
+  const oldStartTimer = typeof startTimer==='function' ? startTimer : null;
+  startExam=function(){
+    if(current&&!graded){if(!confirm('進行中の試験を破棄して新しく開始しますか？'))return}
+    clearInterval(tickId);
+    const si=Number($('setSelect').value||0);
+    const mode=($('modeSelect')&&$('modeSelect').value)||'challenging';
+    const m=(window.MODE&&window.MODE[mode])||{name:'やや難',seconds:5400};
+    let qs=SETS[si].questions.slice();
+    if(mode!=='standard') qs=shuffle(qs, Date.now()%100000 + SET_META[si].seed);
+    current={set:{...SETS[si],questions:qs},setIndex:si,answers:Array(qs.length).fill(null),flags:Array(qs.length).fill(false),confidence:Array(qs.length).fill('normal'),started:new Date().toISOString(),mode};
+    remaining=m.seconds||5400; paused=false; graded=false;
+    $('examArea').classList.remove('hidden'); $('result').classList.add('hidden'); $('pauseOverlay').classList.remove('show');
+    $('setTitle').textContent=`${SETS[si].title} - 業界ミックス / ${m.name}`;
+    $('totalQ').textContent=qs.length;
+    renderQuestions(); updateProgress();
+    if(oldStartTimer) oldStartTimer(); else startTimer();
+    if(typeof saveLive==='function') saveLive();
+    window.scrollTo({top:$('exam').offsetTop,behavior:'smooth'});
+  };
+  renderQuestions=function(){
+    if(!current)return;
+    const qs=current.set.questions;
+    $('questions').innerHTML=qs.map((q,i)=>`<div class="qcard" id="q${i}"><div class="toolbar space"><div><span class="pill cat-${catCss(q.cat)}">Q${i+1} ${catShort(q.cat)}</span> <span class="pill">難易度: ${(window.DIFF&&window.DIFF[q.diff])||q.diff}</span> <span class="pill">${esc(q.industry||'業界ケース')}</span> ${q.tags.filter((t,idx)=>idx>0).map(t=>`<span class="pill">${esc(t)}</span>`).join(' ')}</div><button class="link no-print" onclick="openWiki('${q.wiki}')">Wiki: ${esc(WIKI[q.wiki]?.title||q.wiki)}</button></div><p><b>${esc(q.q)}</b></p><div class="choices">${q.choices.map((c,ci)=>choiceHtml(i,ci,c)).join('')}</div><div class="toolbar no-print" style="margin-top:10px"><button class="btn sec flagbtn ${current.flags[i]?'warn':''}" onclick="toggleFlag(${i})" ${paused||graded?'disabled':''}>${current.flags[i]?'★ 後から確認する':'☆ 後から確認する'}</button><label class="small">自信度 <select class="confsel" onchange="setConfidence(${i},this.value)" ${paused||graded?'disabled':''}><option value="high" ${current.confidence[i]==='high'?'selected':''}>高い</option><option value="normal" ${current.confidence[i]==='normal'?'selected':''}>普通</option><option value="low" ${current.confidence[i]==='low'?'selected':''}>低い</option></select></label></div>${graded?`<div class="explain"><b>要点:</b> ${esc(q.exp)}<br><b>見極め:</b> ${esc(q.tip)}</div>`:''}</div>`).join('');
+    updateQuestionStyles(); renderQnav();
+  };
+  const oldRenderProgress=renderProgress;
+  renderProgress=function(){oldRenderProgress();
+    const el=$('progressBody'); if(!el) return;
+    const note=document.createElement('div'); note.className='card'; note.style.marginTop='16px';
+    note.innerHTML='<h3>v3 問題バランス調整</h3><p class="muted">各セットは単一業界ではなく、金融、製造、小売、医療、通信、物流、公共、教育、広告、エネルギー、製薬などのケースを混在させています。選択肢は正解だけが極端に長くならないよう、各選択肢に要件・運用・統制観点を持たせています。</p>';
+    if(!el.querySelector('[data-v3-note]')){note.setAttribute('data-v3-note','1');el.appendChild(note)}
+  };
+  const oldRenderCongrats=renderCongrats;
+  renderCongrats=function(){oldRenderCongrats();
+    const el=$('congratsBody'); if(!el) return;
+    const p=el.querySelector('p.muted'); if(p) p.textContent='5セット完走です。300問すべてを、複数業界が混在する本番想定ケースとして解き切りました。';
+  };
+  const hero=document.querySelector('.hero');
+  if(hero){
+    const p=hero.querySelector('p');
+    if(p) p.textContent='本試験を想定した60問×5セット。各セットは業界ミックス、選択肢長さと誤答のもっともらしさを調整し、最後の2択で迷う判断力を鍛える構成です。';
+    if(!hero.querySelector('[data-v3-badge]')) hero.insertAdjacentHTML('beforeend','<span class="badge green" data-v3-badge>業界ミックス</span><span class="badge yellow" data-v3-badge>選択肢バランス調整</span><span class="badge purple" data-v3-badge>本番想定60問</span>');
+  }
+  buildSets(); refreshSetSelect(); renderSetCards(); renderProgress(); renderCongrats();
+})();
+</script>
+
+
+<style id="wiki-memory-style">
+.wiki-memory-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
+.mem-key{color:#b91c1c;font-weight:950;background:#fff1f2;border-radius:5px;padding:0 3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+body.keywords-hidden .mem-key{color:transparent!important;background:#fee2e2!important;text-shadow:none!important;border-bottom:2px dotted #dc2626;user-select:none;min-width:2.2em;display:inline-block;vertical-align:baseline;line-height:1.15}
+body.keywords-hidden .mem-key::selection{color:transparent;background:#fee2e2}
+.mem-badge{border:1px solid #fecaca;background:#fff1f2!important;color:#b91c1c!important}
+body.keywords-hidden .mem-badge{color:transparent!important;background:#fee2e2!important;border-color:#fecaca!important;min-width:4.5em}
+.wiki-all-toolbar{position:sticky;top:72px;z-index:5;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:14px;padding:10px;margin:0 0 14px;box-shadow:0 8px 24px rgba(15,23,42,.07)}
+.wiki-quick-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.wiki-review-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px;box-shadow:0 8px 18px rgba(15,23,42,.05)}
+.wiki-review-card h3{margin:0 0 6px;font-size:16px}.wiki-review-card ul{margin:8px 0 0 1.1em;padding:0}.wiki-review-card li{margin:4px 0}.wiki-terms-cloud{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.wiki-terms-cloud span{border:1px solid #fecaca;border-radius:999px;background:#fff1f2;padding:4px 8px;color:#b91c1c;font-weight:900;font-size:12px}.wiki-terms-cloud span.core{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+body.keywords-hidden .wiki-terms-cloud span{color:transparent!important;background:#fee2e2!important;border-color:#fecaca!important;min-width:4.5em;display:inline-block}.wiki-mode-note{font-size:13px;color:var(--muted);margin-top:8px}.wiki-list button.all-wiki{background:#fef2f2;border-color:#fecaca;color:#991b1b}.wiki-list button.key-sheet{background:#fffbeb;border-color:#fde68a;color:#92400e}
+@media print{.wiki-memory-tools,.wiki-all-toolbar{display:none!important}.mem-key{color:#b91c1c!important;background:transparent!important}}
+</style>
+<script id="wiki-memory-enhancement">
+(function(){
+  const HIDE_KEY = 'gail_wiki_keywords_hidden_v1';
+  const CORE_TERMS = [
+    'Vertex AI Agent Builder','Gemini for Google Workspace','Security Command Center','Google AI Studio','Vertex AI Studio','Gemini Enterprise','Vertex AI Search','Customer Engagement Suite','Conversational Insights','Agent Assist','Cloud Functions','Cloud Run','Model Garden','Document Translation API','Document AI API','Speech-to-Text','Text-to-Speech','Translation API','Cloud Vision API','Natural Language API','RAG API','Google検索によるグラウンディング','検索拡張生成','プロンプトエンジニアリング','プロンプトチェーン','Chain-of-Thought','ReAct','ファインチューニング','グラウンディング','ハルシネーション','ナレッジカットオフ','データアクセシビリティ','データ品質','構造化データ','非構造化データ','ラベル付きデータ','ラベルなしデータ','基盤モデル','マルチモーダル','拡散モデル','教師あり学習','教師なし学習','強化学習','教師あり','教師なし','強化学習','Gemini','Gemma','Imagen','Veo','NotebookLM','AutoML','LLM','HITL','SAIF','IAM','KPI','Top-P','温度','トークン数','安全性設定','プライバシー','匿名化','仮名化','バイアス','公平性','透明性','説明可能性','アカウンタビリティ','アクセス制御','データ最小化','ガバナンス','ドリフト','監査','人間参加型','CCaaS','RAG'
+  ];
+  function rxEscape(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+  function uniqueTerms(terms){
+    const seen=new Set();
+    return terms.filter(Boolean).map(String).map(s=>s.trim()).filter(s=>s.length>=2 && !['AI','ML'].includes(s)).filter(s=>{const k=s.toLowerCase(); if(seen.has(k))return false; seen.add(k); return true}).sort((a,b)=>b.length-a.length);
+  }
+  function termPool(id){
+    const w=WIKI[id]||{};
+    return uniqueTerms([...(w.keys||[]), ...(String(w.title||'').split(/[\s/・:：、,]+/)), ...CORE_TERMS]);
+  }
+  function hi(text,terms){
+    let out=esc(text||'');
+    const ts=uniqueTerms(terms||CORE_TERMS).slice(0,120);
+    if(!ts.length)return out;
+    const re=new RegExp('('+ts.map(rxEscape).join('|')+')','g');
+    return out.replace(re,'<span class="mem-key">$1</span>');
+  }
+  function setHiddenState(hidden){
+    document.body.classList.toggle('keywords-hidden', !!hidden);
+    localStorage.setItem(HIDE_KEY, hidden?'1':'0');
+    refreshMemoryButtons();
+  }
+  function refreshMemoryButtons(){
+    const hidden=document.body.classList.contains('keywords-hidden');
+    document.querySelectorAll('[data-key-toggle]').forEach(b=>{b.textContent=hidden?'重要語句を表示':'重要語句を隠す'});
+    document.querySelectorAll('[data-key-mode]').forEach(el=>{el.textContent=hidden?'暗記チェック中：赤字語句を伏せています。もう一度押すと表示します。':'表示中：赤字の重要語句を中心に確認してください。'});
+  }
+  window.toggleWikiKeywords=function(){setHiddenState(!document.body.classList.contains('keywords-hidden'))};
+  window.showAllWikiReview=function(){selectedWiki='__all__';show('wiki');setTimeout(renderWikiAll,20)};
+  window.showKeyTermSheet=function(){selectedWiki='__keys__';show('wiki');setTimeout(renderKeyTermSheet,20)};
+  window.expandAllWiki=function(open){document.querySelectorAll('#wikiDetail details').forEach(d=>d.open=open)};
+  if(localStorage.getItem(HIDE_KEY)==='1') document.body.classList.add('keywords-hidden');
+  if(!WIKI['model-selection']){
+    WIKI['model-selection']={title:'モデル選定の判断軸',cat:'basics',keys:['モダリティ','コンテキストウィンドウ','セキュリティ','可用性','費用','パフォーマンス','カスタマイズ'],body:['基盤モデルを選ぶときは、精度だけでなく、扱うデータ形式、コンテキストウィンドウ、セキュリティ、可用性と信頼性、費用、応答性能、ファインチューニングやカスタマイズの必要性をビジネス要件に照らして判断します。','試験では、最も新しいモデル名を選ぶのではなく、ユースケース、リスク、運用要件に最も合う選択肢を選ぶことが重要です。'],pit:['画像生成、動画生成、テキスト理解、社内検索など、モダリティと用途を最初に確認する。','企業利用ではセキュリティ、可用性、費用、ガバナンスを必ず含める。']};
+  }
+  function enhanceWikiHeader(){
+    const card=document.querySelector('#wiki > .card');
+    if(!card || card.querySelector('#wikiMemoryTools')) return;
+    const box=document.createElement('div');
+    box.id='wikiMemoryTools';
+    box.className='wiki-memory-tools no-print';
+    box.innerHTML=`<button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目をざっと見返す</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ確認</button><span class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</span>`;
+    const search=$('wikiSearch');
+    if(search) search.insertAdjacentElement('afterend',box); else card.appendChild(box);
+    refreshMemoryButtons();
+  }
+  renderWikiList=function(){
+    enhanceWikiHeader();
+    const q=($('wikiSearch')?.value||'').toLowerCase();
+    const ids=Object.keys(WIKI).filter(id=>{const w=WIKI[id];return !q||[w.title,w.cat,...(w.keys||[]),...(w.body||[]),...(w.pit||[])].join(' ').toLowerCase().includes(q)});
+    $('wikiList').innerHTML=`<button class="all-wiki ${selectedWiki==='__all__'?'active':''}" onclick="showAllWikiReview()">📚 全項目をざっと見返す<br><span class="mini">試験前の総復習シート</span></button><button class="key-sheet ${selectedWiki==='__keys__'?'active':''}" onclick="showKeyTermSheet()">🧠 重要語句だけ確認<br><span class="mini">赤字語句の暗記チェック</span></button>`+
+      (ids.map(id=>{const w=WIKI[id];return`<button class="${id===selectedWiki?'active':''}" onclick="renderWikiDetail('${id}')"><span class="pill cat-${catCss(w.cat)}">${catShort(w.cat)}</span><br>${esc(w.title)}<br><span class="mini">${(w.keys||[]).slice(0,4).map(esc).join(' / ')}</span></button>`}).join('')||'<p class="muted">該当するWikiがありません。</p>');
+  };
+  renderWikiDetail=function(id){
+    enhanceWikiHeader();
+    if(id==='__all__') return renderWikiAll();
+    if(id==='__keys__') return renderKeyTermSheet();
+    selectedWiki=id;
+    if(!WIKI[id]) selectedWiki='foundation';
+    const w=WIKI[selectedWiki];
+    const terms=termPool(selectedWiki);
+    renderWikiList();
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>暗記補助</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ</button></div></div></div><h2>${hi(w.title,terms)}</h2><p><span class="pill cat-${catCss(w.cat)}">${catLabel(w.cat)}</span></p><p>${(w.keys||[]).map(k=>`<span class="badge mem-badge"><span class="mem-key">${esc(k)}</span></span>`).join(' ')}</p><div class="section"><h3>要点</h3>${(w.body||[]).map(p=>`<p>${hi(p,terms)}</p>`).join('')}</div><div class="section"><h3>試験での見極めポイント</h3><ul>${(w.pit||[]).map(p=>`<li>${hi(p,terms)}</li>`).join('')}</ul></div><div class="section"><h3>関連する問題タグ</h3><p>${relatedTags(selectedWiki).map(t=>`<span class="badge purple">${esc(t)}</span>`).join(' ')||'<span class="muted">関連タグなし</span>'}</p></div><div class="toolbar no-print"><button class="btn sec" onclick="show('exam')">問題集へ戻る</button><button class="btn sec" onclick="show('progress')">進捗を見る</button></div>`;
+    refreshMemoryButtons();
+  };
+  function renderWikiAll(){
+    enhanceWikiHeader();
+    selectedWiki='__all__';
+    renderWikiList();
+    const grouped={};
+    Object.keys(WIKI).forEach(id=>{const c=WIKI[id].cat||'other';(grouped[c]=grouped[c]||[]).push(id)});
+    const order=(typeof CAT_ORDER!=='undefined'?CAT_ORDER:['basics','services','improve','strategy']).concat(Object.keys(grouped).filter(c=>!['basics','services','improve','strategy'].includes(c)));
+    const blocks=order.filter(c=>grouped[c]).map(c=>`<h2 style="margin-top:18px">${catLabel(c)}</h2><div class="wiki-quick-grid">${grouped[c].map(id=>{const w=WIKI[id];const terms=termPool(id);return`<details class="wiki-review-card" open><summary><b>${hi(w.title,terms)}</b></summary><div class="wiki-terms-cloud">${(w.keys||[]).map(k=>`<span>${esc(k)}</span>`).join('')}</div><h3>要点</h3>${(w.body||[]).map(p=>`<p>${hi(p,terms)}</p>`).join('')}<h3>見極め</h3><ul>${(w.pit||[]).map(p=>`<li>${hi(p,terms)}</li>`).join('')}</ul><button class="link no-print" onclick="renderWikiDetail('${id}')">この項目を詳しく見る</button></details>`}).join('')}</div>`).join('');
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>テスト前クイックレビュー</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="expandAllWiki(true)">全て開く</button><button class="btn sec" onclick="expandAllWiki(false)">全て閉じる</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ</button></div></div></div><p class="muted">全Wiki項目をカテゴリ別にまとめています。試験直前は赤字語句だけを追い、非表示に切り替えて思い出せるか確認してください。</p>${blocks}`;
+    refreshMemoryButtons();
+  }
+  function renderKeyTermSheet(){
+    enhanceWikiHeader();
+    selectedWiki='__keys__';
+    renderWikiList();
+    const grouped={};
+    Object.keys(WIKI).forEach(id=>{const w=WIKI[id];const c=w.cat||'other';(grouped[c]=grouped[c]||[]).push(...(w.keys||[]).map(k=>({term:k,title:w.title,id}))) });
+    const order=(typeof CAT_ORDER!=='undefined'?CAT_ORDER:['basics','services','improve','strategy']);
+    const html=order.filter(c=>grouped[c]).map(c=>`<div class="wiki-review-card"><h2>${catLabel(c)}</h2><div class="wiki-terms-cloud">${grouped[c].map(x=>`<span title="${esc(x.title)}" onclick="renderWikiDetail('${x.id}')">${esc(x.term)}</span>`).join('')}</div></div>`).join('');
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>重要語句 暗記シート</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目</button></div></div></div><p class="muted">語句をクリックすると該当Wikiへ移動します。表示→非表示を切り替え、意味を口頭で説明できるか確認してください。</p>${html}`;
+    refreshMemoryButtons();
+  }
+  const oldOpenWiki = typeof openWiki==='function' ? openWiki : null;
+  openWiki=function(id){
+    selectedWiki=id;
+    try{ if(typeof loadStore==='function'){const st=loadStore();st.wikiVisits=st.wikiVisits||{};st.wikiVisits[id]=(st.wikiVisits[id]||0)+1;saveStore(st);} }catch(e){}
+    show('wiki');
+    setTimeout(()=>renderWikiDetail(id),20);
+  };
+  const oldShow=show;
+  show=function(page){
+    oldShow(page);
+    if(page==='wiki'){enhanceWikiHeader(); setTimeout(()=>{ if(selectedWiki==='__all__') renderWikiAll(); else if(selectedWiki==='__keys__') renderKeyTermSheet(); else renderWikiDetail(selectedWiki||'foundation'); },10);}
+  };
+  enhanceWikiHeader();
+  renderWikiList();
+  if($('wikiDetail')) renderWikiDetail(selectedWiki||'foundation');
+})();
+</script>
+
+
+<style id="wiki-memory-v2-style">
+/* V2: stable cloze behavior. Keep layout width by leaving the original text in place and making only the glyphs transparent. */
+body.keywords-hidden .mem-key{
+  color:transparent!important;
+  background:#fee2e2!important;
+  text-shadow:none!important;
+  border-bottom:2px dotted #dc2626!important;
+  user-select:none;
+  min-width:0!important;
+  display:inline!important;
+  vertical-align:baseline!important;
+  line-height:inherit!important;
+  padding:0 .22em!important;
+  cursor:help;
+  position:relative;
+}
+body.keywords-hidden .mem-key.revealed{
+  color:#b91c1c!important;
+  background:#fff1f2!important;
+  user-select:text;
+}
+body.keywords-hidden .mem-key::selection{color:transparent;background:#fee2e2}
+body.keywords-hidden .mem-key[data-hint]:hover::after,
+body.keywords-hidden .mem-key[data-hint]:focus::after{
+  content:attr(data-hint);
+  position:absolute;
+  left:0;
+  top:1.8em;
+  z-index:9999;
+  width:max-content;
+  max-width:280px;
+  white-space:normal;
+  color:#1f2937;
+  background:#fff;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  padding:8px 10px;
+  box-shadow:0 10px 30px rgba(15,23,42,.18);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.5;
+  pointer-events:none;
+}
+body.keywords-hidden .mem-badge{
+  color:inherit!important;
+  min-width:0!important;
+  display:inline-block!important;
+}
+body.keywords-hidden .wiki-terms-cloud span{
+  color:transparent!important;
+  min-width:0!important;
+  display:inline-block!important;
+  position:relative;
+  cursor:help;
+}
+body.keywords-hidden .wiki-terms-cloud span:hover,
+body.keywords-hidden .wiki-terms-cloud span:focus{
+  outline:2px solid #fca5a5;
+  outline-offset:2px;
+}
+body.keywords-hidden .wiki-terms-cloud span[data-hint]:hover::after,
+body.keywords-hidden .wiki-terms-cloud span[data-hint]:focus::after{
+  content:attr(data-hint);
+  position:absolute;
+  left:0;
+  top:2.2em;
+  z-index:9999;
+  width:max-content;
+  max-width:280px;
+  white-space:normal;
+  color:#1f2937;
+  background:#fff;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  padding:8px 10px;
+  box-shadow:0 10px 30px rgba(15,23,42,.18);
+  font-size:12px;
+  font-weight:800;
+  line-height:1.5;
+}
+.wiki-heading,.wiki-review-card summary b,.wiki-category-title{
+  color:var(--text)!important;
+}
+.wiki-shortcut{border:1px solid #dbeafe;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:900}
+.wiki-remember-note{border-left:4px solid #2563eb;background:#eff6ff;border-radius:12px;padding:10px 12px;margin:10px 0;color:#1e3a8a;font-size:13px}
+@media print{
+  body.keywords-hidden .mem-key{color:#b91c1c!important;background:transparent!important;border-bottom:0!important}
+  body.keywords-hidden .wiki-terms-cloud span{color:#b91c1c!important}
+}
+</style>
+<script id="wiki-memory-v2-behavior">
+(function(){
+  const HIDE_KEY_V2 = 'gail_wiki_keywords_hidden_v1';
+  const CORE_TERMS_V2 = [
+    'Vertex AI Agent Builder','Gemini for Google Workspace','Security Command Center','Google AI Studio','Vertex AI Studio','Gemini Enterprise','Vertex AI Search','Customer Engagement Suite','Conversational Insights','Agent Assist','Cloud Functions','Cloud Run','Model Garden','Document Translation API','Document AI API','Speech-to-Text','Text-to-Speech','Translation API','Cloud Vision API','Natural Language API','RAG API','Google検索によるグラウンディング','検索拡張生成','プロンプトエンジニアリング','プロンプトチェーン','Chain-of-Thought','ReAct','ファインチューニング','グラウンディング','ハルシネーション','ナレッジカットオフ','データアクセシビリティ','データ品質','構造化データ','非構造化データ','ラベル付きデータ','ラベルなしデータ','基盤モデル','マルチモーダル','拡散モデル','教師あり学習','教師なし学習','強化学習','教師あり','教師なし','Gemini','Gemma','Imagen','Veo','NotebookLM','AutoML','LLM','HITL','SAIF','IAM','KPI','Top-P','温度','トークン数','安全性設定','プライバシー','匿名化','仮名化','バイアス','公平性','透明性','説明可能性','アカウンタビリティ','アクセス制御','データ最小化','ガバナンス','ドリフト','監査','人間参加型','CCaaS','RAG'
+  ];
+  const HINTS_V2 = {
+    'RAG':'ヒント: 外部情報を検索してから回答を生成する手法 / 3文字',
+    '検索拡張生成':'ヒント: RAGの日本語名称。検索で根拠を補う手法。',
+    'グラウンディング':'ヒント: 回答を検証可能な情報源に結び付ける考え方。',
+    'ファインチューニング':'ヒント: モデルの振る舞い・文体・タスク適合を学習で調整。',
+    'HITL':'ヒント: 高リスク判断で人間の確認を入れる考え方 / 4文字',
+    '人間参加型':'ヒント: Human-in-the-loop。人間の確認や介入を組み込む。',
+    'LLM':'ヒント: 大規模言語モデル / 3文字',
+    'SAIF':'ヒント: Googleの安全なAIのためのフレームワーク / 4文字',
+    'IAM':'ヒント: アクセス制御と権限管理に関するサービス / 3文字',
+    'Vertex AI':'ヒント: モデル開発、評価、デプロイ、管理の統合プラットフォーム。',
+    'Vertex AI Search':'ヒント: 検索アプリや事前構築済みRAGで使うサービス。',
+    'Gemini Enterprise':'ヒント: 企業内情報活用とカスタムエージェントで迷いやすいサービス。',
+    'NotebookLM':'ヒント: アップロードした文書を根拠に分析・要約・メモ化するノートブック。',
+    'Gemini for Google Workspace':'ヒント: Gmail、Docs、Sheets、Slides、Meet内で使う生成AI。',
+    'Gemini':'ヒント: マルチモーダルなGoogle基盤モデル。',
+    'Gemma':'ヒント: Googleの軽量オープンモデルファミリー。',
+    'Imagen':'ヒント: テキストから高品質な静止画像を生成。',
+    'Veo':'ヒント: テキストや画像から動画を生成。',
+    'ハルシネーション':'ヒント: もっともらしいが事実に基づかない出力。',
+    'ナレッジカットオフ':'ヒント: モデルが学習していない最新情報に弱くなる境界。',
+    'バイアス':'ヒント: データや設計に由来する偏り。',
+    '公平性':'ヒント: 特定集団に不利な結果を避ける観点。',
+    '説明可能性':'ヒント: なぜその出力・判断に至ったか説明できること。',
+    '透明性':'ヒント: AIの利用目的、判断根拠、制限を明確にすること。',
+    'アカウンタビリティ':'ヒント: 結果に対する責任所在と説明責任。',
+    '温度':'ヒント: 出力のランダム性を調整するパラメータ。',
+    'Top-P':'ヒント: 候補トークンの累積確率で出力多様性を制御。',
+    'トークン数':'ヒント: 入出力長やコンテキスト量に関係する単位。'
+  };
+  function rxEscapeV2(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}
+  function uniqueTermsV2(terms){
+    const seen=new Set();
+    return (terms||[]).filter(Boolean).map(String).map(s=>s.trim()).filter(s=>s.length>=2 && !['AI','ML'].includes(s)).filter(s=>{const k=s.toLowerCase(); if(seen.has(k)) return false; seen.add(k); return true;}).sort((a,b)=>b.length-a.length);
+  }
+  function termPoolV2(id){
+    const w=WIKI[id]||{};
+    return uniqueTermsV2([...(w.keys||[]), ...CORE_TERMS_V2]);
+  }
+  function hintV2(term){
+    const t=String(term||'');
+    if(HINTS_V2[t]) return HINTS_V2[t] + '（クリックで一時表示）';
+    const chars=Array.from(t);
+    const first=chars[0]||'';
+    const last=chars.length>2?chars[chars.length-1]:'';
+    return `ヒント: 頭文字「${first}」${last?` / 末尾「${last}」`:''} / ${chars.length}文字（クリックで一時表示）`;
+  }
+  function attrV2(s){return esc(String(s||''))}
+  function keySpanV2(term){return `<span class="mem-key" tabindex="0" data-hint="${attrV2(hintV2(term))}">${esc(term)}</span>`}
+  function hiV2(text,terms){
+    let out=esc(text||'');
+    const ts=uniqueTermsV2(terms||CORE_TERMS_V2).slice(0,140);
+    if(!ts.length) return out;
+    const re=new RegExp('('+ts.map(rxEscapeV2).join('|')+')','g');
+    return out.replace(re,function(m){return keySpanV2(m)});
+  }
+  function chipV2(term, cls, click){
+    const onClick=click?` onclick="${click}"`:'';
+    return `<span class="${cls||''}" tabindex="0" data-hint="${attrV2(hintV2(term))}"${onClick}>${esc(term)}</span>`;
+  }
+  function setHiddenStateV2(hidden){
+    document.body.classList.toggle('keywords-hidden', !!hidden);
+    localStorage.setItem(HIDE_KEY_V2, hidden?'1':'0');
+    refreshMemoryButtonsV2();
+  }
+  function refreshMemoryButtonsV2(){
+    const hidden=document.body.classList.contains('keywords-hidden');
+    document.querySelectorAll('[data-key-toggle]').forEach(b=>{b.textContent=hidden?'重要語句を表示':'重要語句を隠す'});
+    document.querySelectorAll('[data-key-mode]').forEach(el=>{el.textContent=hidden?'暗記チェック中：空欄はレイアウトを保ったまま伏せています。ロールオーバーでヒント、クリックで一時表示できます。':'表示中：赤字の重要語句を中心に確認してください。Spaceキーでも切り替えできます。'});
+  }
+  function enhanceWikiHeaderV2(){
+    const card=document.querySelector('#wiki > .card');
+    if(!card) return;
+    let box=card.querySelector('#wikiMemoryTools');
+    const html=`<button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目をざっと見返す</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ確認</button><span class="wiki-shortcut">Spaceで表示/非表示</span><span class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</span>`;
+    if(!box){
+      box=document.createElement('div');
+      box.id='wikiMemoryTools';
+      box.className='wiki-memory-tools no-print';
+      const search=$('wikiSearch');
+      if(search) search.insertAdjacentElement('afterend',box); else card.appendChild(box);
+    }
+    box.innerHTML=html;
+    refreshMemoryButtonsV2();
+  }
+  window.toggleWikiKeywords=function(){setHiddenStateV2(!document.body.classList.contains('keywords-hidden'))};
+  window.showAllWikiReview=function(){selectedWiki='__all__';show('wiki');setTimeout(renderWikiAllV2,20)};
+  window.showKeyTermSheet=function(){selectedWiki='__keys__';show('wiki');setTimeout(renderKeyTermSheetV2,20)};
+  window.expandAllWiki=function(open){document.querySelectorAll('#wikiDetail details').forEach(d=>d.open=open)};
+  window.renderWikiList=function(){
+    enhanceWikiHeaderV2();
+    const q=($('wikiSearch')?.value||'').toLowerCase();
+    const ids=Object.keys(WIKI).filter(id=>{const w=WIKI[id];return !q||[w.title,w.cat,...(w.keys||[]),...(w.body||[]),...(w.pit||[])].join(' ').toLowerCase().includes(q)});
+    $('wikiList').innerHTML=`<button class="all-wiki ${selectedWiki==='__all__'?'active':''}" onclick="showAllWikiReview()">📚 全項目をざっと見返す<br><span class="mini">見出しは表示、重要語句は穴埋め</span></button><button class="key-sheet ${selectedWiki==='__keys__'?'active':''}" onclick="showKeyTermSheet()">🧠 重要語句だけ確認<br><span class="mini">ロールオーバーでヒント</span></button>`+
+      (ids.map(id=>{const w=WIKI[id];return`<button class="${id===selectedWiki?'active':''}" onclick="renderWikiDetail('${id}')"><span class="pill cat-${catCss(w.cat)}">${catShort(w.cat)}</span><br>${esc(w.title)}<br><span class="mini">${(w.keys||[]).slice(0,4).map(esc).join(' / ')}</span></button>`}).join('')||'<p class="muted">該当するWikiがありません。</p>');
+  };
+  window.renderWikiDetail=function(id){
+    enhanceWikiHeaderV2();
+    if(id==='__all__') return renderWikiAllV2();
+    if(id==='__keys__') return renderKeyTermSheetV2();
+    selectedWiki=id;
+    if(!WIKI[id]) selectedWiki='foundation';
+    const w=WIKI[selectedWiki];
+    const terms=termPoolV2(selectedWiki);
+    renderWikiList();
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>暗記補助</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ</button></div></div></div><h2 class="wiki-heading">${esc(w.title)}</h2><p><span class="pill cat-${catCss(w.cat)}">${catLabel(w.cat)}</span></p><p>${(w.keys||[]).map(k=>`<span class="badge mem-badge">${keySpanV2(k)}</span>`).join(' ')}</p><div class="wiki-remember-note">見出し語は表示したまま、本文中の重要語句だけを穴埋めにできます。空欄はロールオーバーでヒント、クリックで2秒だけ表示されます。</div><div class="section"><h3>要点</h3>${(w.body||[]).map(p=>`<p>${hiV2(p,terms)}</p>`).join('')}</div><div class="section"><h3>試験での見極めポイント</h3><ul>${(w.pit||[]).map(p=>`<li>${hiV2(p,terms)}</li>`).join('')}</ul></div><div class="section"><h3>関連する問題タグ</h3><p>${relatedTags(selectedWiki).map(t=>`<span class="badge purple">${esc(t)}</span>`).join(' ')||'<span class="muted">関連タグなし</span>'}</p></div><div class="toolbar no-print"><button class="btn sec" onclick="show('exam')">問題集へ戻る</button><button class="btn sec" onclick="show('progress')">進捗を見る</button></div>`;
+    refreshMemoryButtonsV2();
+  };
+  function renderWikiAllV2(){
+    enhanceWikiHeaderV2();
+    selectedWiki='__all__';
+    renderWikiList();
+    const grouped={};
+    Object.keys(WIKI).forEach(id=>{const c=WIKI[id].cat||'other';(grouped[c]=grouped[c]||[]).push(id)});
+    const order=(typeof CAT_ORDER!=='undefined'?CAT_ORDER:['basics','services','improve','strategy']).concat(Object.keys(grouped).filter(c=>!['basics','services','improve','strategy'].includes(c)));
+    const blocks=order.filter(c=>grouped[c]).map(c=>`<h2 class="wiki-category-title" style="margin-top:18px">${catLabel(c)}</h2><div class="wiki-quick-grid">${grouped[c].map(id=>{const w=WIKI[id];const terms=termPoolV2(id);return`<details class="wiki-review-card" open><summary><b>${esc(w.title)}</b></summary><div class="wiki-terms-cloud">${(w.keys||[]).map(k=>chipV2(k,'',`renderWikiDetail('${id}')`)).join('')}</div><h3>要点</h3>${(w.body||[]).map(p=>`<p>${hiV2(p,terms)}</p>`).join('')}<h3>見極め</h3><ul>${(w.pit||[]).map(p=>`<li>${hiV2(p,terms)}</li>`).join('')}</ul><button class="link no-print" onclick="renderWikiDetail('${id}')">この項目を詳しく見る</button></details>`}).join('')}</div>`).join('');
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>テスト前クイックレビュー</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="expandAllWiki(true)">全て開く</button><button class="btn sec" onclick="expandAllWiki(false)">全て閉じる</button><button class="btn sec" onclick="showKeyTermSheet()">重要語句だけ</button></div></div></div><p class="muted">全Wiki項目をカテゴリ別にまとめています。見出しは常に表示されるため、穴埋め状態でも何の論点かを確認しながら解けます。</p><div class="wiki-remember-note">Spaceキーで赤字表示/穴埋めを切り替えます。穴埋め部分はロールオーバーでヒント、クリックで2秒だけ表示されます。表示/非表示で文字幅を保つため、レイアウトが崩れにくくなっています。</div>${blocks}`;
+    refreshMemoryButtonsV2();
+  }
+  function renderKeyTermSheetV2(){
+    enhanceWikiHeaderV2();
+    selectedWiki='__keys__';
+    renderWikiList();
+    const grouped={};
+    Object.keys(WIKI).forEach(id=>{const w=WIKI[id];const c=w.cat||'other';(grouped[c]=grouped[c]||[]).push(...(w.keys||[]).map(k=>({term:k,title:w.title,id}))) });
+    const order=(typeof CAT_ORDER!=='undefined'?CAT_ORDER:['basics','services','improve','strategy']);
+    const html=order.filter(c=>grouped[c]).map(c=>`<div class="wiki-review-card"><h2 class="wiki-category-title">${catLabel(c)}</h2><div class="wiki-terms-cloud">${grouped[c].map(x=>chipV2(x.term,'',`renderWikiDetail('${x.id}')`)).join('')}</div></div>`).join('');
+    $('wikiDetail').innerHTML=`<div class="wiki-all-toolbar no-print"><div class="toolbar space"><div><b>重要語句 暗記シート</b><div class="wiki-mode-note" data-key-mode>表示中：赤字の重要語句を中心に確認してください。</div></div><div class="toolbar"><button class="btn" data-key-toggle onclick="toggleWikiKeywords()">重要語句を隠す</button><button class="btn sec" onclick="showAllWikiReview()">全項目</button></div></div></div><p class="muted">語句をクリックすると該当Wikiへ移動します。穴埋め状態ではロールオーバーでヒントを確認できます。</p>${html}`;
+    refreshMemoryButtonsV2();
+  }
+  const baseShowV2 = show;
+  show=function(page){
+    baseShowV2(page);
+    if(page==='wiki'){
+      enhanceWikiHeaderV2();
+      setTimeout(()=>{ if(selectedWiki==='__all__') renderWikiAllV2(); else if(selectedWiki==='__keys__') renderKeyTermSheetV2(); else renderWikiDetail(selectedWiki||'foundation'); },10);
+    }
+  };
+  openWiki=function(id){
+    selectedWiki=id;
+    try{ if(typeof loadStore==='function'){const st=loadStore();st.wikiVisits=st.wikiVisits||{};st.wikiVisits[id]=(st.wikiVisits[id]||0)+1;saveStore(st);} }catch(e){}
+    show('wiki');
+    setTimeout(()=>renderWikiDetail(id),20);
+  };
+  document.addEventListener('keydown',function(e){
+    const isSpace = e.code==='Space' || e.key===' ' || e.key==='Spacebar';
+    if(!isSpace || e.ctrlKey || e.metaKey || e.altKey) return;
+    const wikiPage=document.getElementById('wiki');
+    if(!wikiPage || !wikiPage.classList.contains('active')) return;
+    const t=e.target;
+    const tag=(t&&t.tagName||'').toUpperCase();
+    if(['INPUT','TEXTAREA','SELECT'].includes(tag) || (t&&t.isContentEditable)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggleWikiKeywords();
+  },true);
+  document.addEventListener('click',function(e){
+    const target=e.target.closest && e.target.closest('.mem-key');
+    if(!target || !document.body.classList.contains('keywords-hidden')) return;
+    target.classList.add('revealed');
+    clearTimeout(target._revealTimer);
+    target._revealTimer=setTimeout(()=>target.classList.remove('revealed'),2000);
+  },true);
+  if(localStorage.getItem(HIDE_KEY_V2)==='1') document.body.classList.add('keywords-hidden');
+  enhanceWikiHeaderV2();
+  try{renderWikiList(); if($('wikiDetail')){ if(selectedWiki==='__all__') renderWikiAllV2(); else if(selectedWiki==='__keys__') renderKeyTermSheetV2(); else renderWikiDetail(selectedWiki||'foundation'); }}catch(e){console.warn('wiki v2 patch render skipped',e)}
+})();
+</script>
+
+</body>
+</html>
