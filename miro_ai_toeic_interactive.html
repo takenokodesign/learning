@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miro AI TOEIC Interactive Practice</title>
+<style>
+:root{--bg:#f7f8fb;--card:#ffffff;--ink:#172033;--muted:#64748b;--line:#e2e8f0;--accent:#2563eb;--accent2:#0f766e;--bad:#b91c1c;--good:#15803d;--soft:#eff6ff;--soft2:#ecfdf5;--soft3:#fff7ed;--shadow:0 8px 24px rgba(15,23,42,.07)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;line-height:1.72}
+header{background:linear-gradient(135deg,#1e3a8a,#0f766e);color:#fff;padding:34px 20px 30px}
+.header-inner{max-width:1160px;margin:auto}
+h1{margin:0 0 8px;font-size:clamp(1.55rem,3vw,2.35rem);line-height:1.22}
+header p{margin:.35rem 0;color:#dbeafe;max-width:980px}
+nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:9px 14px;overflow-x:auto;white-space:nowrap}
+nav a, nav button{display:inline-block;margin:3px 6px 3px 0;padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#fff;color:#1d4ed8;text-decoration:none;font-size:.9rem;cursor:pointer}
+main{max-width:1160px;margin:0 auto;padding:24px 16px 90px}
+section{background:var(--card);border:1px solid var(--line);border-radius:18px;margin:0 0 22px;padding:22px;box-shadow:var(--shadow)}
+h2{font-size:1.45rem;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+h3{font-size:1.1rem;margin:22px 0 10px}
+h4{margin:16px 0 8px}
+.note{background:var(--soft);border-left:5px solid var(--accent);border-radius:12px;padding:12px 14px;margin:12px 0}
+.tip{background:var(--soft2);border-left:5px solid var(--accent2);border-radius:12px;padding:12px 14px;margin:12px 0}
+.warn{background:var(--soft3);border-left:5px solid #f59e0b;border-radius:12px;padding:12px 14px;margin:12px 0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.success{background:var(--good);color:#fff;border-color:var(--good)}
+button.danger{background:#fff;color:var(--bad);border-color:#fecaca}
+button.audio{background:#eef2ff;color:#3730a3;border-color:#c7d2fe}
+button:disabled{opacity:.55;cursor:not-allowed}
+.q{border:1px solid var(--line);border-radius:16px;padding:16px;margin:14px 0;background:#fff}
+.q-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:8px}
+.badge{display:inline-block;background:#e0f2fe;color:#075985;border-radius:999px;padding:2px 8px;font-size:.78rem;margin-left:6px}
+.meta{color:var(--muted);font-size:.9rem}
+.photo{max-width:640px;margin:12px 0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.photo svg{display:block;width:100%;height:auto}
+.choices{display:grid;gap:7px;margin-top:10px}
+.choice{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:12px;padding:9px 10px;cursor:pointer;background:#fbfdff}
+.choice:hover{border-color:#93c5fd;background:#eff6ff}
+.choice input{margin-top:5px}
+.passage{background:#fbfdff;border:1px solid #dbeafe;border-radius:14px;padding:14px 16px;margin:12px 0}
+.hidden-transcript{display:none}
+#scoreBox{position:sticky;bottom:0;z-index:30;background:#fff;border:1px solid var(--line);border-radius:18px 18px 0 0;box-shadow:0 -8px 28px rgba(15,23,42,.12);padding:12px 16px;max-width:1160px;margin:auto}
+#scoreSummary{font-weight:700}
+.review-item{border:1px solid var(--line);border-radius:14px;padding:14px;margin:12px 0;background:#fff}
+.correct{border-color:#bbf7d0;background:#f0fdf4}
+.incorrect{border-color:#fecaca;background:#fff7f7}
+.mark-good{color:var(--good);font-weight:700}
+.mark-bad{color:var(--bad);font-weight:700}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.94rem}
+th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top}
+th{background:#f1f5f9;text-align:left}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:14px}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;padding:1px 5px}
+.small{font-size:.9rem;color:var(--muted)}
+details{border:1px solid var(--line);border-radius:14px;background:#fff;margin:12px 0}
+summary{cursor:pointer;padding:10px 12px;font-weight:700;background:#f8fafc;border-radius:14px}
+details[open] summary{border-bottom:1px solid var(--line);border-radius:14px 14px 0 0}
+.inside{padding:12px 16px}
+#review{display:none}
+.pronunciation-list button{margin:4px 4px 4px 0}
+.footer-note{color:var(--muted);font-size:.9rem;margin-top:18px}
+@media print{nav,#scoreBox,.controls,button.audio,.no-print{display:none!important}body{background:#fff}section{box-shadow:none;break-inside:avoid}.q{break-inside:avoid}#review{display:block}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <h1>Miro AI会議で学ぶ TOEIC L&amp;R インタラクティブ問題集</h1>
+    <p>会議トランスクリプトの内容をもとにした非公式のTOEIC風オリジナル教材です。回答、音声再生、採点、詳細レビュー、参照Wikiを1つのHTMLにまとめています。</p>
+    <p class="small">音声はブラウザのWeb Speech APIで再生します。Chrome / Edge / Safariなどの音声読み上げ対応ブラウザで利用してください。</p>
+  </div>
+</header>
+<nav class="no-print">
+  <a href="#overview">概要</a><a href="#part1">Part 1</a><a href="#part2">Part 2</a><a href="#part3">Part 3</a><a href="#part4">Part 4</a><a href="#part5">Part 5</a><a href="#part6">Part 6</a><a href="#part7">Part 7</a><a href="#review">採点レビュー</a><a href="#wiki">参照Wiki</a>
+  <button type="button" onclick="gradeQuiz()">採点する</button><button type="button" onclick="resetQuiz()">リセット</button>
+</nav>
+<main>
+<section id="overview">
+  <h2>概要と使い方</h2>
+  <div class="note">
+    <strong>使い方:</strong> Listeningパートは「▶ 音声を再生」を押して回答してください。Part 1とPart 2は本番形式に近づけるため、選択肢文は採点後のレビューで表示されます。Readingパートは画面上の英文を読んで選択します。
+  </div>
+  <div class="tip">
+    <strong>採点:</strong> ページ下部または上部ナビの「採点する」を押すと、スコア、Part別正答率、未回答、各問の解説、トランスクリプトが表示されます。結果はブラウザに保存され、後から開いてもレビューできます。
+  </div>
+  <table>
+    <tr><th>Part</th><th>内容</th><th>問題数</th><th>重点</th></tr>
+    <tr><td>Part 1</td><td>写真描写</td><td>4</td><td>現在進行形・受動態・場所表現</td></tr>
+    <tr><td>Part 2</td><td>応答問題</td><td>6</td><td>疑問詞・自然な応答・機能語</td></tr>
+    <tr><td>Part 3</td><td>会話問題</td><td>6</td><td>業務課題・ユースケース・要望理解</td></tr>
+    <tr><td>Part 4</td><td>説明文問題</td><td>6</td><td>製品ロードマップ・リリース説明</td></tr>
+    <tr><td>Part 5</td><td>短文穴埋め</td><td>8</td><td>品詞・前置詞・句動詞・コロケーション</td></tr>
+    <tr><td>Part 6</td><td>長文穴埋め風読解</td><td>4</td><td>メール文脈・語彙言い換え</td></tr>
+    <tr><td>Part 7</td><td>読解問題</td><td>6</td><td>社内ノート・チャット・返信の読解</td></tr>
+  </table>
+</section>
+
+<section id="part1"><h2>Part 1: Photographs</h2><p class="meta">写真を見て、音声で流れる4つの文のうち、写真を最もよく描写しているものを選んでください。</p><div id="part1-container"></div></section>
+<section id="part2"><h2>Part 2: Question-Response</h2><p class="meta">音声で流れる質問と3つの応答を聞き、最も自然な応答を選んでください。</p><div id="part2-container"></div></section>
+<section id="part3"><h2>Part 3: Conversations</h2><p class="meta">会話音声を聞き、各設問に答えてください。</p><div id="part3-container"></div></section>
+<section id="part4"><h2>Part 4: Talks</h2><p class="meta">説明文・アナウンス音声を聞き、各設問に答えてください。</p><div id="part4-container"></div></section>
+<section id="part5"><h2>Part 5: Incomplete Sentences</h2><p class="meta">空所に入る最も適切な語句を選んでください。</p><div id="part5-container"></div></section>
+<section id="part6"><h2>Part 6: Text Completion / Email Reading</h2><p class="meta">メールを読み、設問に答えてください。</p><div id="part6-container"></div></section>
+<section id="part7"><h2>Part 7: Reading Comprehension</h2><p class="meta">文書を読み、設問に答えてください。</p><div id="part7-container"></div></section>
+
+<section id="review"><h2>採点結果・詳細レビュー</h2><div id="reviewContent"></div></section>
+
+<section id="wiki">
+<h2>参照Wiki: Miro AI会議で頻出した表現</h2>
+<div class="note">音声ボタンで発音確認もできます。TOEICだけでなく、SaaS・AI・プロダクト会議の実務英語としても使いやすい表現です。</div>
+<h3>発音・リスニング練習</h3>
+<div class="pronunciation-list" id="pronunciationList"></div>
+<h3>頻出コロケーション</h3>
+<table>
+<tr><th>表現</th><th>意味</th><th>例文</th></tr>
+<tr><td><strong>reduce manual effort</strong></td><td>手作業の負担を減らす</td><td>AI can reduce manual effort after workshops.</td></tr>
+<tr><td><strong>synthesize information</strong></td><td>情報を統合・整理する</td><td>The tool synthesizes information from sticky notes.</td></tr>
+<tr><td><strong>capture ideas in real time</strong></td><td>アイデアをリアルタイムで記録する</td><td>The voice feature may capture ideas in real time.</td></tr>
+<tr><td><strong>come down the line</strong></td><td>今後出てくる予定である</td><td>Several voice features are coming down the line.</td></tr>
+<tr><td><strong>be on the roadmap</strong></td><td>開発予定にある</td><td>Is live transcription on the roadmap?</td></tr>
+<tr><td><strong>go live</strong></td><td>正式稼働する、公開される</td><td>The feature will go live after testing.</td></tr>
+<tr><td><strong>general availability</strong></td><td>一般提供</td><td>The feature is not in general availability yet.</td></tr>
+<tr><td><strong>align with user needs</strong></td><td>ユーザーニーズに合う</td><td>The idea aligns with what users are looking for.</td></tr>
+<tr><td><strong>keep participants engaged</strong></td><td>参加者を関与させ続ける</td><td>The facilitator needs to keep participants engaged.</td></tr>
+<tr><td><strong>free up time</strong></td><td>時間を空ける、捻出する</td><td>Automation frees up time for complex work.</td></tr>
+</table>
+<h3>文法ポイント</h3>
+<div class="grid">
+<div class="card"><h4>1. used to do</h4><p><strong>以前は〜していた</strong>。今は違うことを暗示します。</p><p class="kbd">They used to synthesize sticky notes manually.</p></div>
+<div class="card"><h4>2. Have you tried -ing?</h4><p><strong>〜してみたことはありますか</strong>。提案・確認で頻出。</p><p class="kbd">Have you tried putting the transcript into Miro AI?</p></div>
+<div class="card"><h4>3. get + O + 過去分詞</h4><p><strong>Oを〜された状態にする</strong>。</p><p class="kbd">We need to get the workflow standardized.</p></div>
+<div class="card"><h4>4. instead of -ing</h4><p><strong>〜する代わりに</strong>。</p><p class="kbd">Instead of typing notes, users can dictate commands.</p></div>
+<div class="card"><h4>5. be supposed to do</h4><p><strong>〜することになっている / 本来〜するものだ</strong>。</p><p class="kbd">AI is supposed to make our work easier.</p></div>
+<div class="card"><h4>6. where + 主語 + 動詞</h4><p><strong>〜するところ・点</strong>。場所だけでなく論点にも使います。</p><p class="kbd">That is where I see the real power.</p></div>
+</div>
+<h3>ビジネス表現・会議表現</h3>
+<table>
+<tr><th>表現</th><th>自然な日本語</th><th>使いどころ</th></tr>
+<tr><td><strong>Going back to what Simon was asking...</strong></td><td>Simonが聞いていたことに戻ると...</td><td>話題を戻す</td></tr>
+<tr><td><strong>We can do it another time.</strong></td><td>それは別の機会にしましょう</td><td>脱線を止める</td></tr>
+<tr><td><strong>That is a strong use case.</strong></td><td>それは有力な活用例です</td><td>提案を評価する</td></tr>
+<tr><td><strong>Does that make sense?</strong></td><td>伝わっていますか</td><td>理解確認</td></tr>
+<tr><td><strong>I would love to hear your ideas.</strong></td><td>ぜひ皆さんのアイデアを聞きたいです</td><td>参加を促す</td></tr>
+<tr><td><strong>Can I ask a quick question?</strong></td><td>少し質問してもいいですか</td><td>会議で質問する</td></tr>
+<tr><td><strong>What is your perspective on that?</strong></td><td>それについてどう見ていますか</td><td>見解を尋ねる</td></tr>
+<tr><td><strong>Let me walk you through the process.</strong></td><td>プロセスを順に説明します</td><td>手順説明</td></tr>
+</table>
+<h3>自動字幕で誤認識されやすい表現</h3>
+<table>
+<tr><th>字幕の可能性</th><th>自然な表現</th><th>意味</th></tr>
+<tr><td>Mirror AI</td><td><strong>Miro AI</strong></td><td>MiroのAI機能</td></tr>
+<tr><td>rank those sidekicks</td><td><strong>run those sidekicks</strong></td><td>Sidekickを実行する</td></tr>
+<tr><td>getting catch up</td><td><strong>getting caught up</strong></td><td>状況に追いつく</td></tr>
+<tr><td>passenger princes</td><td><strong>passenger princesses</strong></td><td>受け身で乗っているだけの人の比喩</td></tr>
+<tr><td>buzzword</td><td><strong>wake word</strong></td><td>Hey Siriのような起動語</td></tr>
+<tr><td>The Planet</td><td><strong>Good point / The plan is...</strong></td><td>文脈上は相づちや説明開始の誤認識の可能性</td></tr>
+</table>
+</section>
+
+<div id="scoreBox" class="no-print">
+  <div id="scoreSummary">未採点です。回答後、「採点する」を押してください。</div>
+  <div class="controls"><button class="primary" type="button" onclick="gradeQuiz()">採点する</button><button type="button" onclick="saveProgress()">回答を保存</button><button class="danger" type="button" onclick="resetQuiz()">回答をリセット</button><button type="button" onclick="stopAudio()">音声停止</button></div>
+</div>
+</main>
+<script>
+const QUESTIONS = [{"id": "P1-1", "part": "Part 1", "section": "Photographs", "mode": "listening-hidden", "image": "<svg viewBox=\"0 0 600 360\" role=\"img\" aria-label=\"A facilitator is standing near a digital whiteboard while several participants sit around a table.\">\n<defs><linearGradient id=\"g1\" x1=\"0\" x2=\"1\"><stop stop-color=\"#e0f2fe\"/><stop offset=\"1\" stop-color=\"#ecfdf5\"/></linearGradient></defs>\n<rect width=\"600\" height=\"360\" fill=\"url(#g1)\"/>\n<rect x=\"45\" y=\"38\" width=\"270\" height=\"190\" rx=\"14\" fill=\"#fff\" stroke=\"#1f2937\" stroke-width=\"3\"/>\n<rect x=\"65\" y=\"62\" width=\"54\" height=\"36\" rx=\"6\" fill=\"#fef3c7\"/><rect x=\"132\" y=\"62\" width=\"54\" height=\"36\" rx=\"6\" fill=\"#dbeafe\"/><rect x=\"199\" y=\"62\" width=\"54\" height=\"36\" rx=\"6\" fill=\"#dcfce7\"/>\n<rect x=\"65\" y=\"117\" width=\"54\" height=\"36\" rx=\"6\" fill=\"#fee2e2\"/><rect x=\"132\" y=\"117\" width=\"54\" height=\"36\" rx=\"6\" fill=\"#ede9fe\"/><path d=\"M230 135 C275 115 282 170 245 188\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"5\"/>\n<circle cx=\"390\" cy=\"96\" r=\"28\" fill=\"#fde68a\"/><rect x=\"365\" y=\"124\" width=\"50\" height=\"92\" rx=\"17\" fill=\"#2563eb\"/><path d=\"M365 150 L320 180\" stroke=\"#2563eb\" stroke-width=\"14\" stroke-linecap=\"round\"/>\n<ellipse cx=\"355\" cy=\"276\" rx=\"210\" ry=\"45\" fill=\"#cbd5e1\"/>\n<rect x=\"180\" y=\"220\" width=\"320\" height=\"62\" rx=\"18\" fill=\"#94a3b8\"/>\n<circle cx=\"145\" cy=\"236\" r=\"24\" fill=\"#fed7aa\"/><rect x=\"120\" y=\"260\" width=\"50\" height=\"46\" rx=\"12\" fill=\"#0f766e\"/>\n<circle cx=\"525\" cy=\"232\" r=\"24\" fill=\"#fecaca\"/><rect x=\"500\" y=\"256\" width=\"50\" height=\"48\" rx=\"12\" fill=\"#7c3aed\"/>\n<circle cx=\"320\" cy=\"250\" r=\"22\" fill=\"#bfdbfe\"/><rect x=\"298\" y=\"272\" width=\"46\" height=\"42\" rx=\"12\" fill=\"#475569\"/>\n</svg>", "audio": "Number 1. Look at the picture. A. A facilitator is pointing at a board while participants sit around a table. B. Several workers are carrying boxes into a warehouse. C. A technician is repairing a microphone. D. The participants are leaving an empty conference room.", "choices": ["A", "B", "C", "D"], "answer": "A", "transcript": "(A) A facilitator is pointing at a board while participants sit around a table. (B) Several workers are carrying boxes into a warehouse. (C) A technician is repairing a microphone. (D) The participants are leaving an empty conference room.", "explanation": "写真では、進行役らしき人物がボードのそばに立ち、参加者がテーブル周りに座っています。facilitator, participants, board が鍵です。", "skill": "写真描写 / workplace scene"}, {"id": "P1-2", "part": "Part 1", "section": "Photographs", "mode": "listening-hidden", "image": "<svg viewBox=\"0 0 600 360\" role=\"img\" aria-label=\"A person is typing notes on a laptop while printed transcripts are beside the computer.\">\n<rect width=\"600\" height=\"360\" fill=\"#f8fafc\"/>\n<rect x=\"70\" y=\"240\" width=\"460\" height=\"58\" rx=\"12\" fill=\"#cbd5e1\"/>\n<rect x=\"210\" y=\"100\" width=\"190\" height=\"125\" rx=\"10\" fill=\"#1e293b\"/>\n<rect x=\"226\" y=\"116\" width=\"158\" height=\"88\" rx=\"6\" fill=\"#dbeafe\"/>\n<rect x=\"180\" y=\"225\" width=\"250\" height=\"28\" rx=\"8\" fill=\"#334155\"/>\n<circle cx=\"305\" cy=\"70\" r=\"30\" fill=\"#fde68a\"/>\n<path d=\"M274 91 C293 112 326 112 337 91\" fill=\"#2563eb\"/>\n<path d=\"M154 165 C195 182 215 208 248 230\" fill=\"none\" stroke=\"#f59e0b\" stroke-width=\"13\" stroke-linecap=\"round\"/>\n<path d=\"M456 165 C420 185 393 210 360 230\" fill=\"none\" stroke=\"#f59e0b\" stroke-width=\"13\" stroke-linecap=\"round\"/>\n<g transform=\"rotate(-8 105 125)\"><rect x=\"55\" y=\"70\" width=\"110\" height=\"135\" rx=\"8\" fill=\"#fff\" stroke=\"#94a3b8\" stroke-width=\"2\"/><line x1=\"75\" y1=\"100\" x2=\"145\" y2=\"100\" stroke=\"#64748b\" stroke-width=\"4\"/><line x1=\"75\" y1=\"125\" x2=\"145\" y2=\"125\" stroke=\"#64748b\" stroke-width=\"4\"/><line x1=\"75\" y1=\"150\" x2=\"130\" y2=\"150\" stroke=\"#64748b\" stroke-width=\"4\"/></g>\n<rect x=\"455\" y=\"95\" width=\"80\" height=\"42\" rx=\"7\" fill=\"#fef3c7\"/><rect x=\"455\" y=\"150\" width=\"80\" height=\"42\" rx=\"7\" fill=\"#dcfce7\"/><rect x=\"455\" y=\"205\" width=\"80\" height=\"42\" rx=\"7\" fill=\"#fee2e2\"/>\n</svg>", "audio": "Number 2. Look at the picture. A. A man is typing notes on a laptop beside some documents. B. A group of people are lifting a whiteboard. C. The laptop has been packed into a box. D. A woman is painting a wall.", "choices": ["A", "B", "C", "D"], "answer": "A", "transcript": "(A) A man is typing notes on a laptop beside some documents. (B) A group of people are lifting a whiteboard. (C) The laptop has been packed into a box. (D) A woman is painting a wall.", "explanation": "laptop と documents が見えるため、Aが適切です。beside は『〜のそばに』。", "skill": "現在進行形 / beside"}, {"id": "P1-3", "part": "Part 1", "section": "Photographs", "mode": "listening-hidden", "image": "<svg viewBox=\"0 0 600 360\" role=\"img\" aria-label=\"A microphone icon is sending speech bubbles toward sticky notes on a board.\">\n<defs><linearGradient id=\"g3\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop stop-color=\"#eff6ff\"/><stop offset=\"1\" stop-color=\"#f0fdf4\"/></linearGradient></defs>\n<rect width=\"600\" height=\"360\" fill=\"url(#g3)\"/>\n<rect x=\"50\" y=\"45\" width=\"295\" height=\"240\" rx=\"16\" fill=\"#fff\" stroke=\"#334155\" stroke-width=\"3\"/>\n<rect x=\"78\" y=\"80\" width=\"75\" height=\"52\" rx=\"7\" fill=\"#fef08a\"/><rect x=\"174\" y=\"80\" width=\"75\" height=\"52\" rx=\"7\" fill=\"#bfdbfe\"/><rect x=\"78\" y=\"158\" width=\"75\" height=\"52\" rx=\"7\" fill=\"#bbf7d0\"/><rect x=\"174\" y=\"158\" width=\"75\" height=\"52\" rx=\"7\" fill=\"#fecaca\"/><rect x=\"270\" y=\"158\" width=\"48\" height=\"52\" rx=\"7\" fill=\"#ddd6fe\"/>\n<circle cx=\"445\" cy=\"145\" r=\"65\" fill=\"#1e293b\" opacity=\"0.09\"/>\n<rect x=\"420\" y=\"75\" width=\"55\" height=\"115\" rx=\"28\" fill=\"#2563eb\"/><rect x=\"435\" y=\"188\" width=\"25\" height=\"42\" fill=\"#2563eb\"/><path d=\"M395 165 C397 220 498 220 500 165\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"11\" stroke-linecap=\"round\"/>\n<path d=\"M377 104 C340 95 327 88 298 90\" stroke=\"#0f766e\" stroke-width=\"5\" fill=\"none\" stroke-dasharray=\"10 8\"/><path d=\"M378 150 C333 158 322 176 290 184\" stroke=\"#0f766e\" stroke-width=\"5\" fill=\"none\" stroke-dasharray=\"10 8\"/><path d=\"M375 199 C340 230 304 241 250 235\" stroke=\"#0f766e\" stroke-width=\"5\" fill=\"none\" stroke-dasharray=\"10 8\"/>\n<circle cx=\"520\" cy=\"92\" r=\"18\" fill=\"#fff\" stroke=\"#94a3b8\"/><circle cx=\"536\" cy=\"133\" r=\"13\" fill=\"#fff\" stroke=\"#94a3b8\"/><circle cx=\"515\" cy=\"179\" r=\"16\" fill=\"#fff\" stroke=\"#94a3b8\"/>\n</svg>", "audio": "Number 3. Look at the picture. A. A microphone is being used to capture ideas for sticky notes. B. The board is being removed from the room. C. The chairs are being arranged in a circle. D. Several files are being printed at a desk.", "choices": ["A", "B", "C", "D"], "answer": "A", "transcript": "(A) A microphone is being used to capture ideas for sticky notes. (B) The board is being removed from the room. (C) The chairs are being arranged in a circle. (D) Several files are being printed at a desk.", "explanation": "マイクからボード上の付箋へ情報が流れるイメージです。capture ideas は『アイデアを拾う・記録する』。", "skill": "受動進行形 / capture ideas"}, {"id": "P1-4", "part": "Part 1", "section": "Photographs", "mode": "listening-hidden", "image": "<svg viewBox=\"0 0 600 360\" role=\"img\" aria-label=\"A structured journey canvas has columns, and sticky notes are placed in the correct sections.\">\n<rect width=\"600\" height=\"360\" fill=\"#f8fafc\"/>\n<rect x=\"38\" y=\"42\" width=\"524\" height=\"250\" rx=\"14\" fill=\"#fff\" stroke=\"#334155\" stroke-width=\"3\"/>\n<line x1=\"169\" y1=\"42\" x2=\"169\" y2=\"292\" stroke=\"#cbd5e1\" stroke-width=\"3\"/><line x1=\"300\" y1=\"42\" x2=\"300\" y2=\"292\" stroke=\"#cbd5e1\" stroke-width=\"3\"/><line x1=\"431\" y1=\"42\" x2=\"431\" y2=\"292\" stroke=\"#cbd5e1\" stroke-width=\"3\"/>\n<rect x=\"60\" y=\"62\" width=\"86\" height=\"25\" rx=\"6\" fill=\"#e2e8f0\"/><rect x=\"190\" y=\"62\" width=\"86\" height=\"25\" rx=\"6\" fill=\"#e2e8f0\"/><rect x=\"322\" y=\"62\" width=\"86\" height=\"25\" rx=\"6\" fill=\"#e2e8f0\"/><rect x=\"453\" y=\"62\" width=\"86\" height=\"25\" rx=\"6\" fill=\"#e2e8f0\"/>\n<rect x=\"70\" y=\"112\" width=\"66\" height=\"48\" rx=\"7\" fill=\"#fef08a\"/><rect x=\"199\" y=\"138\" width=\"66\" height=\"48\" rx=\"7\" fill=\"#bfdbfe\"/><rect x=\"331\" y=\"112\" width=\"66\" height=\"48\" rx=\"7\" fill=\"#bbf7d0\"/><rect x=\"462\" y=\"188\" width=\"66\" height=\"48\" rx=\"7\" fill=\"#fecaca\"/>\n<path d=\"M92 310 C172 330 250 330 334 312 S475 294 540 322\" fill=\"none\" stroke=\"#2563eb\" stroke-width=\"6\" stroke-linecap=\"round\"/>\n<circle cx=\"92\" cy=\"310\" r=\"9\" fill=\"#2563eb\"/><circle cx=\"334\" cy=\"312\" r=\"9\" fill=\"#2563eb\"/><circle cx=\"540\" cy=\"322\" r=\"9\" fill=\"#2563eb\"/>\n</svg>", "audio": "Number 4. Look at the picture. A. Sticky notes are organized on a structured canvas. B. A presenter is closing a laptop. C. Several customers are waiting outside an office. D. A team is moving furniture across the floor.", "choices": ["A", "B", "C", "D"], "answer": "A", "transcript": "(A) Sticky notes are organized on a structured canvas. (B) A presenter is closing a laptop. (C) Several customers are waiting outside an office. (D) A team is moving furniture across the floor.", "explanation": "構造化されたキャンバスに付箋が配置されています。organized on a structured canvas がポイントです。", "skill": "状態受動 / organized on"}, {"id": "P2-1", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 1. Is the voice feature already available to all users? A. Not yet, but it is coming down the line. B. Yes, the board is on the left. C. I prefer the yellow sticky note.", "choices": ["A", "B", "C"], "answer": "A", "transcript": "Q1. Is the voice feature already available to all users? A. Not yet, but it is coming down the line. B. Yes, the board is on the left. C. I prefer the yellow sticky note.", "questionText": "Is the voice feature already available to all users?", "correctResponse": "Not yet, but it is coming down the line.", "explanation": "機能の提供状況を聞くYes/No疑問文。Not yet が自然。coming down the line は『今後出てくる予定』。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P2-2", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 2. Who organized this training session? A. The meeting starts at ten. B. The two Sarahs helped set it up. C. It was placed on the canvas.", "choices": ["A", "B", "C"], "answer": "B", "transcript": "Q2. Who organized this training session? A. The meeting starts at ten. B. The two Sarahs helped set it up. C. It was placed on the canvas.", "questionText": "Who organized this training session?", "correctResponse": "The two Sarahs helped set it up.", "explanation": "Who には人・担当者で答えます。organize = 企画・手配する。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P2-3", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 3. Have you tried putting the transcript into Miro AI? A. Not yet. I need the output during the session. B. It is beside the laptop. C. The transcript is yellow.", "choices": ["A", "B", "C"], "answer": "A", "transcript": "Q3. Have you tried putting the transcript into Miro AI? A. Not yet. I need the output during the session. B. It is beside the laptop. C. The transcript is yellow.", "questionText": "Have you tried putting the transcript into Miro AI?", "correctResponse": "Not yet. I need the output during the session.", "explanation": "Have you tried -ing? への返答。Not yet が自然で、その後理由が続いています。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P2-4", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 4. What is the biggest time-saving impact she has seen? A. Reducing manual synthesis after brainstorming sessions. B. Replacing every client meeting. C. Buying new office furniture.", "choices": ["A", "B", "C"], "answer": "A", "transcript": "Q4. What is the biggest time-saving impact she has seen? A. Reducing manual synthesis after brainstorming sessions. B. Replacing every client meeting. C. Buying new office furniture.", "questionText": "What is the biggest time-saving impact she has seen?", "correctResponse": "Reducing manual synthesis after brainstorming sessions.", "explanation": "biggest time-saving impact の中身を答えます。manual synthesis が会話の中心。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P2-5", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 5. Should we cover advanced sidekick flows now? A. We can do it another time. B. The customer is in finance. C. The presentation has four slides.", "choices": ["A", "B", "C"], "answer": "A", "transcript": "Q5. Should we cover advanced sidekick flows now? A. We can do it another time. B. The customer is in finance. C. The presentation has four slides.", "questionText": "Should we cover advanced sidekick flows now?", "correctResponse": "We can do it another time.", "explanation": "今扱うかどうかを聞いています。do it another time = 別の機会にする。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P2-6", "part": "Part 2", "section": "Question-Response", "mode": "listening-hidden", "audio": "Question 6. Why does Markus need the notes live? A. Because he uses them for brainstorming, not just documentation. B. Because the meeting room is closed. C. Because he printed the user stories.", "choices": ["A", "B", "C"], "answer": "A", "transcript": "Q6. Why does Markus need the notes live? A. Because he uses them for brainstorming, not just documentation. B. Because the meeting room is closed. C. Because he printed the user stories.", "questionText": "Why does Markus need the notes live?", "correctResponse": "Because he uses them for brainstorming, not just documentation.", "explanation": "Why に理由で返答。during the session / not just documentation が根拠。", "skill": "応答問題 / wh疑問文・機能語"}, {"id": "P3-1", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "question": "What does the woman say has the biggest impact?", "choices": ["Basic features that reduce manual work", "Image creation for social media", "A new finance dashboard", "Longer in-person workshops"], "answer": "A", "transcript": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "explanation": "The woman says the biggest impact is in basic tools such as synthesis and summaries, not just flashy features.", "skill": "会話理解 / time saving"}, {"id": "P3-2", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "question": "How long did the design lead previously spend organizing sticky notes?", "choices": ["Five minutes", "Two to three weeks", "One full quarter", "About one hour"], "answer": "B", "transcript": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "explanation": "two to three weeks が明示されています。", "skill": "会話理解 / time saving"}, {"id": "P3-3", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "question": "What task is being shortened?", "choices": ["Hiring designers", "Manual synthesis after brainstorming", "Building office furniture", "Writing legal contracts"], "answer": "B", "transcript": "Questions 11 through 13 refer to the following conversation. Woman: I talk to customers who are using Miro AI right now, and the biggest impact is not always the flashy features. Man: Do you mean the basic tools, like synthesis and summaries? Woman: Exactly. One design lead used to spend two to three weeks organizing two hundred to three hundred sticky notes after brainstorming sessions. Now he can do it in about five minutes. Man: That is a huge time saving.", "explanation": "organizing sticky notes / synthesis after brainstorming sessions が対象です。", "skill": "会話理解 / time saving"}, {"id": "P3-4", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "question": "What problem does the man mention?", "choices": ["Participants have different levels of familiarity with Miro", "The meeting room is too small", "The audio is too loud", "The company has no design team"], "answer": "A", "transcript": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "explanation": "Some people know the system while others are passive participants. familiarity が鍵です。", "skill": "会話理解 / use case"}, {"id": "P3-5", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "question": "What does the man want the voice feature to do?", "choices": ["Translate every slide into French", "Create sticky notes in real time and place them appropriately", "Delete the entire canvas", "Send a calendar invitation"], "answer": "B", "transcript": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "explanation": "listen in, create sticky notes in real time, and place them on the right part of the canvas が要望です。", "skill": "会話理解 / use case"}, {"id": "P3-6", "part": "Part 3", "section": "Conversations", "mode": "standard", "audio": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "question": "How does the woman respond?", "choices": ["She rejects the idea immediately", "She says it is a strong use case for a future release", "She asks him to leave the meeting", "She says Miro cannot use templates"], "answer": "B", "transcript": "Questions 14 through 16 refer to the following conversation. Man: The challenge is keeping people engaged in Miro while also using AI. Some people know the system, but others are just passengers. Woman: So you want the conversation to be captured automatically? Man: Yes. Ideally the voice feature would listen in, create sticky notes in real time, and place them on the right part of the canvas based on the structure. Woman: That sounds like a strong use case for a future release.", "explanation": "strong use case / future release が返答の要点です。", "skill": "会話理解 / use case"}, {"id": "P4-1", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "question": "What is the main topic of the talk?", "choices": ["A new billing policy", "Advanced AI workflows in Miro", "Office relocation plans", "Hardware requirements"], "answer": "B", "transcript": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "explanation": "custom sidekicks, templates, workflow が話題です。", "skill": "説明文 / product update"}, {"id": "P4-2", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "question": "What will teams be able to generate?", "choices": ["User stories and wireframes", "Travel receipts", "Employee contracts", "Phone bills"], "answer": "A", "transcript": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "explanation": "generate user stories, create wireframes が明示されています。", "skill": "説明文 / product update"}, {"id": "P4-3", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "question": "What is the stated goal?", "choices": ["To replace collaboration completely", "To reduce manual effort and supercharge collaboration", "To cancel future meetings", "To limit access to templates"], "answer": "B", "transcript": "Questions 17 through 19 refer to the following talk. Thank you for joining today’s Miro AI session. In the next release cycle, our advanced AI work will focus on custom sidekicks that can be embedded into board templates. Teams will be able to run a brainstorming synthesis, generate user stories, create wireframes, and prepare a presentation from the same workflow. The goal is not to replace collaboration, but to supercharge it by reducing manual effort.", "explanation": "not replace collaboration, but supercharge it by reducing manual effort の言い換えです。", "skill": "説明文 / product update"}, {"id": "P4-4", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "question": "What is said about the voice component?", "choices": ["It is already available to every user", "It is not generally available yet", "It has been canceled", "It is only for printing documents"], "answer": "B", "transcript": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "explanation": "not generally available yet がそのまま答え。", "skill": "説明文 / roadmap"}, {"id": "P4-5", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "question": "What might be true of the first version?", "choices": ["It may be more basic than expected", "It will include every requested feature", "It will not use voice at all", "It will only work offline"], "answer": "A", "transcript": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "explanation": "first version may be more basic が根拠。", "skill": "説明文 / roadmap"}, {"id": "P4-6", "part": "Part 4", "section": "Talks", "mode": "standard", "audio": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "question": "Which use case will the product team review?", "choices": ["Real-time idea capture on a board", "Office catering", "Financial auditing", "Password reset training"], "answer": "A", "transcript": "Questions 20 through 22 refer to the following announcement. The voice component is not generally available yet. It is coming down the line, and the first version may be more basic than some users expect. Once the feature is closer to going live, the product team will review use cases such as live transcription, voice commands, and real-time idea capture on a board.", "explanation": "live transcription, voice commands, and real-time idea capture が列挙されています。", "skill": "説明文 / roadmap"}, {"id": "P5-1", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The new workflow is designed to reduce the amount of time employees spend on ______ tasks.", "choices": ["manual", "manually", "manuals", "manualize"], "answer": "A", "explanation": "名詞 tasks を修飾する形容詞 manual が必要です。", "skill": "語彙・文法"}, {"id": "P5-2", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The team plans to ______ customer feedback into clear themes after each workshop.", "choices": ["synthesize", "synthesis", "synthetic", "synthesizing"], "answer": "A", "explanation": "plans to の後は動詞原形。synthesize feedback = フィードバックを統合する。", "skill": "語彙・文法"}, {"id": "P5-3", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The voice feature is not live yet, but several updates are coming down the ______.", "choices": ["line", "desk", "chair", "note"], "answer": "A", "explanation": "coming down the line = 今後出てくる予定。", "skill": "語彙・文法"}, {"id": "P5-4", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "Several sidekicks can be embedded ______ a board template.", "choices": ["into", "among", "beside", "despite"], "answer": "A", "explanation": "embed A into B = AをBに組み込む。", "skill": "語彙・文法"}, {"id": "P5-5", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "Automation can free ______ time for more complex work.", "choices": ["up", "on", "by", "after"], "answer": "A", "explanation": "free up time = 時間を空ける・捻出する。", "skill": "語彙・文法"}, {"id": "P5-6", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The team will evaluate whether the feature aligns ______ user needs.", "choices": ["with", "for", "at", "of"], "answer": "A", "explanation": "align with = 〜と一致する・合う。", "skill": "語彙・文法"}, {"id": "P5-7", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The facilitator asked whether any other participants had ideas to ______.", "choices": ["share", "sharing", "shared", "shares"], "answer": "A", "explanation": "to 不定詞の後は動詞原形。share ideas = アイデアを共有する。", "skill": "語彙・文法"}, {"id": "P5-8", "part": "Part 5", "section": "Incomplete Sentences", "mode": "standard", "question": "The summary helped new participants get ______ quickly.", "choices": ["caught up", "catching up", "catch up", "catches up"], "answer": "A", "explanation": "get caught up = 状況に追いつく。", "skill": "語彙・文法"}, {"id": "P6-1", "part": "Part 6", "section": "Text Completion", "mode": "standard", "passage": "To: Product Workshop Team<br>Subject: Using AI in Next Week's Design Session<br><br>Hi team,<br><br>For next week's workshop, we will use a standardized Miro board template. The goal is to reduce manual effort and keep participants engaged. After the initial brainstorming activity, please run the AI synthesis feature to group related ideas. The output should then be used to create user stories and an early wireframe.<br><br>We are also evaluating voice-based workflows. The feature is not in general availability yet, but it may eventually help us capture ideas in real time. Until then, please make sure each facilitator is familiar with the board structure.<br><br>Best,<br>Sarah", "question": "What is the purpose of the email?", "choices": ["To cancel a design workshop", "To explain how AI will be used in a workshop", "To request office supplies", "To announce a hiring plan"], "answer": "B", "explanation": "workshopでMiro AIをどう使うかを説明しています。", "skill": "メール読解 / 語彙"}, {"id": "P6-2", "part": "Part 6", "section": "Text Completion", "mode": "standard", "passage": null, "question": "Which word is closest in meaning to “standardized”?", "choices": ["consistent", "temporary", "expensive", "private"], "answer": "A", "explanation": "standardized = 標準化された、一貫した。", "skill": "メール読解 / 語彙"}, {"id": "P6-3", "part": "Part 6", "section": "Text Completion", "mode": "standard", "passage": null, "question": "What should facilitators do after brainstorming?", "choices": ["Run the AI synthesis feature", "Print all slides", "Leave the meeting", "Delete the board"], "answer": "A", "explanation": "After the initial brainstorming activity, please run the AI synthesis feature とあります。", "skill": "メール読解 / 語彙"}, {"id": "P6-4", "part": "Part 6", "section": "Text Completion", "mode": "standard", "passage": null, "question": "What is NOT yet generally available?", "choices": ["Voice-based workflows", "The board structure", "The design session", "The AI synthesis feature"], "answer": "A", "explanation": "voice-based workflows の feature is not in general availability yet。", "skill": "メール読解 / 語彙"}, {"id": "P7-1", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": "<h4>Internal Training Note</h4><p>Miro AI should be used to remove repetitive manual effort from collaborative work. Common use cases include synthesizing sticky notes after brainstorming, generating summaries for people who need to catch up, and creating first drafts of tables or diagrams. The platform's collaboration layer remains central; AI is intended to supercharge the process rather than replace discussion.</p>", "question": "According to the note, what is Miro AI mainly intended to reduce?", "choices": ["Repetitive manual effort", "The number of design employees", "All customer meetings", "The need for internet access"], "answer": "A", "explanation": "remove repetitive manual effort と明記。", "skill": "single passage"}, {"id": "P7-2", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": null, "question": "Which use case is mentioned?", "choices": ["Generating summaries for catch-up", "Calculating payroll taxes", "Ordering lunch", "Repairing hardware"], "answer": "A", "explanation": "generating summaries for people who need to catch up が根拠。", "skill": "single passage"}, {"id": "P7-3", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": null, "question": "What does the note imply about collaboration?", "choices": ["It remains central to the platform", "It will be removed from the product", "It only happens after meetings", "It is less important than billing"], "answer": "A", "explanation": "collaboration layer remains central とあります。", "skill": "single passage"}, {"id": "P7-4", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": "<h4>Chat Message</h4><p><strong>Markus:</strong> For client workshops, I need live idea capture. If I wait until after the meeting and use the Teams transcript, the output is useful only for documentation. Ideally, the system would listen during the session and place sticky notes in the right area of the canvas.</p><h4>Product Team Reply</h4><p><strong>Sarah:</strong> That is a strong use case. The first version of the voice component may be basic, but once it is closer to going live, we can bring up scenarios such as real-time transcription, voice commands, and method-aware sticky note placement.</p>", "question": "Why is Markus dissatisfied with using the transcript after the meeting?", "choices": ["It is too late for live brainstorming", "It is too expensive to print", "It deletes the canvas", "It cannot be shared with Sarah"], "answer": "A", "explanation": "after the meeting では documentation 用にしかならず、live brainstorming に間に合わない。", "skill": "multiple passage"}, {"id": "P7-5", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": null, "question": "What does Markus want the system to recognize?", "choices": ["Where a sticky note belongs on the canvas", "The price of every license", "The names of all employees", "The color of the meeting room"], "answer": "A", "explanation": "place sticky notes in the right area of the canvas が根拠。", "skill": "multiple passage"}, {"id": "P7-6", "part": "Part 7", "section": "Reading Comprehension", "mode": "standard", "passage": null, "question": "What does Sarah suggest about the first version?", "choices": ["It may be basic", "It has already gone live", "It will replace all facilitators", "It has no voice component"], "answer": "A", "explanation": "first version of the voice component may be basic とあります。", "skill": "multiple passage"}];
+const PRONUNCIATION = [["synthesize information", "情報を統合する"], ["manual effort", "手作業の負担"], ["coming down the line", "今後出てくる予定"], ["general availability", "一般提供"], ["go live", "正式稼働する"], ["capture ideas in real time", "アイデアをリアルタイムで記録する"], ["keep participants engaged", "参加者を関与させ続ける"], ["embedded into a workflow", "ワークフローに組み込まれた"], ["align with user needs", "ユーザーニーズに合う"], ["walk through the journey", "ジャーニーを順に確認する"]];
+const letters = ['A','B','C','D'];
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function partKey(part) { return part.toLowerCase().replace(' ',''); }
+function speak(text, rate=0.9) {
+  if (!('speechSynthesis' in window)) { alert('このブラウザは音声読み上げに対応していません。'); return; }
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = rate;
+  u.pitch = 1;
+  window.speechSynthesis.speak(u);
+}
+function stopAudio() { if ('speechSynthesis' in window) window.speechSynthesis.cancel(); }
+function renderQuestion(q, indexInPart) {
+  const qnum = q.id.replace('P','Part ').replace('-', ' Q');
+  let html = `<div class="q" id="${q.id}"><div class="q-head"><div><strong>${q.id}</strong><span class="badge">${esc(q.skill || q.section)}</span></div><div class="meta">${esc(q.section)}</div></div>`;
+  if (q.audio) html += `<button class="audio" type="button" onclick='speak(${JSON.stringify(q.audio)}, 0.88)'>▶ 音声を再生</button>`;
+  if (q.image) html += `<div class="photo">${q.image}</div>`;
+  if (q.passage) html += `<div class="passage">${q.passage}</div>`;
+  if (q.question) html += `<p><strong>${esc(q.question)}</strong></p>`;
+  else if (q.questionText && q.mode !== 'listening-hidden') html += `<p><strong>${esc(q.questionText)}</strong></p>`;
+  else if (q.mode === 'listening-hidden') html += `<p class="meta">選択肢文は表示されません。音声を聞いて選んでください。</p>`;
+  html += '<div class="choices">';
+  q.choices.forEach((choice, i) => {
+    const value = letters[i];
+    const labelText = q.mode === 'listening-hidden' ? `(${value})` : `(${value}) ${esc(choice)}`;
+    html += `<label class="choice"><input type="radio" name="${q.id}" value="${value}"> <span>${labelText}</span></label>`;
+  });
+  html += '</div></div>';
+  return html;
+}
+function renderAll() {
+  const map = {'Part 1':'part1-container','Part 2':'part2-container','Part 3':'part3-container','Part 4':'part4-container','Part 5':'part5-container','Part 6':'part6-container','Part 7':'part7-container'};
+  Object.entries(map).forEach(([part, id]) => {
+    const target = document.getElementById(id);
+    target.innerHTML = QUESTIONS.filter(q => q.part === part).map(renderQuestion).join('');
+  });
+  const pron = document.getElementById('pronunciationList');
+  pron.innerHTML = PRONUNCIATION.map(([term, meaning]) => `<button class="audio" type="button" onclick='speak(${JSON.stringify(term)}, 0.82)'>▶ ${esc(term)}</button><span class="small">${esc(meaning)}</span><br>`).join('');
+  loadProgress();
+}
+function getAnswers() {
+  const out = {};
+  QUESTIONS.forEach(q => {
+    const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+    out[q.id] = selected ? selected.value : '';
+  });
+  return out;
+}
+function saveProgress(silent=false) {
+  localStorage.setItem('miroToeicAnswersV2', JSON.stringify(getAnswers()));
+  if (!silent) alert('回答を保存しました。');
+}
+function loadProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('miroToeicAnswersV2') || '{}');
+    Object.entries(saved).forEach(([id, val]) => {
+      const input = document.querySelector(`input[name="${id}"][value="${val}"]`);
+      if (input) input.checked = true;
+    });
+    const last = localStorage.getItem('miroToeicLastReviewV2');
+    if (last) renderReview(JSON.parse(last), false);
+  } catch(e) { console.warn(e); }
+}
+function gradeQuiz() {
+  const answers = getAnswers();
+  let correct = 0;
+  const byPart = {};
+  const review = QUESTIONS.map(q => {
+    const user = answers[q.id] || '';
+    const ok = user === q.answer;
+    if (ok) correct++;
+    byPart[q.part] ||= {total:0, correct:0};
+    byPart[q.part].total++;
+    if (ok) byPart[q.part].correct++;
+    return {id:q.id, part:q.part, user, answer:q.answer, ok};
+  });
+  const result = {timestamp:new Date().toISOString(), correct, total:QUESTIONS.length, byPart, review, answers};
+  localStorage.setItem('miroToeicAnswersV2', JSON.stringify(answers));
+  localStorage.setItem('miroToeicLastReviewV2', JSON.stringify(result));
+  renderReview(result, true);
+}
+function renderReview(result, jump=true) {
+  const pct = Math.round(result.correct / result.total * 100);
+  const unanswered = result.review.filter(r => !r.user).length;
+  document.getElementById('scoreSummary').innerHTML = `スコア: ${result.correct} / ${result.total}（${pct}%）｜未回答: ${unanswered}`;
+  let html = `<div class="note"><strong>総合スコア:</strong> ${result.correct} / ${result.total}（${pct}%）<br><strong>採点日時:</strong> ${new Date(result.timestamp).toLocaleString('ja-JP')}<br><strong>未回答:</strong> ${unanswered}</div>`;
+  html += '<h3>Part別結果</h3><table><tr><th>Part</th><th>正答</th><th>正答率</th></tr>';
+  Object.entries(result.byPart).forEach(([part, v]) => { html += `<tr><td>${part}</td><td>${v.correct} / ${v.total}</td><td>${Math.round(v.correct/v.total*100)}%</td></tr>`; });
+  html += '</table><h3>詳細レビュー</h3>';
+  result.review.forEach(r => {
+    const q = QUESTIONS.find(x => x.id === r.id);
+    const cls = r.ok ? 'correct' : 'incorrect';
+    const mark = r.ok ? '<span class="mark-good">正解</span>' : '<span class="mark-bad">不正解</span>';
+    html += `<div class="review-item ${cls}"><h4>${q.id} ${mark}</h4>`;
+    html += `<p><strong>あなたの回答:</strong> ${r.user || '未回答'}　<strong>正解:</strong> ${q.answer}</p>`;
+    if (q.question) html += `<p><strong>設問:</strong> ${esc(q.question)}</p>`;
+    if (q.questionText) html += `<p><strong>質問:</strong> ${esc(q.questionText)}</p>`;
+    html += '<p><strong>選択肢:</strong></p><ul>';
+    q.choices.forEach((c,i) => {
+      const val = letters[i];
+      const text = q.mode === 'listening-hidden' ? hiddenChoiceText(q, i) : c;
+      const suffix = val === q.answer ? ' <strong class="mark-good">← 正解</strong>' : '';
+      html += `<li>(${val}) ${esc(text)}${suffix}</li>`;
+    });
+    html += '</ul>';
+    if (q.transcript) html += `<details><summary>トランスクリプトを表示</summary><div class="inside">${esc(q.transcript)}</div></details>`;
+    html += `<p><strong>解説:</strong> ${esc(q.explanation)}</p>`;
+    html += `<p class="small">学習ポイント: ${esc(q.skill || '')}</p></div>`;
+  });
+  document.getElementById('reviewContent').innerHTML = html;
+  document.getElementById('review').style.display = 'block';
+  if (jump) document.getElementById('review').scrollIntoView({behavior:'smooth', block:'start'});
+}
+function hiddenChoiceText(q, i) {
+  const t = q.transcript || q.audio || '';
+  const marker = `(${letters[i]})`;
+  const next = i < q.choices.length - 1 ? `(${letters[i+1]})` : null;
+  let s = t.indexOf(marker);
+  if (s >= 0) {
+    let e = next ? t.indexOf(next, s+1) : t.length;
+    if (e < 0) e = t.length;
+    return t.slice(s + marker.length).trim().replace(/^[:.\s]+/,'');
+  }
+  // fallback for Part 2 transcript format such as "A. Not yet. B. ..."
+  const startLabel = letters[i] + '. ';
+  const s2 = t.indexOf(startLabel);
+  if (s2 >= 0) {
+    const nextLabel = i < q.choices.length - 1 ? ' ' + letters[i + 1] + '. ' : null;
+    let e2 = nextLabel ? t.indexOf(nextLabel, s2 + startLabel.length) : t.length;
+    if (e2 < 0) e2 = t.length;
+    return t.slice(s2 + startLabel.length, e2).trim();
+  }
+  return q.choices[i];
+}
+function resetQuiz() {
+  if (!confirm('回答と採点結果をリセットしますか？')) return;
+  stopAudio();
+  document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
+  localStorage.removeItem('miroToeicAnswersV2');
+  localStorage.removeItem('miroToeicLastReviewV2');
+  document.getElementById('review').style.display = 'none';
+  document.getElementById('reviewContent').innerHTML = '';
+  document.getElementById('scoreSummary').textContent = '未採点です。回答後、「採点する」を押してください。';
+}
+window.addEventListener('beforeunload', () => saveProgress(true));
+renderAll();
+</script>
+</body>
+</html>
